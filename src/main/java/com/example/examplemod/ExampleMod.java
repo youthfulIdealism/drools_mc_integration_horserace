@@ -34,11 +34,6 @@ public class ExampleMod
 	{
 		com.example.droolsinterface.InitCommon.init(event);
 		com.example.droolsinterface.InitClient.init(event);
-		
-		// some example code
-		System.out.println("DIRT BLOCK >> "+Blocks.dirt.getUnlocalizedName());
-
-		
 	}
 
 	@EventHandler
@@ -47,40 +42,4 @@ public class ExampleMod
 		com.example.droolsinterface.InitCommon.postInit(event);
 		com.example.droolsinterface.InitClient.postInit(event);
 	}
-
-
-
-
-	public static class Message {
-
-		public static final int HELLO = 0;
-		public static final int GOODBYE = 1;
-
-		private String message;
-
-		private int status;
-
-		public String getMessage() {
-			return this.message;
-		}
-
-		public void setMessage(String message) {
-			this.message = message;
-		}
-
-		public int getStatus() {
-			return this.status;
-		}
-
-		public void setStatus(int status) {
-			this.status = status;
-		}
-
-		public String toString()
-		{
-			return message;
-		}
-
-	}
-
 }

@@ -3,6 +3,11 @@ package com.example.droolsinterface;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.BlockPos;
 
+/**
+ * Stub. None of these work. Don't use them.
+ * @author Samuel
+ *
+ */
 public class DroolsTestInterface
 {
 	public static boolean withinPos(Entity test, int x, int y, int z, int tx, int ty, int tz)

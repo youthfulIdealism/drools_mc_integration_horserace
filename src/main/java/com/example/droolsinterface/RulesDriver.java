@@ -8,15 +8,26 @@ import org.kie.api.runtime.KieSession;
 import org.kie.api.runtime.rule.FactHandle;
 
 import com.example.examplemod.ExampleMod;
-import com.example.examplemod.ExampleMod.Message;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ServerTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.WorldTickEvent;
 
+/**
+ * Driver to continually submit updated information to drools.
+ * I have a vague suspicion that this is really clumsy, and that
+ * there's a better way to go about it.
+ * 
+ * The class currently updates drools once every 16 ticks.
+ * 
+ * If you have any ideas, I'd be more than happy to hear them. :)
+ * @author Samuel
+ *
+ */
 public class RulesDriver
 {
 	int throttle = 0;
@@ -24,10 +35,7 @@ public class RulesDriver
 	
 	public static KieSession kSession;
 	
-	public static Message message;
-	public static FactHandle messageHandle;
-	
-	public static DroolsWorldState state;
+	public static DroolsPlayerPos playerPos;
 	public static FactHandle stateHandle;
 	
 	public RulesDriver()
@@ -37,14 +45,6 @@ public class RulesDriver
 			KieServices ks = KieServices.Factory.get();
 			KieContainer kContainer = ks.getKieClasspathContainer();
 			kSession = kContainer.newKieSession("ksession-rules");
-
-			// go !
-			message = new Message();
-			message.setMessage("Hello World");
-			message.setStatus(Message.HELLO);
-			messageHandle = kSession.insert(message);
-			
-			state = new DroolsWorldState();
 			
 			kSession.fireAllRules();
 		} catch (Throwable t) {
@@ -58,22 +58,18 @@ public class RulesDriver
 		throttle++;
 		if(throttle % 16 == 0)
 		{
-			System.out.println("tick");
-			//message.setMessage("Hello World");
-			//message.setStatus(Message.HELLO);
-			if(messageHandle != null)
+			if(event.world.playerEntities.size() > 0)
 			{
-				kSession.delete(messageHandle);
+				EntityPlayer player = event.world.playerEntities.get(0);
+				BlockPos loc = player.getPosition();
+				playerPos = new DroolsPlayerPos(new DroolsPlayer(player), loc.getX(), loc.getY(), loc.getZ());
+				if(stateHandle != null)
+				{
+					kSession.delete(stateHandle);
+				}
+				stateHandle = kSession.insert(playerPos);
 			}
-			messageHandle = kSession.insert(message);
 			
-			
-			/*state.players = (ArrayList<EntityPlayer>) event.world.playerEntities;
-			if(stateHandle != null)
-			{
-				kSession.delete(stateHandle);
-			}
-			stateHandle = kSession.insert(state);*/
 			
 			kSession.fireAllRules();
 		}
