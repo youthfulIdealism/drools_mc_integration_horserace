@@ -1,6 +1,7 @@
 package com.example.droolsinterface;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.BlockPos;
 
 /**
  * Stub class used to wrap the player.
@@ -12,10 +13,30 @@ import net.minecraft.entity.player.EntityPlayer;
 public class DroolsPlayer
 {
 	public EntityPlayer base;
+	public DroolsPlayerPos position;
 	
 	public DroolsPlayer(EntityPlayer base)
 	{
 		this.base = base;
+		position = new DroolsPlayerPos(this);
 	}
+
+	public EntityPlayer getBase() {
+		return base;
+	}
+
+	public void setBase(EntityPlayer base) {
+		this.base = base;
+	}
+
+	public DroolsPlayerPos getPosition() {
+		return position;
+	}
+
+	public void setPosition(DroolsPlayerPos position) {
+		this.position = position;
+	}
+	
+	
 
 }

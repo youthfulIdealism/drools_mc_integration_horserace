@@ -28,6 +28,10 @@ local.properties
 # PDT-specific
 .buildpath
 
+#################
+## Run
+#################
+run/*
 
 #################
 ## Visual Studio

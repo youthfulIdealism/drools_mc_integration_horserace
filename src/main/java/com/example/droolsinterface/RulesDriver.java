@@ -38,6 +38,11 @@ public class RulesDriver
 	public static DroolsPlayerPos playerPos;
 	public static FactHandle stateHandle;
 	
+	//TODO: this has to change, if we want rules accesible from different dimensions.
+	public static World world;
+	
+	ArrayList<DroolsPlayer> players;
+	
 	public RulesDriver()
 	{
 		try {
@@ -50,26 +55,38 @@ public class RulesDriver
 		} catch (Throwable t) {
 			t.printStackTrace();
 		}
+		kSession.insert(this);
 	}
 	
 	@SubscribeEvent
 	public void onServerTick(WorldTickEvent event)
 	{
+		if(event.world.provider.getDimensionId() == 0)
+		{
+			world = event.world;
+		}
+		
 		throttle++;
 		if(throttle % 16 == 0)
 		{
+			players = new ArrayList<DroolsPlayer>();
+			
 			if(event.world.playerEntities.size() > 0)
 			{
 				EntityPlayer player = event.world.playerEntities.get(0);
-				BlockPos loc = player.getPosition();
-				playerPos = new DroolsPlayerPos(new DroolsPlayer(player), loc.getX(), loc.getY(), loc.getZ());
+				players.add(new DroolsPlayer(player));
+				
+				//BlockPos loc = player.getPosition();
+				//playerPos = new DroolsPlayerPos(new DroolsPlayer(player), loc.getX(), loc.getY(), loc.getZ());
 				if(stateHandle != null)
 				{
 					kSession.delete(stateHandle);
 				}
-				stateHandle = kSession.insert(playerPos);
+				//stateHandle = kSession.insert(playerPos);
+				stateHandle = kSession.insert(players.get(0));
 			}
-			
+			Event tickEvent = new Event("tick");
+			kSession.insert(tickEvent);
 			
 			kSession.fireAllRules();
 		}
