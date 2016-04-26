@@ -5,7 +5,7 @@ We will be updating this repository with a Minecraft MOD which uses the Rule Eng
 
 #Installation / Setup
 
-- Install GIT and Java
+- Install GIT, Java and Gradle
 - git clone https://github.com/youthfulIdealism/drools_mc_integration
 - cd drools_mc_integration
 - gradlew setupDecompWorkspace --refresh-dependencies
