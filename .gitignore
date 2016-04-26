@@ -2,8 +2,8 @@
 # GRADLE
 ##########
 gradle*
-
-
+.nb-gradle
+.gradle
 
 
 
