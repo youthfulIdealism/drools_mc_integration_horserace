@@ -1,29 +1,19 @@
 package com.example.droolsinterface;
 
-import java.util.ArrayList;
 import java.util.EnumSet;
-import java.util.List;
 
 import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.play.server.S08PacketPlayerPosLook;
 import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionAbsorption;
-import net.minecraft.potion.PotionAttackDamage;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.potion.PotionHealth;
-import net.minecraft.potion.PotionHealthBoost;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.ResourceLocation;
 
 /**
  * 
@@ -105,7 +95,7 @@ public class DroolsCommandInterface
 	public static boolean blockMatches(int x, int y, int z, BlockState match)
 	{
 		IBlockState state = RulesDriver.world.getBlockState(new BlockPos(x, y, z));
-		System.out.println(state);
+		//System.out.println(state);
 		return match.getBlock().isAssociatedBlock(state.getBlock());
 		//entity.addPotionEffect(new PotionEffect(potion, duration, strength));
 	}

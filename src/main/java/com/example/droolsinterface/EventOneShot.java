@@ -1,6 +1,5 @@
 package com.example.droolsinterface;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class EventOneShot extends Event

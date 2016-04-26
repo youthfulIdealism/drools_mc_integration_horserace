@@ -3,10 +3,8 @@ package com.example.droolsinterface;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.BlockPos;
 
 public class DroolsBoundingArea
 {

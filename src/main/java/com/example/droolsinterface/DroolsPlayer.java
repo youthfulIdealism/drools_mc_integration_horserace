@@ -1,7 +1,6 @@
 package com.example.droolsinterface;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.BlockPos;
 
 /**
  * Stub class used to wrap the player.
