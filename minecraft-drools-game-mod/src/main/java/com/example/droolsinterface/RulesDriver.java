@@ -11,7 +11,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.WorldTickEvent;
-
+import org.drools.minecraft.model.Player;
+import org.drools.minecraft.util.GameUtil;
 /**
  * Driver to continually submit updated information to drools. I have a vague
  * suspicion that this is really clumsy, and that there's a better way to go
@@ -39,6 +40,8 @@ public class RulesDriver {
     ArrayList<DroolsPlayer> players;
 
     public RulesDriver() {
+        new Player();
+        new GameUtil();
         try {
             // load up the knowledge base
             KieServices ks = KieServices.Factory.get();
