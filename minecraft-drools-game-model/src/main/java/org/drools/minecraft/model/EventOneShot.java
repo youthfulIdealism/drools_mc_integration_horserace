@@ -1,4 +1,4 @@
-package com.example.droolsinterface;
+package org.drools.minecraft.model;
 
 import java.util.HashMap;
 

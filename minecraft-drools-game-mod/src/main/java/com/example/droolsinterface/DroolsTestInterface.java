@@ -4,7 +4,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.BlockPos;
 
 /**
- * Stub. None of these work. Don't use them.
+ * Stub. None of these work. Don't use them. This class will probably be removed entirely.
  * @author Samuel
  *
  */

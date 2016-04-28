@@ -1,5 +1,6 @@
-package com.example.droolsinterface;
+package org.drools.minecraft.util;
 
+import org.drools.minecraft.model.DroolsPlayer;
 import java.util.EnumSet;
 
 import net.minecraft.block.state.BlockState;
@@ -43,60 +44,45 @@ public class DroolsCommandInterface
 	 */
 	public static void movePlayer(DroolsPlayer player, int x, int y, int z)
 	{
-		System.out.println("CALLED");
-		player.base.setLocationAndAngles(x, y, z, 0, 0);//.moveEntity(x, y, z);
-		
-		
-		/*
-		 * 
-		 * //TODO: This is stupid-awkward. It's because of the whole client-server
-		 * synchronization thing. Find a way to handle it more elegantly.
-		 * 
-		 * //TODO: Find out if I even need to use that first move call.
-		 * 
-		 */
-        
-		if(player.base instanceof EntityPlayerMP)
-		{
-			EnumSet enumset = EnumSet.noneOf(S08PacketPlayerPosLook.EnumFlags.class);
-			enumset.add(S08PacketPlayerPosLook.EnumFlags.X);
-	        enumset.add(S08PacketPlayerPosLook.EnumFlags.Y);
-	        enumset.add(S08PacketPlayerPosLook.EnumFlags.Z);
-	        
-			((EntityPlayerMP)player.base).playerNetServerHandler.setPlayerLocation(x, y, z, 0, 0, enumset);
-		}
+		//TODO: NOT IMPLEMENTED!
 	}
 	
 	public static void sendChat(String chat)
 	{
-		if(RulesDriver.world.playerEntities.size() > 0)
+            //TODO: NOT IMPLEMENTED
+		/*if(RulesDriver.world.playerEntities.size() > 0)
 		{
 			RulesDriver.world.playerEntities.get(0).addChatMessage(new ChatComponentText(chat));
-		}
+		}*/
 	}
 	
 	public static void spawnEntity(String entityid, int x, int y, int z)
 	{
-		Entity entity = EntityList.createEntityByName(entityid, RulesDriver.world);
+            //TODO: NOT IMPLEMENTED
+		/*Entity entity = EntityList.createEntityByName(entityid, RulesDriver.world);
 		entity.setLocationAndAngles(x, y, z,0.0F, 0.0F);
-		RulesDriver.world.spawnEntityInWorld(entity);
+		RulesDriver.world.spawnEntityInWorld(entity);*/
 	}
 	
 	public static void enchantEntity(EntityLiving entity, int potion, int duration, int strength)
 	{
-		entity.addPotionEffect(new PotionEffect(potion, duration, strength));
+		//TODO: NOT IMPLEMENTED
+                //entity.addPotionEffect(new PotionEffect(potion, duration, strength));
 	}
 	
 	public static void enchantEntity(EntityPlayer entity, int potion, int duration, int strength)
 	{
-		entity.addPotionEffect(new PotionEffect(potion, duration, strength));
+            //TODO: NOT IMPLEMENTED
+		//entity.addPotionEffect(new PotionEffect(potion, duration, strength));
 	}
 	
 	public static boolean blockMatches(int x, int y, int z, BlockState match)
 	{
-		IBlockState state = RulesDriver.world.getBlockState(new BlockPos(x, y, z));
+            //TODO: NOT IMPLEMENTED
+            return false;
+		//IBlockState state = RulesDriver.world.getBlockState(new BlockPos(x, y, z));
 		//System.out.println(state);
-		return match.getBlock().isAssociatedBlock(state.getBlock());
+		//return match.getBlock().isAssociatedBlock(state.getBlock());
 		//entity.addPotionEffect(new PotionEffect(potion, duration, strength));
 	}
 

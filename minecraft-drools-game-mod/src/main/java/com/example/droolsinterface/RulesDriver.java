@@ -1,5 +1,7 @@
 package com.example.droolsinterface;
 
+import org.drools.minecraft.model.DroolsPlayer;
+import org.drools.minecraft.model.Event;
 import java.util.ArrayList;
 
 import org.kie.api.KieServices;
@@ -11,7 +13,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.WorldTickEvent;
-import org.drools.minecraft.model.Adapter;
+import org.drools.minecraft.adapter.Adapter;
 import org.drools.minecraft.model.Player;
 import org.drools.minecraft.util.GameUtil;
 /**
@@ -32,7 +34,6 @@ public class RulesDriver {
 
     public static KieSession kSession;
 
-    public static DroolsPlayerPos playerPos;
     public static FactHandle stateHandle;
 
     //TODO: this has to change, if we want rules accesible from different dimensions.
@@ -68,15 +69,14 @@ public class RulesDriver {
             players = new ArrayList<DroolsPlayer>();
 
             if (event.world.playerEntities.size() > 0) {
-                EntityPlayer player = event.world.playerEntities.get(0);
-                players.add(new DroolsPlayer(player));
+                
 
-                //BlockPos loc = player.getPosition();
-                //playerPos = new DroolsPlayerPos(new DroolsPlayer(player), loc.getX(), loc.getY(), loc.getZ());
                 if (stateHandle != null) {
                     kSession.delete(stateHandle);
                 }
-                //stateHandle = kSession.insert(playerPos);
+                
+                //TODO: create Session, have adapter change session based on players.
+                EntityPlayer player = event.world.playerEntities.get(0);
                 stateHandle = kSession.insert(players.get(0));
             }
             Event tickEvent = new Event("tick");
