@@ -41,6 +41,15 @@ minecraft {
     // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
 }
 
+repositories {
+        
+        maven{
+            name = "jboss"
+            url = "https://repository.jboss.org/nexus/content/groups/public-jboss"
+        }
+        
+    }
+
 dependencies {
     
     // TODO: Add dependencies here
@@ -50,6 +59,8 @@ dependencies {
     //
     // You can read more about how to add dependency here:
     //   http://www.gradle.org/docs/current/userguide/dependency_management.html#sec:how_to_declare_your_dependencies
+    compile "org.drools:drools-compiler:6.4.0.Final"
+    compile project(':minecraft-drools-game-model')  
 }
 
 processResources

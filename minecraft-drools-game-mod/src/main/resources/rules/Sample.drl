@@ -1,229 +1,27 @@
 package com.example
  
-import com.example.droolsinterface.DroolsPlayerPos;
-import com.example.droolsinterface.DroolsPlayer;
-import com.example.droolsinterface.DroolsTestInterface;
-import com.example.droolsinterface.DroolsCommandInterface;
-import com.example.droolsinterface.DroolsBoundingArea;
-import com.example.droolsinterface.Event;
-import com.example.droolsinterface.EventOneShot;
-import com.example.droolsinterface.RulesDriver;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.Entity;
-import java.util.List;
-import net.minecraft.init.Blocks;
+import org.drools.minecraft.model.Room;
 
 rule "Setup"
     when
-        driver : RulesDriver()
+        //I'm a stub!
     then
-        System.out.println("Rule Setup");
-        insert( new DroolsBoundingArea("starting area", -24, 84, -338, -13, 89, -329) );
-        
-        insert( new DroolsBoundingArea("main corridor", -25, 85, -339, -32, 89, -329) );
-        insert( new DroolsBoundingArea("doorArea", -46, 91, -291, -50, 93, -297) );
-        insert( new DroolsBoundingArea("doorRefreshArea", -41, 91, -287, -42, 96, -297) );
-        
-        insert( new DroolsBoundingArea("bindingHall", -3, 88, -291, -4, 90, -297) );
-        insert( new EventOneShot("binding hall description and spawn"));
-        insert( new DroolsBoundingArea("bindingHallHeal", -4, 88, -287, -1, 90, -289) );
-        insert( new Event("binding hall heal"));
-        
-        insert( new EventOneShot("starting area"));
-        insert( new EventOneShot("main corridor"));
-        insert( new EventOneShot("door narration"));
-        insert( new EventOneShot("door narration reset"));
-        
-        insert( new EventOneShot("candleOneExtinguished"));
-        insert( new EventOneShot("candleTwoExtinguished"));
-        insert( new EventOneShot("candleThreeExtinguished"));
-        insert( new EventOneShot("candleFourExtinguished"));
-        insert( new EventOneShot("allCandlesExtinguished"));
+        //I'm a stub, too!
 end
 
 
-rule "Constant ruleset"
+rule "Update"
 no-loop
     when
-        event : Event(id.equals("tick") && !getHasFired())
-        startArea : DroolsBoundingArea(name.equals("starting area"))
-        mainCorridor : DroolsBoundingArea(name.equals("main corridor"))
-        doorArea : DroolsBoundingArea(name.equals("doorArea"))
-        doorRefreshArea : DroolsBoundingArea(name.equals("doorRefreshArea")) 
-        
-        startingAreaEvt : EventOneShot(id.equals("starting area"))
-        mainCorridorEvt : EventOneShot(id.equals("main corridor"))
-        doorNarrationEvt : EventOneShot(id.equals("door narration"))
-        doorNarrationEvtRst : EventOneShot(id.equals("door narration reset"))
-        
-        bindingHall : DroolsBoundingArea(name.equals("bindingHall"))
-        bindingHallSpawn : EventOneShot(id.equals("binding hall description and spawn"))
-        bindingHallHealArea : DroolsBoundingArea(name.equals("bindingHallHeal"))
-        bindingHallHealEvent : Event(id.equals("binding hall heal"))
-        
-        candleOneExtinguished : EventOneShot(id.equals("candleOneExtinguished"))
-        candleTwoExtinguished : EventOneShot(id.equals("candleTwoExtinguished"))
-        candleThreeExtinguished : EventOneShot(id.equals("candleThreeExtinguished"))
-        candleFourExtinguished : EventOneShot(id.equals("candleFourExtinguished"))
-        allCandlesExtinguished : EventOneShot(id.equals("allCandlesExtinguished"))
+        //I'm a stub, and maybe should go away entirely!
     then
-        modify( startArea ){ reset() };
-        modify( mainCorridor ){ reset() };
-        modify( doorArea ){ reset() };
-        modify( doorRefreshArea ){ reset() };
-        
-        modify( startingAreaEvt ){};
-        modify( mainCorridorEvt ){};
-        modify( doorNarrationEvt ){};
-        modify( doorNarrationEvtRst ){};
-        
-        modify( bindingHall ){reset()};
-        modify( bindingHallSpawn ){};
-        modify( bindingHallHealArea ){reset()};
-        modify( bindingHallHealEvent ){ setHasFired(false)};
-        
-        modify( candleOneExtinguished ){};
-        modify( candleTwoExtinguished ){};
-        modify( candleThreeExtinguished ){};
-        modify( candleFourExtinguished ){};
-        modify( allCandlesExtinguished ){};
-        
-        event.setHasFired(true);
+        //I'm still a stub!
         
 end
 
-rule "candleOneExtinguished"
+rule "PlayerInRoom"
     when
-        candleOneExtinguished : EventOneShot(id.equals("candleOneExtinguished"))
+        room : Room()
     then
-        if(!candleOneExtinguished.getHasFired() && !DroolsCommandInterface.blockMatches(-21, 88, -264, Blocks.torch.getBlockState()))
-        {
-            DroolsCommandInterface.sendChat("You blow out the candle...");
-            DroolsCommandInterface.sendChat("A swirling rush of cold air is hurled through the halls, ripping at the tapestries and carpets. The light dims slightly.");
-            candleOneExtinguished.setHasFired(true);
-        }
-end
-
-rule "Player in starting area"
-    when
-        box : DroolsBoundingArea(name.equals("starting area"))
-        event: EventOneShot(id.equals("starting area") )
-    then
-	    if(box.containsEntityOfType(EntityPlayer.class)&& !event.getHasFired())
-	    {
-            DroolsCommandInterface.sendChat("You wake in a dimly lit room. You move around slowly, the stone under your shoulders pressing"
-            +" uncomfortably into the back of your head. There's well-cut stone all around, with time-worn banners hanging limply on the walls."
-            +" ...you appear to be in a crypt.");
-            event.setHasFired(true);
-        }
-end
-
-rule "Player in main corridor"
-    when
-        box : DroolsBoundingArea(name.equals("main corridor"))
-        event: EventOneShot(id.equals("main corridor") )
-    then
-        if(box.containsEntityOfType(EntityPlayer.class)&& !event.getHasFired())
-        {
-            DroolsCommandInterface.sendChat("You move out of the tomb. The air is cold. You can hear water trickling somewhere. You pause, leaning"
-            + " against a pillar, and the chilling sound of air moving through dead lungs scrapes across your ears.");
-            DroolsCommandInterface.sendChat("Zombies.");
-            DroolsCommandInterface.sendChat("You're going to need to arm yourself. Maybe there are some weapons stashed in one of the other burial"
-            + "chambers.");
-            
-            DroolsCommandInterface.spawnEntity("Zombie", -32, 83, -306);
-            DroolsCommandInterface.spawnEntity("Zombie", -32, 83, -306);
-            DroolsCommandInterface.spawnEntity("Zombie", -32, 83, -306);
-            
-            event.setHasFired(true);
-        }
-end
-
-rule "door narration"
-    when
-        box : DroolsBoundingArea(name.equals("doorArea"))
-        event: EventOneShot(id.equals("door narration") )
-        eventResetter: EventOneShot(id.equals("door narration reset") )
-    then
-        if(box.containsEntityOfType(EntityPlayer.class)&& !event.getHasFired())
-        {
-            DroolsCommandInterface.sendChat("The door is sealed. Arcane sigils are scrolled across it. You know--somehow--"
-                + "that you need to extinguish ceremonial candles to remove the binding and get out.");
-            
-            event.setHasFired(true);
-            eventResetter.setHasFired(false);
-        }
-end
-rule "door reset"
-    when
-        box : DroolsBoundingArea(name.equals("doorRefreshArea"))
-        event: EventOneShot(id.equals("door narration reset") )
-        eventNarration: EventOneShot(id.equals("door narration") )
-    then
-        if(box.containsEntityOfType(EntityPlayer.class)&& !event.getHasFired())
-        {
-            eventNarration.setHasFired(false);
-            event.setHasFired(true);
-        }
-end
-
-
-        
-rule "enter binding hall"
-    when
-        bindingHall : DroolsBoundingArea(name.equals("bindingHall"))
-        bindingHallSpawn : EventOneShot(id.equals("binding hall description and spawn"))
-    then
-        if(bindingHall.containsEntityOfType(EntityPlayer.class)&& !bindingHallSpawn.getHasFired())
-        {
-            DroolsCommandInterface.sendChat("You leave the lofty hall, and enter a more cramped space. A tattered rug covers parts of the floor. You hear the"
-            + " soft squelch of undead footsteps, and the clattering of bones. You grip your sword tighter. It's handle feels more and more familiar, reassuring.");
-            
-            DroolsCommandInterface.spawnEntity("Zombie", -3, 89, -288);
-            DroolsCommandInterface.spawnEntity("Skeleton", 2, 93, -287);
-            DroolsCommandInterface.spawnEntity("Zombie", -4, 94, -288);
-            DroolsCommandInterface.spawnEntity("Zombie", -4, 94, -292);
-            bindingHallSpawn.setHasFired(true);
-        }
-end
-
-rule "enter heal area"
-    when
-        bindingHallHealArea : DroolsBoundingArea(name.equals("bindingHallHeal"))
-        bindingHallHealEvent : Event(id.equals("binding hall heal"))
-    then
-        boolean fired = false;
-        List<Entity> entites = bindingHallHealArea.getEntitiesOfType(EntityLiving.class);
-        if(entites.size() > 0 && !bindingHallHealEvent.getHasFired())
-        {
-            for(int i = 0; i < entites.size(); i++)
-            {
-                DroolsCommandInterface.enchantEntity((EntityLiving)(entites.get(i)), DroolsCommandInterface.potionRegen, 20, 3);
-                DroolsCommandInterface.enchantEntity((EntityLiving)(entites.get(i)), DroolsCommandInterface.potionSaturation, 20, 3);
-            }
-            fired = true;
-        }
-        
-        entites = bindingHallHealArea.getEntitiesOfType(EntityPlayer.class);
-        if(entites.size() > 0 && !bindingHallHealEvent.getHasFired())
-        {
-            for(int i = 0; i < entites.size(); i++)
-            {
-                DroolsCommandInterface.enchantEntity((EntityPlayer)(entites.get(i)), DroolsCommandInterface.potionRegen, 20, 3);
-                DroolsCommandInterface.enchantEntity((EntityPlayer)(entites.get(i)), DroolsCommandInterface.potionSaturation, 20, 3);
-            }
-            fired = true;
-        }
-        bindingHallHealEvent.setHasFired(fired);
-end
-
-rule "BindPlayer"
-    when
-        player : DroolsPlayer(position.x > 100 || position.x < -100 || position.z > 100 || position.z < -100)
-        //pos : DroolsPlayerPos(player = player, x >= 100 || x <= -100 || z >= 100 || z <= -100)
-        //pos : DroolsPlayerPos(x >= 100 || x <= -100 || z >= 100 || z <= -100)
-    then
-        //System.out.println( "Player exceeded game bounds! Move him!" );
-        //DroolsCommandInterface.movePlayer(player, 0, 40, 0);
+        System.out.println("There is a room at: " + room.getX() + ", " +room.getY() + ", " +room.getZ() + ", " +room.getFx() + ", " +room.getFy() + ", " +room.getFz());
 end

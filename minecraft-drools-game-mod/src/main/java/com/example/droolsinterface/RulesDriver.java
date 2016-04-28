@@ -16,6 +16,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.WorldTickEvent;
 import org.drools.minecraft.adapter.Adapter;
 import org.drools.minecraft.model.Player;
 import org.drools.minecraft.util.GameUtil;
+
 /**
  * Driver to continually submit updated information to drools. I have a vague
  * suspicion that this is really clumsy, and that there's a better way to go
@@ -36,15 +37,16 @@ public class RulesDriver {
 
     public static FactHandle stateHandle;
 
-    //TODO: this has to change, if we want rules accesible from different dimensions.
-    public static World world;
+    Adapter adapter;
 
+    //TODO: this has to change, if we want rules accesible from different dimensions.
+    //public static World world;
     ArrayList<DroolsPlayer> players;
 
     public RulesDriver() {
         new Player();
         new GameUtil();
-        new Adapter();
+
         try {
             // load up the knowledge base
             KieServices ks = KieServices.Factory.get();
@@ -56,33 +58,20 @@ public class RulesDriver {
             t.printStackTrace();
         }
         kSession.insert(this);
+        adapter = new Adapter(kSession);
     }
 
     @SubscribeEvent
     public void onServerTick(WorldTickEvent event) {
-        if (event.world.provider.getDimensionId() == 0) {
-            world = event.world;
-        }
 
         throttle++;
         if (throttle % 16 == 0) {
-            players = new ArrayList<DroolsPlayer>();
 
-            if (event.world.playerEntities.size() > 0) {
-                
-
-                if (stateHandle != null) {
-                    kSession.delete(stateHandle);
-                }
-                
-                //TODO: create Session, have adapter change session based on players.
-                EntityPlayer player = event.world.playerEntities.get(0);
-                stateHandle = kSession.insert(players.get(0));
+            //for simplicity's sake, this locks the adapter into only working
+            //in the default dimension. Rules will not work in the nether or end.
+            if (event.world.provider.getDimensionId() == 0) {
+                adapter.update(event.world);
             }
-            Event tickEvent = new Event("tick");
-            kSession.insert(tickEvent);
-
-            kSession.fireAllRules();
         }
     }
 

@@ -1,7 +1,7 @@
 package org.drools.minecraft.model;
 
 import java.util.HashMap;
-
+//TODO: merge with Event, or remove entirely
 public class EventOneShot extends Event
 {
 	public static HashMap<String, Boolean> events;
