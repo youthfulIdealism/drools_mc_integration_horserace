@@ -11,6 +11,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.WorldTickEvent;
+import org.drools.minecraft.model.Adapter;
 import org.drools.minecraft.model.Player;
 import org.drools.minecraft.util.GameUtil;
 /**
@@ -42,6 +43,7 @@ public class RulesDriver {
     public RulesDriver() {
         new Player();
         new GameUtil();
+        new Adapter();
         try {
             // load up the knowledge base
             KieServices ks = KieServices.Factory.get();
