@@ -11,6 +11,7 @@ import org.kie.api.runtime.rule.FactHandle;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.WorldTickEvent;
 import org.drools.minecraft.adapter.Adapter;
@@ -18,61 +19,14 @@ import org.drools.minecraft.model.Player;
 import org.drools.minecraft.util.GameUtil;
 
 /**
- * Driver to continually submit updated information to drools. I have a vague
- * suspicion that this is really clumsy, and that there's a better way to go
- * about it.
- *
- * The class currently updates drools once every 16 ticks.
- *
- * If you have any ideas, I'd be more than happy to hear them. :)
+ * This is being replaced by the adapter.
  *
  * @author Samuel
  *
  */
+@Deprecated
 public class RulesDriver {
-
-    int throttle = 0;
-
-    public static KieSession kSession;
-
-    public static FactHandle stateHandle;
-
-    Adapter adapter;
-
-    //TODO: this has to change, if we want rules accesible from different dimensions.
-    //public static World world;
-    ArrayList<DroolsPlayer> players;
-
     public RulesDriver() {
-        new Player();
-        new GameUtil();
-
-        try {
-            // load up the knowledge base
-            KieServices ks = KieServices.Factory.get();
-            KieContainer kContainer = ks.getKieClasspathContainer();
-            kSession = kContainer.newKieSession("ksession-rules");
-
-            kSession.fireAllRules();
-        } catch (Throwable t) {
-            t.printStackTrace();
-        }
-        kSession.insert(this);
-        adapter = new Adapter(kSession);
+        
     }
-
-    @SubscribeEvent
-    public void onServerTick(WorldTickEvent event) {
-
-        throttle++;
-        if (throttle % 16 == 0) {
-
-            //for simplicity's sake, this locks the adapter into only working
-            //in the default dimension. Rules will not work in the nether or end.
-            if (event.world.provider.getDimensionId() == 0) {
-                adapter.update(event.world);
-            }
-        }
-    }
-
 }

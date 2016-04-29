@@ -1,6 +1,8 @@
 package com.example
  
 import org.drools.minecraft.model.Room;
+import org.drools.minecraft.model.Session;
+import org.drools.minecraft.model.Player;
 
 rule "Setup"
     when
@@ -19,9 +21,26 @@ no-loop
         
 end
 
-rule "PlayerInRoom"
+rule "RoomExists"
     when
         room : Room()
     then
         System.out.println("There is a room at: " + room.getX() + ", " +room.getY() + ", " +room.getZ() + ", " +room.getFx() + ", " +room.getFy() + ", " +room.getFz());
+end
+
+/**
+Note: this shouldn't fire unless we insert the player with the session.
+*/
+rule "PlayerExists"
+    when
+        player : Player()
+    then
+        System.out.println("There is a player.");
+end
+
+rule "SessionExists"
+    when
+        session : Session()
+    then
+        System.out.println("There is a session.");
 end

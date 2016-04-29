@@ -5,7 +5,11 @@ import java.util.List;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.util.AxisAlignedBB;
-
+/**
+ * 
+ * Probably depricate this. We'll see.
+ * @author Samuel
+ */
 public class DroolsBoundingArea {
 
     AxisAlignedBB bounds;

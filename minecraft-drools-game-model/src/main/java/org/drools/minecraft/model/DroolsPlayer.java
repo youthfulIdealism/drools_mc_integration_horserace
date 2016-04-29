@@ -1,23 +1,23 @@
 package org.drools.minecraft.model;
 
-
 /**
  * Stub class used to wrap the player.
- * 
+ *
  * //TODO: research viability of replacing EntityPlayer with EntityPlayerMP
+ *
  * @author Samuel
  *
  */
-public class DroolsPlayer
-{
-	int xloc;
-        int yloc;
-        int zloc;
-	
-	public DroolsPlayer()
-	{
-		
-	}
+public class DroolsPlayer {
+
+    int xloc;
+    int yloc;
+    int zloc;
+    Inventory inventory;
+
+    public DroolsPlayer() {
+        inventory = new Inventory();
+    }
 
     public int getXloc() {
         return xloc;
@@ -43,5 +43,14 @@ public class DroolsPlayer
         this.zloc = zloc;
     }
 
-	
+    public Inventory getInventory() {
+        return inventory;
+    }
+
+    public void setInventory(Inventory inventory) {
+        this.inventory = inventory;
+    }
+    
+    
+
 }
