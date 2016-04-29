@@ -24,7 +24,8 @@ import org.kie.api.runtime.rule.FactHandle;
  *
  * @author rs
  */
-public class Adapter {
+public class Adapter
+{
 
     int throttle = 0;
 
@@ -37,41 +38,39 @@ public class Adapter {
     //public static World world;
     ArrayList<DroolsPlayer> players;
 
-    public Adapter() {
-        if(adapter != null)
+    public Adapter()
+    {
+        if (adapter != null)
         {
             System.err.println("Hey, bub, you tried to build two adapters. I don't like it when you do that. In retribution, I think I'll leak memory unboundedly for a while.");
         }
         adapter = this;
-        
-        new Player();
-        System.out.println("Something Happened!");
-        System.out.println("Something Happened!");
-        System.out.println("Something Happened!");
-        System.out.println("Something Happened!");
-        System.out.println("Something Happened!");
-        System.out.println("Something Happened!");
-        System.out.println("Something Happened!");
 
-        try {
+        new Player();
+        System.out.println("Adapter built!");
+
+        try
+        {
             // load up the knowledge base
             KieServices ks = KieServices.Factory.get();
             KieContainer kContainer = ks.getKieClasspathContainer();
             kSession = kContainer.newKieSession("ksession-rules");
 
             kSession.fireAllRules();
-        } catch (Throwable t) {
+        } catch (Throwable t)
+        {
             t.printStackTrace();
         }
         //kSession.insert(this);
-        
+
         Room defaultRoom = new Room(-100, -100, -100, 100, 100, 100);
         kSession.insert(defaultRoom);
     }
 
-    public void update(World world) {
+    public void update(World world)
+    {
         //adapter.update(event.world);
-       /* players = new ArrayList<DroolsPlayer>();
+        /* players = new ArrayList<DroolsPlayer>();
 
         if (event.world.playerEntities.size() > 0) {
 
@@ -90,27 +89,35 @@ public class Adapter {
 
         kSession.fireAllRules();
     }
-    
+
     @SubscribeEvent
-    public void onServerTick(TickEvent.WorldTickEvent event) {
+    public void onServerTick(TickEvent.WorldTickEvent event)
+    {
+        if (!event.world.isRemote)
+        {
+            throttle++;
+            if (throttle % 16 == 0)
+            {
 
-        throttle++;
-        if (throttle % 16 == 0) {
-
-            //for simplicity's sake, this locks the adapter into only working
-            //in the default dimension. Rules will not work in the nether or end.
-            if (event.world.provider.getDimensionId() == 0) {
-                adapter.update(event.world);
+                //for simplicity's sake, this locks the adapter into only working
+                //in the default dimension. Rules will not work in the nether or end.
+                if (event.world.provider.getDimensionId() == 0)
+                {
+                    adapter.update(event.world);
+                }
             }
         }
     }
-    
+
     @SubscribeEvent
     public void onPlayerJoin(EntityJoinWorldEvent event)
     {
-        if(event.entity instanceof EntityPlayer)
+        if (!event.world.isRemote)
         {
-            kSession.insert(new Session(new DroolsPlayer()));
+            if (event.entity instanceof EntityPlayer)
+            {
+                kSession.insert(new Session(new DroolsPlayer()));
+            }
         }
     }
 

@@ -229,3 +229,5 @@ pip-log.txt
 
 #Mr Developer
 .mr.developer.cfg
+/minecraft-drools-game-mod/run/
+/minecraft-drools-game-adapter/run/
