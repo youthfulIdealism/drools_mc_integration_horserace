@@ -17,14 +17,18 @@ public class Room
     int fx;
     int fy;
     int fz;
+    int dimension;
+    String id;
 
-    public Room(int x, int y, int z, int fx, int fy, int fz) {
+    public Room(int x, int y, int z, int fx, int fy, int fz, String id) {
         this.x = x;
         this.y = y;
         this.z = z;
         this.fx = fx;
         this.fy = fy;
         this.fz = fz;
+        dimension = 0;
+        this.id = id;
     }
 
     public int getX() {
@@ -73,6 +77,26 @@ public class Room
 
     public void setFz(int fz) {
         this.fz = fz;
+    }
+
+    public int getDimension()
+    {
+        return dimension;
+    }
+
+    public void setDimension(int dimension)
+    {
+        this.dimension = dimension;
+    }
+
+    public String getId()
+    {
+        return id;
+    }
+
+    public void setId(String id)
+    {
+        this.id = id;
     }
     
     

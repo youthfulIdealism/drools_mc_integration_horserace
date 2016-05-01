@@ -14,6 +14,7 @@ import java.util.ArrayList;
 public class Inventory
 {
     ArrayList<Item> items;
+    boolean dirty;
 
     public Inventory() {
         items = new ArrayList<Item>();
@@ -26,4 +27,16 @@ public class Inventory
     public void setItems(ArrayList<Item> items) {
         this.items = items;
     }
+
+    public boolean isDirty()
+    {
+        return dirty;
+    }
+
+    public void setDirty(boolean dirty)
+    {
+        this.dirty = dirty;
+    }
+    
+    
 }

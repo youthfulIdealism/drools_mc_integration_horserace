@@ -2,13 +2,17 @@ package com.example
  
 import org.drools.minecraft.model.Room;
 import org.drools.minecraft.model.Session;
-import org.drools.minecraft.model.Player;
+import org.drools.minecraft.model.DroolsPlayer;
+import org.drools.minecraft.model.Inventory;
+import org.drools.minecraft.model.Item;
+import org.drools.minecraft.util.DroolsCommandInterface;
+import org.drools.minecraft.util.DroolsTestInterface;
 
 rule "Setup"
     when
         //I'm a stub!
     then
-        //I'm a stub, too!
+        //I'm the continuation of a stub!
 end
 
 
@@ -21,26 +25,31 @@ no-loop
         
 end
 
-rule "RoomExists"
+
+rule "modifyInventory"
     when
-        room : Room()
+        inventory : Inventory()
     then
-        System.out.println("There is a room at: " + room.getX() + ", " +room.getY() + ", " +room.getZ() + ", " +room.getFx() + ", " +room.getFy() + ", " +room.getFz());
+        System.out.println("ModifyInventory base");
+        for(Item item : inventory.getItems())
+            {
+                System.out.println("ModifyInventory: " + item.getType());
+            }
+        
 end
 
-/**
-Note: this shouldn't fire unless we insert the player with the session.
-*/
-rule "PlayerExists"
+rule "goThroughLighthouseDoor"
     when
-        player : Player()
+        room : Room(id.equals("LighthouseDoor"))
+        player : DroolsPlayer()
     then
-        System.out.println("There is a player.");
+        if(room != null && player != null)
+        {
+                if(DroolsTestInterface.playerHasItem(player, "item.key") && DroolsTestInterface.playerInRoom(player, room))
+                {
+                    System.out.println("Player has key.");
+                    DroolsCommandInterface.ModifyBlocks(-85, 76, 437, -84, 79, 437, room.getDimension(), DroolsCommandInterface.Blocks.Air);
+                }
+        }
 end
 
-rule "SessionExists"
-    when
-        session : Session()
-    then
-        System.out.println("There is a session.");
-end
