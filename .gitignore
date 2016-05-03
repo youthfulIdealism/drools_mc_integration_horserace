@@ -5,9 +5,9 @@ gradle*
 .nb-gradle
 .gradle
 
-
-
-
+minecraft-drools-game-mod/run/saves/
+minecraft-drools-game-mod/run/logs/
+minecraft-drools-game-mod/run/crash-reports/
 
 #################
 ## Eclipse
