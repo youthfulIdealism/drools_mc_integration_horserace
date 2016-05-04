@@ -15,7 +15,6 @@ import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import org.drools.minecraft.model.DroolsPlayer;
 import org.drools.minecraft.model.Inventory;
 import org.drools.minecraft.model.Item;
 import org.drools.minecraft.model.Player;
@@ -24,7 +23,6 @@ import org.drools.minecraft.model.Session;
 import org.kie.api.KieServices;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
-import org.kie.api.runtime.rule.FactHandle;
 
 /**
  *
@@ -36,7 +34,7 @@ public class Adapter
     int throttle = 0;
 
     public static KieSession kSession;
-    public static HashMap<String, DroolsPlayer> players;
+    public static HashMap<String, Player> players;
     public static HashMap<Integer, World> dimensions;
     public static ArrayList<Room> rooms;
     Adapter adapter;
@@ -55,7 +53,7 @@ public class Adapter
             System.err.println("Hey, bub, you tried to build two adapters. I don't like it when you do that. In retribution, I think I'll leak memory unboundedly for a while.");
         }
         adapter = this;
-        players = new HashMap<String, DroolsPlayer>();
+        players = new HashMap<String, Player>();
         dimensions = new HashMap<Integer, World>();
         rooms = new ArrayList<Room>();
 
@@ -88,7 +86,7 @@ public class Adapter
     {
         for (EntityPlayer player : world.playerEntities)
         {
-            DroolsPlayer droolsPlayer = players.get(player.getName());
+            Player droolsPlayer = players.get(player.getName());
             droolsPlayer.setXloc(player.getPosition().getX());
             droolsPlayer.setYloc(player.getPosition().getY());
             droolsPlayer.setZloc(player.getPosition().getZ());
@@ -150,7 +148,7 @@ public class Adapter
         {
             if (event.entity instanceof EntityPlayer)
             {
-                DroolsPlayer player = new DroolsPlayer();
+                Player player = new Player();
                 players.put(event.entity.getName(), player);
                 player.getInventory().setDirty(true);
 
@@ -169,7 +167,7 @@ public class Adapter
      */
     public void rebuildInventory(EntityPlayer entity)
     {
-        DroolsPlayer player = players.get(entity.getName());
+        Player player = players.get(entity.getName());
         Inventory inventory = player.getInventory();
         inventory.getItems().clear();
         for (int i = 0; i < entity.inventory.mainInventory.length; i++)
@@ -202,7 +200,7 @@ public class Adapter
         {
             if (event.entityPlayer != null)
             {
-                DroolsPlayer player = players.get(event.entityPlayer.getName());
+                Player player = players.get(event.entityPlayer.getName());
                 player.getInventory().setDirty(true);
             }
         }
@@ -219,13 +217,13 @@ public class Adapter
         {
             if (event.player != null)
             {
-                DroolsPlayer player = players.get(event.player.getName());
+                Player player = players.get(event.player.getName());
                 player.getInventory().setDirty(true);
             }
         }
     }
     
-    public boolean playerWithinRoom(DroolsPlayer player, Room room)
+    public boolean playerWithinRoom(Player player, Room room)
     {
         boolean xWithin = within(player.getXloc(), room.getX(), room.getFx());
         boolean yWithin = within(player.getYloc(), room.getY(), room.getFy());

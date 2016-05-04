@@ -11,14 +11,14 @@ package org.drools.minecraft.model;
  */
 public class Room
 {
-    int x;
-    int y;
-    int z;
-    int fx;
-    int fy;
-    int fz;
-    int dimension;
-    String id;
+    private int x;
+    private int y;
+    private int z;
+    private int fx;
+    private int fy;
+    private int fz;
+    private int dimension;
+    private String id;
 
     public Room(int x, int y, int z, int fx, int fy, int fz, String id) {
         this.x = x;
@@ -27,7 +27,7 @@ public class Room
         this.fx = fx;
         this.fy = fy;
         this.fz = fz;
-        dimension = 0;
+        this.dimension = 0;
         this.id = id;
     }
 

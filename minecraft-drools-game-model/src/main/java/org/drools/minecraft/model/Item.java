@@ -9,12 +9,12 @@ package org.drools.minecraft.model;
  *
  * @author Samuel
  */
-public class Item
-{
-    String name;
-    String type;
-    int count;
-    int durability;
+public class Item {
+
+    private String name;
+    private String type;
+    private int count;
+    private int durability;
 
     public Item(String name, String type, int durability) {
         this.name = name;
@@ -58,6 +58,5 @@ public class Item
     public void setDurability(int durability) {
         this.durability = durability;
     }
-    
-    
+
 }

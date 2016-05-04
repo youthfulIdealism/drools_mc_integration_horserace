@@ -1,22 +1,21 @@
 package org.drools.minecraft.adapter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.util.AxisAlignedBB;
 /**
  * 
- * Probably depricate this. We'll see.
+ * Probably deprecate this. We'll see.
  * @author Samuel
  */
-public class DroolsBoundingArea {
+public class BoundingArea {
 
-    AxisAlignedBB bounds;
-    List<Entity> creatures;
-    String name;
+    private AxisAlignedBB bounds;
+    private List<Entity> creatures;
+    private String name;
 
-    public DroolsBoundingArea(String name, int startx, int starty, int startz, int endx, int endy, int endz) {
+    public BoundingArea(String name, int startx, int starty, int startz, int endx, int endy, int endz) {
         //NOT IMPLEMENTED!
         /*bounds = AxisAlignedBB.fromBounds(startx, starty, startz, endx, endy, endz);
 		creatures = RulesDriver.world.getEntitiesWithinAABB(Entity.class, bounds);

@@ -2,7 +2,7 @@ package com.example
  
 import org.drools.minecraft.model.Room;
 import org.drools.minecraft.model.Session;
-import org.drools.minecraft.model.DroolsPlayer;
+import org.drools.minecraft.model.Player;
 import org.drools.minecraft.model.Inventory;
 import org.drools.minecraft.model.Item;
 import org.drools.minecraft.util.DroolsCommandInterface;
@@ -41,14 +41,14 @@ end
 rule "goThroughLighthouseDoor"
     when
         room : Room(id.equals("LighthouseDoor"))
-        player : DroolsPlayer()
+        player : Player()
     then
         if(room != null && player != null)
         {
                 if(DroolsTestInterface.playerHasItem(player, "item.key") && DroolsTestInterface.playerInRoom(player, room))
                 {
                     System.out.println("Player has key.");
-                    DroolsCommandInterface.ModifyBlocks(-85, 76, 437, -84, 79, 437, room.getDimension(), DroolsCommandInterface.Blocks.Air);
+                    DroolsCommandInterface.modifyBlocks(-85, 76, 437, -84, 79, 437, room.getDimension(), DroolsCommandInterface.Blocks.Air);
                 }
         }
 end

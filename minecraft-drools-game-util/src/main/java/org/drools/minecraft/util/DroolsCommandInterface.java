@@ -1,22 +1,12 @@
 package org.drools.minecraft.util;
 
-import org.drools.minecraft.model.DroolsPlayer;
-import java.util.EnumSet;
+import org.drools.minecraft.model.Player;
 import net.minecraft.block.Block;
 
 import net.minecraft.block.state.BlockState;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.network.play.server.S08PacketPlayerPosLook;
 import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.ChatComponentText;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
 import org.drools.minecraft.adapter.Adapter;
 
@@ -61,7 +51,7 @@ public class DroolsCommandInterface
      * @param y
      * @param z
      */
-    public static void movePlayer(DroolsPlayer player, int x, int y, int z)
+    public static void movePlayer(Player player, int x, int y, int z)
     {
 
     }
@@ -106,7 +96,7 @@ public class DroolsCommandInterface
         //entity.addPotionEffect(new PotionEffect(potion, duration, strength));
     }
 
-    public static void ModifyBlocks(int x, int y, int z, int fx, int fy, int fz, int dimension, Blocks match)
+    public static void modifyBlocks(int x, int y, int z, int fx, int fy, int fz, int dimension, Blocks match)
     {
         for (int dx = Math.min(x, fx); dx <= Math.max(x, fx); dx++)
         {

@@ -12,10 +12,9 @@ import net.minecraft.item.Item;
  *
  * @author Samuel
  */
-public class ItemKey extends Item
-{
-    public ItemKey()
-    {
+public class ItemKey extends Item {
+
+    public ItemKey() {
         this.setMaxStackSize(1);
         this.setCreativeTab(CreativeTabs.tabMisc);
     }

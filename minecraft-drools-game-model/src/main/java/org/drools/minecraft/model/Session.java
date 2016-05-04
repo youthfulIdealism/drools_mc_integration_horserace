@@ -11,17 +11,17 @@ package org.drools.minecraft.model;
  */
 public class Session
 {
-    DroolsPlayer player;
-    public Session(DroolsPlayer player)
+    Player player;
+    public Session(Player player)
     {
         this.player = player;
     }
 
-    public DroolsPlayer getPlayer() {
+    public Player getPlayer() {
         return player;
     }
 
-    public void setPlayer(DroolsPlayer player) {
+    public void setPlayer(Player player) {
         this.player = player;
     }
     

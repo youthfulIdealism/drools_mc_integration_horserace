@@ -13,8 +13,8 @@ import java.util.ArrayList;
  */
 public class Inventory
 {
-    ArrayList<Item> items;
-    boolean dirty;
+    private ArrayList<Item> items;
+    private boolean dirty;
 
     public Inventory() {
         items = new ArrayList<Item>();
