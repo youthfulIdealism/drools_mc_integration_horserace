@@ -28,28 +28,25 @@ end
 
 rule "modifyInventory"
     when
-        inventory : Inventory()
+        $i : Inventory()
     then
         System.out.println("ModifyInventory base");
-        for(Item item : inventory.getItems())
+        for(Item item : $i.getItems())
             {
                 System.out.println("ModifyInventory: " + item.getType());
             }
         
 end
 
-rule "goThroughLighthouseDoor"
+rule "Open the door when the player has the key"
     when
-        room : Room(id.equals("LighthouseDoor"))
-        player : Player()
+        $r : Room(id == "LighthouseDoor")
+        $p : Player(roomsIn.contains($r))
+        Item(type == "item.key") from $p.getInventory().getItems()
+        
     then
-        if(room != null && player != null)
-        {
-                if(DroolsTestInterface.playerHasItem(player, "item.key") && DroolsTestInterface.playerInRoom(player, room))
-                {
-                    System.out.println("Player has key.");
-                    DroolsCommandInterface.modifyBlocks(-85, 76, 437, -84, 79, 437, room.getDimension(), DroolsCommandInterface.Blocks.Air);
-                }
-        }
+        System.out.println("Player has key.");
+        DroolsCommandInterface.modifyBlocks(-85, 76, 437, -84, 79, 437, $r.getDimension(), DroolsCommandInterface.Blocks.Air);
+       
 end
 
