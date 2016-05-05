@@ -3,7 +3,6 @@ package com.example
 import org.drools.minecraft.model.Room;
 import org.drools.minecraft.model.Session;
 import org.drools.minecraft.model.Player;
-import org.drools.minecraft.model.Inventory;
 import org.drools.minecraft.model.Item;
 import org.drools.minecraft.util.DroolsCommandInterface;
 import org.drools.minecraft.util.DroolsTestInterface;
@@ -25,24 +24,11 @@ no-loop
         
 end
 
-
-rule "modifyInventory"
-    when
-        $i : Inventory()
-    then
-        System.out.println("ModifyInventory base");
-        for(Item item : $i.getItems())
-            {
-                System.out.println("ModifyInventory: " + item.getType());
-            }
-        
-end
-
 rule "Open the door when the player has the key"
     when
         $r : Room(id == "LighthouseDoor")
         $p : Player(roomsIn.contains($r))
-        Item(type == "item.key") from $p.getInventory().getItems()
+        Item(type == "item.key") from $p.getInventory()
         
     then
         System.out.println("Player has key.");

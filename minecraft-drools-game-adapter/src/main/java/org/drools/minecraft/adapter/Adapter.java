@@ -15,7 +15,6 @@ import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import org.drools.minecraft.model.Inventory;
 import org.drools.minecraft.model.Item;
 import org.drools.minecraft.model.Player;
 import org.drools.minecraft.model.Room;
@@ -90,11 +89,11 @@ public class Adapter
             droolsPlayer.setXloc(player.getPosition().getX());
             droolsPlayer.setYloc(player.getPosition().getY());
             droolsPlayer.setZloc(player.getPosition().getZ());
-            if(droolsPlayer.getInventory().isDirty())
+            if(droolsPlayer.getInventoryDirty())
             {
                 rebuildInventory(player);
             }
-            droolsPlayer.getInventory().setDirty(false);
+            droolsPlayer.setInventoryDirty(false);
             
             droolsPlayer.getRoomsIn().clear();
             for(Room room : rooms)
@@ -150,7 +149,7 @@ public class Adapter
             {
                 Player player = new Player();
                 players.put(event.entity.getName(), player);
-                player.getInventory().setDirty(true);
+                player.setInventoryDirty(true);
 
                 kSession.insert(new Session(player));
                 kSession.insert(player);
@@ -168,14 +167,13 @@ public class Adapter
     public void rebuildInventory(EntityPlayer entity)
     {
         Player player = players.get(entity.getName());
-        Inventory inventory = player.getInventory();
-        inventory.getItems().clear();
+        player.getInventory().clear();
         for (int i = 0; i < entity.inventory.mainInventory.length; i++)
         {
             ItemStack stack = entity.inventory.mainInventory[i];
             if (stack != null)
             {
-                inventory.getItems().add(new Item(stack.getUnlocalizedName(), stack.stackSize));
+                player.getInventory().add(new Item(stack.getUnlocalizedName(), stack.stackSize));
             }
         }
         for (int i = 0; i < entity.inventory.armorInventory.length; i++)
@@ -183,7 +181,7 @@ public class Adapter
             ItemStack stack = entity.inventory.armorInventory[i];
             if (stack != null)
             {
-                inventory.getItems().add(new Item(stack.getUnlocalizedName(), stack.stackSize));
+                player.getInventory().add(new Item(stack.getUnlocalizedName(), stack.stackSize));
             }
         }
         kSession.update(kSession.getFactHandle(player.getInventory()), player.getInventory());
@@ -201,7 +199,7 @@ public class Adapter
             if (event.entityPlayer != null)
             {
                 Player player = players.get(event.entityPlayer.getName());
-                player.getInventory().setDirty(true);
+                player.setInventoryDirty(true);
             }
         }
     }
@@ -218,7 +216,7 @@ public class Adapter
             if (event.player != null)
             {
                 Player player = players.get(event.player.getName());
-                player.getInventory().setDirty(true);
+                player.setInventoryDirty(true);
             }
         }
     }

@@ -15,7 +15,7 @@ public class DroolsTestInterface
 {
     public static boolean playerHasItem(Player player, String item)
     {
-        for(Item inventoryItem : player.getInventory().getItems())
+        for(Item inventoryItem : player.getInventory())
         {
             if(inventoryItem.getType().equals(item))
             {
