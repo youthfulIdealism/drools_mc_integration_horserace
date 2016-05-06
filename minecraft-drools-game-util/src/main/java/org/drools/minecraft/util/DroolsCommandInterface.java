@@ -9,6 +9,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.BlockPos;
 import org.drools.minecraft.adapter.Adapter;
+import org.drools.minecraft.model.Door;
+import org.drools.minecraft.model.Room;
 
 /**
  *
@@ -108,6 +110,55 @@ public class DroolsCommandInterface
                 }
             }
         }
+    }
+    
+    public static void openDoor(Door door)
+    {
+        modifyBlocks(door.getX(), door.getY(), door.getZ(), door.getFx(), door.getFy(), door.getFz(), door.getRoom().getDimension(), Blocks.Air);
+    }
+    
+    public static void closeDoor(Door door)
+    {
+        modifyBlocks(door.getX(), door.getY(), door.getZ(), door.getFx(), door.getFy(), door.getFz(), door.getRoom().getDimension(), Blocks.Planks);
+    }
+    
+    /**
+     * Adds a door to a room.
+     * @param room
+     * @param door 
+     */
+    public static void addDoorToRoom(Room room, Door door)
+    {
+        room.getDoors().add(door);
+        door.setRoom(room);
+    }
+    
+    /**
+     * Creates a door and adds it to a room. Coordinates are relative to the room.
+     * So, if the room is stationed at 5, 5, 7, and you call with xyz params 2 2 2 to 4 8 4,
+     * a door will be created from 7 7 9  to 9 13 11.
+     * @param room
+     * @param x
+     * @param y
+     * @param z
+     * @param fx
+     * @param fy
+     * @param fz
+     * @param id
+     * @return 
+     */
+    public static Door addDoorToRoom(Room room, int x, int y, int z, int fx, int fy, int fz, String id)
+    {
+        int xR = Math.min(x, fx);
+        int yR = Math.min(y, fy);
+        int zR = Math.min(z, fz);
+        int fxR = Math.max(x, fx);
+        int fyR = Math.max(y, fy);
+        int fzR = Math.max(z, fz);
+        Door door = new Door(xR + room.getX(), yR, zR, fxR, fyR, fzR, id);
+        room.getDoors().add(door);
+        door.setRoom(room);
+        return door;
     }
 
 }

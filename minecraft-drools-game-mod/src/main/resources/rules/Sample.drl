@@ -4,6 +4,7 @@ import org.drools.minecraft.model.Room;
 import org.drools.minecraft.model.Session;
 import org.drools.minecraft.model.Player;
 import org.drools.minecraft.model.Item;
+import org.drools.minecraft.model.Door;
 import org.drools.minecraft.util.DroolsCommandInterface;
 import org.drools.minecraft.util.DroolsTestInterface;
 
@@ -26,13 +27,21 @@ end
 
 rule "Open the door when the player has the key"
     when
-        $r : Room(id == "LighthouseDoor")
-        $p : Player(roomsIn.contains($r))
+        $d : Door(id == "LighthouseDoor")
+        $p : Player(DroolsTestInterface.playerTouchingDoor($p, $d))
         Item(type == "item.key") from $p.getInventory()
         
     then
-        System.out.println("Player has key.");
-        DroolsCommandInterface.modifyBlocks(-85, 76, 437, -84, 79, 437, $r.getDimension(), DroolsCommandInterface.Blocks.Air);
-       
+       DroolsCommandInterface.openDoor($d);
+
 end
 
+rule "Close the door when we're not around."
+    when
+        $d : Door(id == "LighthouseDoor")
+        $p : Player(!DroolsTestInterface.playerTouchingDoor($p, $d))
+        
+    then
+       DroolsCommandInterface.closeDoor($d);
+
+end

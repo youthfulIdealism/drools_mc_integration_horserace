@@ -5,13 +5,11 @@
  */
 package org.drools.minecraft.model;
 
-import java.util.ArrayList;
-
 /**
  *
  * @author Samuel
  */
-public class Room
+public class Door
 {
     private int x;
     private int y;
@@ -19,79 +17,88 @@ public class Room
     private int fx;
     private int fy;
     private int fz;
-    private int dimension;
-    private String id;
-    
-    private ArrayList<Door> doors;
+    private Room room;
+    String id;
 
-    public Room(int x, int y, int z, int fx, int fy, int fz, String id) {
+    public Door(int x, int y, int z, int fx, int fy, int fz, String id)
+    {
         this.x = Math.min(x, fx);
         this.y = Math.min(y, fy);
         this.z = Math.min(z, fz);
         this.fx = Math.max(x, fx);
         this.fy = Math.max(y, fy);
         this.fz = Math.max(z, fz);
-        this.dimension = 0;
         this.id = id;
-        doors = new ArrayList<Door>();
     }
 
-    public int getX() {
+    public int getX()
+    {
         return x;
     }
 
-    public void setX(int x) {
+    public void setX(int x)
+    {
         this.x = x;
     }
 
-    public int getY() {
+    public int getY()
+    {
         return y;
     }
 
-    public void setY(int y) {
+    public void setY(int y)
+    {
         this.y = y;
     }
 
-    public int getZ() {
+    public int getZ()
+    {
         return z;
     }
 
-    public void setZ(int z) {
+    public void setZ(int z)
+    {
         this.z = z;
     }
 
-    public int getFx() {
+    public int getFx()
+    {
         return fx;
     }
 
-    public void setFx(int fx) {
+    public void setFx(int fx)
+    {
         this.fx = fx;
     }
 
-    public int getFy() {
+    public int getFy()
+    {
         return fy;
     }
 
-    public void setFy(int fy) {
+    public void setFy(int fy)
+    {
         this.fy = fy;
     }
 
-    public int getFz() {
+    public int getFz()
+    {
         return fz;
     }
 
-    public void setFz(int fz) {
+    public void setFz(int fz)
+    {
         this.fz = fz;
     }
 
-    public int getDimension()
+    public Room getRoom()
     {
-        return dimension;
+        return room;
     }
 
-    public void setDimension(int dimension)
+    public void setRoom(Room room)
     {
-        this.dimension = dimension;
+        this.room = room;
     }
 
     public String getId()
@@ -103,17 +110,7 @@ public class Room
     {
         this.id = id;
     }
+    
+    
 
-    public ArrayList<Door> getDoors()
-    {
-        return doors;
-    }
-
-    public void setDoors(ArrayList<Door> doors)
-    {
-        this.doors = doors;
-    }
-    
-    
-    
 }

@@ -15,6 +15,7 @@ import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import org.drools.minecraft.model.Door;
 import org.drools.minecraft.model.Item;
 import org.drools.minecraft.model.Player;
 import org.drools.minecraft.model.Room;
@@ -72,9 +73,17 @@ public class Adapter
         }
         //kSession.insert(this);
 
-        Room defaultRoom = new Room(-85, 76, 438, -83, 79, 438, "LighthouseDoor");
+        /*Room defaultRoom = new Room(-85, 76, 438, -83, 79, 438, "LighthouseDoor");
         rooms.add(defaultRoom);
-        kSession.insert(defaultRoom);
+        kSession.insert(defaultRoom);*/
+        
+        Room lightHouseInterior = new Room(-81, 76, 436, -88, 87, 429, "LighthouseInterior");
+        rooms.add(lightHouseInterior);
+        kSession.insert(lightHouseInterior);
+        
+        Door lighthouseDoor = new Door(-85, 76, 437, -84, 79, 437, "LighthouseDoor");
+        lighthouseDoor.setRoom(lightHouseInterior);
+        kSession.insert(lighthouseDoor);
     }
 
     /**

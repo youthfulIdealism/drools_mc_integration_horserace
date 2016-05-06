@@ -13,13 +13,11 @@ public class Player {
     private int xloc;
     private int yloc;
     private int zloc;
-    //private Inventory inventory;
     private ArrayList<Room> roomsIn;
     private ArrayList<Item> inventory;
     private boolean inventoryDirty;
 
     public Player() {
-        //inventory = new Inventory();
         roomsIn = new ArrayList<Room>();
         inventory = new ArrayList<Item>();
         inventoryDirty = true;
@@ -66,14 +64,6 @@ public class Player {
     {
         this.inventoryDirty = inventoryDirty;
     }
-    
-    /*public Inventory getInventory() {
-        return inventory;
-    }
-
-    public void setInventory(Inventory inventory) {
-        this.inventory = inventory;
-    }*/
 
     public ArrayList<Room> getRoomsIn() {
         return roomsIn;
