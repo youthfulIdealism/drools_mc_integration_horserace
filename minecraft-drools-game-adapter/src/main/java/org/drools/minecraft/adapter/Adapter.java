@@ -16,7 +16,9 @@ import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.drools.minecraft.model.Door;
+import org.drools.minecraft.model.Event;
 import org.drools.minecraft.model.Item;
+import org.drools.minecraft.model.Location;
 import org.drools.minecraft.model.Player;
 import org.drools.minecraft.model.Room;
 import org.drools.minecraft.model.Session;
@@ -57,8 +59,6 @@ public class Adapter
         dimensions = new HashMap<Integer, World>();
         rooms = new ArrayList<Room>();
 
-        System.out.println("Adapter built!");
-
         try
         {
             // load up the knowledge base
@@ -71,12 +71,6 @@ public class Adapter
         {
             t.printStackTrace();
         }
-        //kSession.insert(this);
-
-        /*Room defaultRoom = new Room(-85, 76, 438, -83, 79, 438, "LighthouseDoor");
-        rooms.add(defaultRoom);
-        kSession.insert(defaultRoom);*/
-        
         Room lightHouseInterior = new Room(-81, 76, 436, -88, 87, 429, "LighthouseInterior");
         rooms.add(lightHouseInterior);
         kSession.insert(lightHouseInterior);
@@ -84,6 +78,8 @@ public class Adapter
         Door lighthouseDoor = new Door(-85, 76, 437, -84, 79, 437, "LighthouseDoor");
         lighthouseDoor.setRoom(lightHouseInterior);
         kSession.insert(lighthouseDoor);
+        
+        kSession.insert(new Event("Setup"));
     }
 
     /**
@@ -95,9 +91,10 @@ public class Adapter
         for (EntityPlayer player : world.playerEntities)
         {
             Player droolsPlayer = players.get(player.getName());
-            droolsPlayer.setXloc(player.getPosition().getX());
-            droolsPlayer.setYloc(player.getPosition().getY());
-            droolsPlayer.setZloc(player.getPosition().getZ());
+            Location playerLoc = droolsPlayer.getLocation();
+            playerLoc.setX(player.getPosition().getX());
+            playerLoc.setY(player.getPosition().getY());
+            playerLoc.setZ(player.getPosition().getZ());
             if(droolsPlayer.getInventoryDirty())
             {
                 rebuildInventory(player);
@@ -232,9 +229,12 @@ public class Adapter
     
     public boolean playerWithinRoom(Player player, Room room)
     {
-        boolean xWithin = within(player.getXloc(), room.getX(), room.getFx());
-        boolean yWithin = within(player.getYloc(), room.getY(), room.getFy());
-        boolean zWithin = within(player.getZloc(), room.getZ(), room.getFz());
+        Location playerLoc = player.getLocation();
+        Location roomLowerLoc = room.getLowerBound();
+        Location roomUpperLoc = room.getUpperBound();
+        boolean xWithin = within(playerLoc.getX(), roomLowerLoc.getX(), roomUpperLoc.getX());
+        boolean yWithin = within(playerLoc.getY(), roomLowerLoc.getY(), roomUpperLoc.getY());
+        boolean zWithin = within(playerLoc.getZ(), roomLowerLoc.getZ(), roomUpperLoc.getZ());
         return xWithin && yWithin && zWithin;
     }
     

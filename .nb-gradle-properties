@@ -14,4 +14,16 @@
       <task-jvm-args/>
     </task>
   </common-tasks>
+  <auxiliary>
+    <spellchecker-wordlist xmlns="http://www.netbeans.org/ns/spellchecker-wordlist/1">
+      <word>closeDoor</word>
+      <word>DroolsCommandInterface</word>
+      <word>DroolsTestInterface</word>
+      <word>getInventory</word>
+      <word>openDoor</word>
+      <word>placeChest</word>
+      <word>playerTouchingDoor</word>
+      <word>setHasFired</word>
+    </spellchecker-wordlist>
+  </auxiliary>
 </gradle-project-properties>

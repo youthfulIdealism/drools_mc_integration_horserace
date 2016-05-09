@@ -13,77 +13,44 @@ import java.util.ArrayList;
  */
 public class Room
 {
-    private int x;
-    private int y;
-    private int z;
-    private int fx;
-    private int fy;
-    private int fz;
+    Location lowerBound;
+    Location upperBound;
+    
     private int dimension;
     private String id;
     
     private ArrayList<Door> doors;
+    private ArrayList<Location> chests;
 
     public Room(int x, int y, int z, int fx, int fy, int fz, String id) {
-        this.x = Math.min(x, fx);
-        this.y = Math.min(y, fy);
-        this.z = Math.min(z, fz);
-        this.fx = Math.max(x, fx);
-        this.fy = Math.max(y, fy);
-        this.fz = Math.max(z, fz);
+        lowerBound = new Location(Math.min(x, fx), Math.min(y, fy), Math.min(z, fz));
+        upperBound = new Location(Math.max(x, fx), Math.max(y, fy), Math.max(z, fz));
         this.dimension = 0;
         this.id = id;
         doors = new ArrayList<Door>();
+        chests = new ArrayList<Location>();
     }
 
-    public int getX() {
-        return x;
+    public Location getLowerBound()
+    {
+        return lowerBound;
     }
 
-    public void setX(int x) {
-        this.x = x;
+    public void setLowerBound(Location lowerBound)
+    {
+        this.lowerBound = lowerBound;
     }
 
-    public int getY() {
-        return y;
+    public Location getUpperBound()
+    {
+        return upperBound;
     }
 
-    public void setY(int y) {
-        this.y = y;
+    public void setUpperBound(Location upperBound)
+    {
+        this.upperBound = upperBound;
     }
-
-    public int getZ() {
-        return z;
-    }
-
-    public void setZ(int z) {
-        this.z = z;
-    }
-
-    public int getFx() {
-        return fx;
-    }
-
-    public void setFx(int fx) {
-        this.fx = fx;
-    }
-
-    public int getFy() {
-        return fy;
-    }
-
-    public void setFy(int fy) {
-        this.fy = fy;
-    }
-
-    public int getFz() {
-        return fz;
-    }
-
-    public void setFz(int fz) {
-        this.fz = fz;
-    }
-
+    
     public int getDimension()
     {
         return dimension;
@@ -113,7 +80,15 @@ public class Room
     {
         this.doors = doors;
     }
-    
-    
+
+    public ArrayList<Location> getChests()
+    {
+        return chests;
+    }
+
+    public void setChests(ArrayList<Location> chests)
+    {
+        this.chests = chests;
+    }
     
 }

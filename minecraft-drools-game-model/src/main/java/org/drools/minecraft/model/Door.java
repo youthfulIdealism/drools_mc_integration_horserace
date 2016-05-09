@@ -11,86 +11,50 @@ package org.drools.minecraft.model;
  */
 public class Door
 {
-    private int x;
-    private int y;
-    private int z;
-    private int fx;
-    private int fy;
-    private int fz;
+    
+    Location lowerBound;
+    Location upperBound;
     private Room room;
+    
     String id;
 
-    public Door(int x, int y, int z, int fx, int fy, int fz, String id)
+    public Door(Location lowerBound, Location upperBound, Room room, String id)
     {
-        this.x = Math.min(x, fx);
-        this.y = Math.min(y, fy);
-        this.z = Math.min(z, fz);
-        this.fx = Math.max(x, fx);
-        this.fy = Math.max(y, fy);
-        this.fz = Math.max(z, fz);
+        this.lowerBound = lowerBound;
+        this.upperBound = upperBound;
+        this.room = room;
         this.id = id;
     }
 
-    public int getX()
+    
+    
+    public Door(int x, int y, int z, int fx, int fy, int fz, String id)
     {
-        return x;
+        lowerBound = new Location(Math.min(x, fx), Math.min(y, fy), Math.min(z, fz));
+        upperBound = new Location(Math.max(x, fx), Math.max(y, fy), Math.max(z, fz));
+        this.id = id;
     }
 
-    public void setX(int x)
+    public Location getLowerBound()
     {
-        this.x = x;
+        return lowerBound;
     }
 
-    public int getY()
+    public void setLowerBound(Location lowerBound)
     {
-        return y;
+        this.lowerBound = lowerBound;
     }
 
-    public void setY(int y)
+    public Location getUpperBound()
     {
-        this.y = y;
+        return upperBound;
     }
 
-    public int getZ()
+    public void setUpperBound(Location upperBound)
     {
-        return z;
+        this.upperBound = upperBound;
     }
-
-    public void setZ(int z)
-    {
-        this.z = z;
-    }
-
-    public int getFx()
-    {
-        return fx;
-    }
-
-    public void setFx(int fx)
-    {
-        this.fx = fx;
-    }
-
-    public int getFy()
-    {
-        return fy;
-    }
-
-    public void setFy(int fy)
-    {
-        this.fy = fy;
-    }
-
-    public int getFz()
-    {
-        return fz;
-    }
-
-    public void setFz(int fz)
-    {
-        this.fz = fz;
-    }
-
+    
     public Room getRoom()
     {
         return room;
@@ -111,6 +75,4 @@ public class Door
         this.id = id;
     }
     
-    
-
 }

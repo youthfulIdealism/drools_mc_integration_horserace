@@ -4,7 +4,7 @@ package org.drools.minecraft.model;
 public class Event {
 
     private String id;
-    protected boolean hasFired;
+    private boolean hasFired;
 
     public Event(String id) {
         this.id = id;

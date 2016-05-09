@@ -9,44 +9,31 @@ import java.util.ArrayList;
  *
  */
 public class Player {
-
-    private int xloc;
-    private int yloc;
-    private int zloc;
+    
     private ArrayList<Room> roomsIn;
     private ArrayList<Item> inventory;
     private boolean inventoryDirty;
+    private Location location;
 
     public Player() {
         roomsIn = new ArrayList<Room>();
         inventory = new ArrayList<Item>();
         inventoryDirty = true;
+        location = new Location(0, 0, 0);
     }
 
-    public int getXloc() {
-        return xloc;
+    public Location getLocation()
+    {
+        return location;
     }
 
-    public void setXloc(int xloc) {
-        this.xloc = xloc;
+    public void setLocation(Location location)
+    {
+        this.location = location;
     }
 
-    public int getYloc() {
-        return yloc;
-    }
-
-    public void setYloc(int yloc) {
-        this.yloc = yloc;
-    }
-
-    public int getZloc() {
-        return zloc;
-    }
-
-    public void setZloc(int zloc) {
-        this.zloc = zloc;
-    }
-
+    
+    
     public ArrayList<Item> getInventory() {
         return inventory;
     }

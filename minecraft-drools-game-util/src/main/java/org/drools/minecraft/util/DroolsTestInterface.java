@@ -3,6 +3,7 @@ package org.drools.minecraft.util;
 import org.drools.minecraft.model.Door;
 import org.drools.minecraft.model.Player;
 import org.drools.minecraft.model.Item;
+import org.drools.minecraft.model.Location;
 import org.drools.minecraft.model.Room;
 
 /**
@@ -34,11 +35,15 @@ public class DroolsTestInterface
 
     public static boolean playerTouchingDoor(Player player, Door door)
     {
-        if (player.getXloc() >= door.getX() - 1 && player.getXloc() <= door.getFx() + 1)
+        Location playerLoc = player.getLocation();
+        
+        Location doorLower = door.getLowerBound();
+        Location doorUpper = door.getUpperBound();
+        if (playerLoc.getX() >= doorLower.getX() - 1 && playerLoc.getX() <= doorUpper.getX() + 1)
         {
-            if (player.getYloc() >= door.getY() - 1 && player.getYloc() <= door.getFy() + 1)
+            if (playerLoc.getY() >= doorLower.getY() - 1 && playerLoc.getY() <= doorUpper.getY() + 1)
             {
-                if (player.getZloc() >= door.getZ() - 1 && player.getZloc() <= door.getFz() + 1)
+                if (playerLoc.getZ() >= doorLower.getZ() - 1 && playerLoc.getZ() <= doorUpper.getZ() + 1)
                 {
                     return true;
                 }

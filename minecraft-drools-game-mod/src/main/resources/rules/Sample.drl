@@ -7,12 +7,20 @@ import org.drools.minecraft.model.Item;
 import org.drools.minecraft.model.Door;
 import org.drools.minecraft.util.DroolsCommandInterface;
 import org.drools.minecraft.util.DroolsTestInterface;
+import org.drools.minecraft.model.Event;
+
+import java.util.ArrayList;
 
 rule "Setup"
     when
-        //I'm a stub!
+        $startup : Event(id == "Setup" && !hasFired)
     then
-        //I'm the continuation of a stub!
+        ArrayList<Item> chestContents = new ArrayList<Item>();
+        chestContents.add(new Item("key", 1));
+        chestContents.add(new Item("bread", 12));
+        
+        DroolsCommandInterface.placeChest(-91, 64, 433, 0, chestContents);
+        $startup.setHasFired(true);
 end
 
 
