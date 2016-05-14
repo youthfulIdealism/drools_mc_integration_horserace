@@ -24,15 +24,6 @@ rule "Setup"
 end
 
 
-rule "Update"
-no-loop
-    when
-        //I'm a stub, and maybe should go away entirely!
-    then
-        //I'm still a stub!
-        
-end
-
 rule "Open the door when the player has the key"
     when
         $d : Door(id == "LighthouseDoor")

@@ -19,7 +19,7 @@ public class InitCommon
     	public static void preInit(FMLPreInitializationEvent event)
 	{
 		//TODO: add side:server only?
-		MinecraftForge.EVENT_BUS.register(new Adapter());
+		MinecraftForge.EVENT_BUS.register(Adapter.getInstance());
 	}
 	
 	public static void init(FMLInitializationEvent event)

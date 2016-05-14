@@ -113,7 +113,7 @@ public class DroolsCommandInterface
             {
                 for (int dy = Math.min(y, fy); dy <= Math.max(y, fy); dy++)
                 {
-                    Adapter.getDimensions().get(dimension).setBlockState(new BlockPos(dx, dy, dz), match.block.getDefaultState());
+                    Adapter.getInstance().getDimensions().get(dimension).setBlockState(new BlockPos(dx, dy, dz), match.block.getDefaultState());
                 }
             }
         }
@@ -190,8 +190,8 @@ public class DroolsCommandInterface
     {
         BlockPos placeLocation = new BlockPos(x, y, z);
 
-        Adapter.getDimensions().get(dimension).setBlockState(placeLocation, net.minecraft.init.Blocks.chest.getDefaultState(), 2);
-        TileEntity chestEntity = Adapter.getDimensions().get(dimension).getTileEntity(placeLocation);
+        Adapter.getInstance().getDimensions().get(dimension).setBlockState(placeLocation, net.minecraft.init.Blocks.chest.getDefaultState(), 2);
+        TileEntity chestEntity = Adapter.getInstance().getDimensions().get(dimension).getTileEntity(placeLocation);
 
         if (chestEntity instanceof TileEntityChest)
         {
@@ -221,8 +221,8 @@ public class DroolsCommandInterface
         BlockPos placeLocation = new BlockPos(roomLocation.getX() + x, roomLocation.getY() + y, roomLocation.getZ() + z);
         room.getChests().add(new Location(placeLocation.getX(), placeLocation.getY(), placeLocation.getZ()));
 
-        Adapter.getDimensions().get(room.getDimension()).setBlockState(placeLocation, net.minecraft.init.Blocks.chest.getDefaultState(), 2);
-        TileEntity chestEntity = Adapter.getDimensions().get(room.getDimension()).getTileEntity(placeLocation);
+        Adapter.getInstance().getDimensions().get(room.getDimension()).setBlockState(placeLocation, net.minecraft.init.Blocks.chest.getDefaultState(), 2);
+        TileEntity chestEntity = Adapter.getInstance().getDimensions().get(room.getDimension()).getTileEntity(placeLocation);
 
         if (chestEntity instanceof TileEntityChest)
         {

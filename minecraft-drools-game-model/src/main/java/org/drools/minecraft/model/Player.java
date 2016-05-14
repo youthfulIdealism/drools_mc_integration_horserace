@@ -1,6 +1,7 @@
 package org.drools.minecraft.model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Stub class used to wrap the player.
@@ -10,14 +11,18 @@ import java.util.ArrayList;
  */
 public class Player {
     
-    private ArrayList<Room> roomsIn;
-    private ArrayList<Item> inventory;
+    private List<Room> roomsIn;
+    
+    /*
+    TODO: replace this with the Item interface instead
+    */
+    private List<Item> inventory;
     private boolean inventoryDirty;
     private Location location;
 
     public Player() {
-        roomsIn = new ArrayList<Room>();
-        inventory = new ArrayList<Item>();
+        roomsIn = new ArrayList<>();
+        inventory = new ArrayList<>();
         inventoryDirty = true;
         location = new Location(0, 0, 0);
     }
@@ -34,11 +39,11 @@ public class Player {
 
     
     
-    public ArrayList<Item> getInventory() {
+    public List<Item> getInventory() {
         return inventory;
     }
 
-    public void setInventory(ArrayList<Item> inventory) {
+    public void setInventory(List<Item> inventory) {
         this.inventory = inventory;
     }
 
@@ -52,11 +57,11 @@ public class Player {
         this.inventoryDirty = inventoryDirty;
     }
 
-    public ArrayList<Room> getRoomsIn() {
+    public List<Room> getRoomsIn() {
         return roomsIn;
     }
 
-    public void setRoomsIn(ArrayList<Room> roomsIn) {
+    public void setRoomsIn(List<Room> roomsIn) {
         this.roomsIn = roomsIn;
     }
 

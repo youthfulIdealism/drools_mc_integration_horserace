@@ -6,21 +6,30 @@
 package org.drools.minecraft.model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
  * @author Samuel
  */
-public class Room
-{
-    Location lowerBound;
-    Location upperBound;
-    
-    private int dimension;
+public class Room {
+
     private String id;
-    
-    private ArrayList<Door> doors;
-    private ArrayList<Location> chests;
+
+    private Location lowerBound;
+    private Location upperBound;
+
+    private int dimension;
+
+    private List<Door> doors;
+
+    private List<Location> chests;
+
+    private List<IItem> items;
+
+    public Room(String id) {
+        this.id = id;
+    }
 
     public Room(int x, int y, int z, int fx, int fy, int fz, String id) {
         lowerBound = new Location(Math.min(x, fx), Math.min(y, fy), Math.min(z, fz));
@@ -31,64 +40,70 @@ public class Room
         chests = new ArrayList<Location>();
     }
 
-    public Location getLowerBound()
-    {
+    public Location getLowerBound() {
         return lowerBound;
     }
 
-    public void setLowerBound(Location lowerBound)
-    {
+    public void setLowerBound(Location lowerBound) {
         this.lowerBound = lowerBound;
     }
 
-    public Location getUpperBound()
-    {
+    public Location getUpperBound() {
         return upperBound;
     }
 
-    public void setUpperBound(Location upperBound)
-    {
+    public void setUpperBound(Location upperBound) {
         this.upperBound = upperBound;
     }
-    
-    public int getDimension()
-    {
+
+    public int getDimension() {
         return dimension;
     }
 
-    public void setDimension(int dimension)
-    {
+    public void setDimension(int dimension) {
         this.dimension = dimension;
     }
 
-    public String getId()
-    {
+    public String getId() {
         return id;
     }
 
-    public void setId(String id)
-    {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public ArrayList<Door> getDoors()
-    {
+    public List<Door> getDoors() {
         return doors;
     }
 
-    public void setDoors(ArrayList<Door> doors)
-    {
+    public void setDoors(List<Door> doors) {
         this.doors = doors;
     }
 
-    public ArrayList<Location> getChests()
-    {
+    public void addDoor(Door door) {
+        if (this.doors == null) {
+            this.doors = new ArrayList<>();
+        }
+        this.doors.add(door);
+    }
+
+    public List<Location> getChests() {
         return chests;
     }
 
-    public void setChests(ArrayList<Location> chests)
-    {
+    public void setChests(List<Location> chests) {
         this.chests = chests;
     }
-    
+
+    public void addItem(IItem item) {
+        if (this.items == null) {
+            this.items = new ArrayList<>();
+        }
+        this.items.add(item);
+    }
+
+    public List<IItem> getItems() {
+        return items;
+    }
+
 }

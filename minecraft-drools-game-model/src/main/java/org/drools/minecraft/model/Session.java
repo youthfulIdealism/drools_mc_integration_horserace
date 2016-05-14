@@ -9,11 +9,11 @@ package org.drools.minecraft.model;
  *
  * @author Samuel
  */
-public class Session
-{
-    Player player;
-    public Session(Player player)
-    {
+public class Session {
+
+    private Player player;
+
+    public Session(Player player) {
         this.player = player;
     }
 
@@ -24,5 +24,5 @@ public class Session
     public void setPlayer(Player player) {
         this.player = player;
     }
-    
+
 }
