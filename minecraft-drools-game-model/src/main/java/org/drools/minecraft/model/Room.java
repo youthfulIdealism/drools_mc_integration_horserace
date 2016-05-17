@@ -23,21 +23,20 @@ public class Room {
 
     private List<Door> doors;
 
-    private List<Location> chests;
-
     private List<IItem> items;
+    
+    private List<String> playersInRoom  = new ArrayList<>();
 
     public Room(String id) {
         this.id = id;
     }
 
     public Room(int x, int y, int z, int fx, int fy, int fz, String id) {
+        this.id = id;
         lowerBound = new Location(Math.min(x, fx), Math.min(y, fy), Math.min(z, fz));
         upperBound = new Location(Math.max(x, fx), Math.max(y, fy), Math.max(z, fz));
         this.dimension = 0;
-        this.id = id;
-        doors = new ArrayList<Door>();
-        chests = new ArrayList<Location>();
+        doors = new ArrayList<>();
     }
 
     public Location getLowerBound() {
@@ -87,13 +86,6 @@ public class Room {
         this.doors.add(door);
     }
 
-    public List<Location> getChests() {
-        return chests;
-    }
-
-    public void setChests(List<Location> chests) {
-        this.chests = chests;
-    }
 
     public void addItem(IItem item) {
         if (this.items == null) {
@@ -105,5 +97,30 @@ public class Room {
     public List<IItem> getItems() {
         return items;
     }
+
+    public List<String> getPlayersInRoom() {
+        return playersInRoom;
+    }
+
+    public void setPlayersInRoom(List<String> playersInRoom) {
+        this.playersInRoom = playersInRoom;
+    }
+    
+    public void addPlayer(String player){
+        this.playersInRoom.add(player);
+    }
+    
+    public void removePlayer(String player){
+        this.playersInRoom.remove(player);
+    }
+
+    @Override
+    public String toString() {
+        return "Room{" + "id=" + id + ", lowerBound=" + lowerBound + ", upperBound=" + upperBound + ", dimension=" + dimension + ", doors=" + doors + ", items=" + items + ", playersInRoom=" + playersInRoom + '}';
+    }
+    
+    
+   
+    
 
 }

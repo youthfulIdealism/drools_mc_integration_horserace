@@ -55,7 +55,8 @@ public class ModelJUnitTest {
         Room roomA = new Room("Room A");
         Door door1 = new Door("to Room B");
         Chest chestA = new Chest("Chest A");
-        chestA.addItem(new Key("to Room B"));
+        Key key1 = new Key("to Room B");
+        chestA.addItem(key1);
         roomA.addItem(chestA);
         roomA.addDoor(door1);
 
@@ -64,7 +65,8 @@ public class ModelJUnitTest {
 
         Room roomB = new Room("Room B");
         Chest chestB = new Chest("Chest B");
-        chestB.addItem(new Key("Exit Door"));
+        Key key2 = new Key("Exit Door");
+        chestB.addItem(key2);
         roomB.addItem(chestB);
 
         Door exitDoor = new Door("Exit Door");
@@ -76,10 +78,11 @@ public class ModelJUnitTest {
         // name of the Door in that room
         assertTrue(((Chest)roomB.getItems().get(0)).getContent().get(0).getName().equals(roomB.getDoors().get(0).getId()));
 
-        /*
-        @TODO: add here how the Player will get the Key from the chest
-        and how it will keep things in the player inventory, Look at the TODO in the player class
+        player.getInventory().add(key1);
+        player.getInventory().add(key2);
         
-         */
+        assertEquals(2, player.getInventory().size());
+        
+        
     }
 }

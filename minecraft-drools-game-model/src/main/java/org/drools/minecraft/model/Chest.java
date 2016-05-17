@@ -16,9 +16,15 @@ public class Chest implements IItem {
 
     private String name;
     private List<IItem> content;
+    private Location location;
 
     public Chest(String name) {
         this.name = name;
+    }
+
+    public Chest(String name, Location location) {
+        this.name = name;
+        this.location = location;
     }
 
     @Override
@@ -43,6 +49,25 @@ public class Chest implements IItem {
             this.content = new ArrayList<>();
         }
         this.content.add(item);
+    }
+
+    @Override
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
+    }
+
+    @Override
+    public String getType() {
+        return "item.chest";
+    }
+
+    @Override
+    public String toString() {
+        return "Chest{" + "name=" + name + ", content=" + content + '}';
     }
 
 }

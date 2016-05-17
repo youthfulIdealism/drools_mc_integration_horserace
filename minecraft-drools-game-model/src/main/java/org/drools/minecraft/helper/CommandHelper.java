@@ -3,14 +3,18 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.drools.minecraft.model;
+package org.drools.minecraft.helper;
+
+import org.drools.minecraft.model.Door;
 
 /**
  *
  * @author salaboy
  */
-public interface IItem {
-    public String getName();
-    public String getType();
-    public Location getLocation();
+public interface CommandHelper {
+    
+    public void openDoor(Door door);
+    
+    public void closeDoor(Door door);
+    
 }

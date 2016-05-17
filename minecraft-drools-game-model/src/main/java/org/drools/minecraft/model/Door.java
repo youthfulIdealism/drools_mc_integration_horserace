@@ -13,23 +13,18 @@ public class Door {
 
     private Location lowerBound;
     private Location upperBound;
-    private Room room;
 
     private String id;
-    
-    /* TODO
-       The door should have a boolean for demarcating the status of the door.
-    */
+
+    private boolean open = false;
 
     public Door(String id) {
         this.id = id;
     }
-    
 
-    public Door(Location lowerBound, Location upperBound, Room room, String id) {
+    public Door(Location lowerBound, Location upperBound, String id) {
         this.lowerBound = lowerBound;
         this.upperBound = upperBound;
-        this.room = room;
         this.id = id;
     }
 
@@ -55,13 +50,6 @@ public class Door {
         this.upperBound = upperBound;
     }
 
-    public Room getRoom() {
-        return room;
-    }
-
-    public void setRoom(Room room) {
-        this.room = room;
-    }
 
     public String getId() {
         return id;
@@ -70,5 +58,20 @@ public class Door {
     public void setId(String id) {
         this.id = id;
     }
+
+    public boolean isOpen() {
+        return open;
+    }
+
+    public void setOpen(boolean open) {
+        this.open = open;
+    }
+
+    @Override
+    public String toString() {
+        return "Door{ id=" + id + ", open=" + open + '}';
+    }
+    
+    
 
 }

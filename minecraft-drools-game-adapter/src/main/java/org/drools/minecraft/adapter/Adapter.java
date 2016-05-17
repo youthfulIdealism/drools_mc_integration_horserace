@@ -7,6 +7,8 @@ package org.drools.minecraft.adapter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
@@ -15,11 +17,8 @@ import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import org.drools.minecraft.adapter.listener.ModAgendaEventListener;
-import org.drools.minecraft.adapter.listener.ModRuleRuntimeEventListener;
 import org.drools.minecraft.model.Door;
 import org.drools.minecraft.model.Event;
-import org.drools.minecraft.model.Item;
 import org.drools.minecraft.model.Location;
 import org.drools.minecraft.model.Player;
 import org.drools.minecraft.model.Room;
@@ -82,11 +81,11 @@ public class Adapter {
     private void constructWorld() {
         if (kSession != null) {
             Room lightHouseInterior = new Room(-81, 76, 436, -88, 87, 429, "LighthouseInterior");
-            rooms.add(lightHouseInterior);
+            
             kSession.insert(lightHouseInterior);
 
             Door lighthouseDoor = new Door(-85, 76, 437, -84, 79, 437, "LighthouseDoor");
-            lighthouseDoor.setRoom(lightHouseInterior);
+            
             kSession.insert(lighthouseDoor);
         } else {
             throw new IllegalStateException("There is no KieSession available, the rules will not work");
@@ -131,9 +130,8 @@ public class Adapter {
     public void onServerTick(TickEvent.WorldTickEvent event) {
         if (!event.world.isRemote) {
             throttle++;
-            
+
             if (throttle % 50 == 0) {
-                System.out.println("Current Time Millis: "+ System.currentTimeMillis());
                 //for simplicity's sake, this locks the adapter into only working
                 //in the default dimension. Rules will not work in the nether or end.
                 //We should change this at some point.
@@ -180,13 +178,22 @@ public class Adapter {
         for (int i = 0; i < entity.inventory.mainInventory.length; i++) {
             ItemStack stack = entity.inventory.mainInventory[i];
             if (stack != null) {
-                player.getInventory().add(new Item(stack.getUnlocalizedName(), stack.stackSize));
+                try {
+                    //                player.getInventory().add(new Item(stack.getUnlocalizedName(), stack.stackSize));
+                    player.getInventory().add(ItemsFactory.newItem(stack.getUnlocalizedName()));
+                } catch (Exception ex) {
+                    Logger.getLogger(Adapter.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         }
         for (int i = 0; i < entity.inventory.armorInventory.length; i++) {
             ItemStack stack = entity.inventory.armorInventory[i];
             if (stack != null) {
-                player.getInventory().add(new Item(stack.getUnlocalizedName(), stack.stackSize));
+                try {
+                    player.getInventory().add(ItemsFactory.newItem(stack.getUnlocalizedName()));
+                } catch (Exception ex) {
+                    Logger.getLogger(Adapter.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         }
         kSession.update(kSession.getFactHandle(player.getInventory()), player.getInventory());

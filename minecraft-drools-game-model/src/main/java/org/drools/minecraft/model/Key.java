@@ -12,6 +12,7 @@ package org.drools.minecraft.model;
 public class Key implements IItem {
 
     private String name;
+    private Location location;
 
     public Key(String name) {
         this.name = name;
@@ -24,6 +25,25 @@ public class Key implements IItem {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
+    }
+
+    @Override
+    public String getType() {
+        return "item.key";
+    }
+
+    @Override
+    public String toString() {
+        return "Key{" + "name=" + name + '}';
     }
 
 }

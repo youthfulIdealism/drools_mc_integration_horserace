@@ -1,0 +1,79 @@
+package com.example
+ 
+import org.drools.minecraft.model.*;
+import org.drools.minecraft.model.Event;
+import org.drools.minecraft.helper.CommandHelper;
+import org.drools.minecraft.helper.TestHelper;
+
+
+import java.util.ArrayList;
+
+global CommandHelper cmds;
+global TestHelper    tests;
+
+/*
+rule "Setup"
+    when
+        $startup : Event(id == "Setup" && !hasFired)
+    then
+        ArrayList<Item> chestContents = new ArrayList<Item>();
+        chestContents.add(new Item("key", 1));
+        chestContents.add(new Item("bread", 12));
+        
+        DroolsCommandInterface.placeChest(-91, 64, 433, 0, chestContents);
+        $startup.setHasFired(true);
+end
+
+rule "Open the door when the player has the key"
+    when
+        $d : Door(id == "LighthouseDoor")
+        $p : Player(DroolsTestInterface.playerTouchingDoor($p, $d))
+        Item(type == "item.key") from $p.getInventory()
+        
+    then
+       cmds.openDoor($d);
+
+end
+
+rule "Close the door when we're not around."
+    when
+        $d : Door(id == "LighthouseDoor")
+        $p : Player(!DroolsTestInterface.playerTouchingDoor($p, $d))
+        
+    then
+       cmds.closeDoor($d);
+
+end
+
+*/
+
+rule "show content of the room where the player is"
+    when
+        $p: Player()
+        $r: Room(playersInRoom contains $p.getName())
+    then
+        for(IItem i : $r.getItems()){
+            System.out.println(">>> Item: "+ i);
+        }
+
+        for(IItem i : $p.getInventory()){
+            System.out.println(">>> Inventory Item: "+ i);
+        }
+end
+
+rule "Open the door when the player has the key matching that Door"
+    when
+        $p : Player()
+        
+        Key(name == "to Room B") from $p.getInventory()
+        $d : Door(id == "to Room B", open == false)
+        $r: Room(playersInRoom contains $p.getName(), doors contains $d)
+        
+    then    
+       modify($d){
+         setOpen(true);
+       }
+       cmds.openDoor($d);
+
+end
+

@@ -3,14 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.drools.minecraft.model;
+package org.drools.minecraft.rules;
+
+import org.drools.minecraft.helper.TestHelper;
 
 /**
  *
  * @author salaboy
  */
-public interface IItem {
-    public String getName();
-    public String getType();
-    public Location getLocation();
+public class MockTestHelper implements TestHelper {
+    
 }
