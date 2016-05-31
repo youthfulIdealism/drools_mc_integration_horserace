@@ -180,6 +180,7 @@ public class Adapter {
             if (stack != null) {
                 try {
                     //                player.getInventory().add(new Item(stack.getUnlocalizedName(), stack.stackSize));
+                    System.out.println(stack.getUnlocalizedName());
                     player.getInventory().add(ItemsFactory.newItem(stack.getUnlocalizedName()));
                 } catch (Exception ex) {
                     Logger.getLogger(Adapter.class.getName()).log(Level.SEVERE, null, ex);
