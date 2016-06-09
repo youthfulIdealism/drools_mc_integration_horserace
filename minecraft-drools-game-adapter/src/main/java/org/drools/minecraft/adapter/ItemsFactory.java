@@ -9,8 +9,8 @@ import java.util.HashMap;
 import java.util.Map;
 import org.drools.minecraft.model.BaseItem;
 import org.drools.minecraft.model.Chest;
-import org.drools.minecraft.model.IItem;
 import org.drools.minecraft.model.Key;
+import org.drools.minecraft.model.InventoryItem;
 
 /**
  *
@@ -18,32 +18,37 @@ import org.drools.minecraft.model.Key;
  */
 public class ItemsFactory {
 
-    public static final Map<String, Class<? extends IItem>> itemClasses = new HashMap<String, Class<? extends IItem>>();
+    public static final Map<String, Class<? extends InventoryItem>> itemClasses = new HashMap<String, Class<? extends InventoryItem>>();
 
     static {
         {
             itemClasses.put("key", Key.class);
-            itemClasses.put("chest", Chest.class);
 
         }
     }
 
-    public static IItem newItem(String itemName) throws ClassNotFoundException, InstantiationException, IllegalAccessException
+    /**
+     * Generates a new InventoryItem given the canonical name of an item. If the item is not found within this mod,
+     * a search is performed to try to find a corresponding item from vanilla minecraft or other registered mods, and
+     * shoves them into a BaseItem.
+     * @param itemName
+     * @return
+     * @throws ClassNotFoundException
+     * @throws InstantiationException
+     * @throws IllegalAccessException 
+     */
+    public static InventoryItem newItem(String itemName) throws ClassNotFoundException, InstantiationException, IllegalAccessException
     {
         Class referencedClass = itemClasses.get(itemName);
-        IItem newItem;
-        boolean instantiatingBaseItem = false;
+        InventoryItem newItem;
         
         if(referencedClass == null)
         {
-            instantiatingBaseItem = true;
             newItem = new BaseItem("", itemName);
-            
-            
         }else
         {
             String canonicalName = referencedClass.getCanonicalName();
-            newItem = (IItem) Class.forName(canonicalName).newInstance();
+            newItem = (InventoryItem) Class.forName(canonicalName).newInstance();
         }
 
         

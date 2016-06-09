@@ -80,6 +80,7 @@ public class Adapter {
 
         bootstrapKieSession();
         
+        //kSession.setGlobal("helper", helper);
         //we can't modify the world until after minecraft boots it up,
         //which is some time after the adapter has been constructed.
         //constructWorld();
@@ -135,21 +136,19 @@ public class Adapter {
             constructDoor(world, exitDoor);
             
             hasConstructedWorld = true;
-            
-            
-            
-            
-            /*Room lightHouseInterior = new Room(-81, 76, 436, -88, 87, 429, "LighthouseInterior");
-            
-            kSession.insert(lightHouseInterior);
-
-            Door lighthouseDoor = new Door(-85, 76, 437, -84, 79, 437, "LighthouseDoor");
-            
-            kSession.insert(lighthouseDoor);*/
         } else {
             throw new IllegalStateException("There is no KieSession available, the rules will not work");
         }
     }
+    
+    //
+    //
+    //
+    // I know that these helpers are massively ugly and probably in the wrong place. Don't worry about them quite yet,
+    // I'll move them when we get drools/MC communication closer to finished.
+    //
+    //
+    //
     
     /**
      * Constructs a room within minecraft.

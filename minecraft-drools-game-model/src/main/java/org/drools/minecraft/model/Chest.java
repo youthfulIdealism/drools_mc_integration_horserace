@@ -12,10 +12,10 @@ import java.util.List;
  *
  * @author salaboy
  */
-public class Chest implements IItem {
+public class Chest implements WorldItem {
 
     private String name;
-    private List<IItem> content;
+    private List<InventoryItem> contents;
     private Location location;
 
     public Chest(String name) {
@@ -27,28 +27,19 @@ public class Chest implements IItem {
         this.location = location;
     }
 
-    @Override
-    public String getName() {
-        return name;
+    public List<InventoryItem> getContents() {
+        return contents;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setContents(List<InventoryItem> content) {
+        this.contents = content;
     }
 
-    public List<IItem> getContent() {
-        return content;
-    }
-
-    public void setContent(List<IItem> content) {
-        this.content = content;
-    }
-
-    public void addItem(IItem item) {
-        if (this.content == null) {
-            this.content = new ArrayList<>();
+    public void addItem(InventoryItem item) {
+        if (this.contents == null) {
+            this.contents = new ArrayList<>();
         }
-        this.content.add(item);
+        this.contents.add(item);
     }
 
     @Override
@@ -67,7 +58,7 @@ public class Chest implements IItem {
 
     @Override
     public String toString() {
-        return "Chest{" + "name=" + name + ", content=" + content + '}';
+        return "Chest{" + "name=" + name + ", content=" + contents + '}';
     }
 
 }

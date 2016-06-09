@@ -76,7 +76,7 @@ public class ModelJUnitTest {
         assertEquals(1, roomB.getDoors().size());
         // Getting the chest from the Items in Room B and checking that the name of the Key (first item) is equals to the
         // name of the Door in that room
-        assertTrue(((Chest)roomB.getItems().get(0)).getContent().get(0).getName().equals(roomB.getDoors().get(0).getId()));
+        assertTrue(((Chest)roomB.getItems().get(0)).getContents().get(0).getName().equals(roomB.getDoors().get(0).getId()));
 
         player.getInventory().add(key1);
         player.getInventory().add(key2);

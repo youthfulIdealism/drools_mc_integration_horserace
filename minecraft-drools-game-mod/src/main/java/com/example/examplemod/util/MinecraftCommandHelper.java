@@ -21,7 +21,7 @@ import org.drools.minecraft.model.Location;
 import org.drools.minecraft.model.Room;
 import org.drools.minecraft.helper.CommandHelper;
 import org.drools.minecraft.model.Chest;
-import org.drools.minecraft.model.IItem;
+import org.drools.minecraft.model.InventoryItem;
 
 /**
  *
@@ -173,7 +173,7 @@ public class MinecraftCommandHelper implements CommandHelper {
      * @param world
      * @param contents
      */
-    public void placeChest(int x, int y, int z, int dimension, List<IItem> contents) {
+    public void placeChest(int x, int y, int z, int dimension, List<InventoryItem> contents) {
         BlockPos placeLocation = new BlockPos(x, y, z);
 
         Adapter.getInstance().getDimensions().get(dimension).setBlockState(placeLocation, net.minecraft.init.Blocks.chest.getDefaultState(), 2);
@@ -199,7 +199,7 @@ public class MinecraftCommandHelper implements CommandHelper {
      * @param world
      * @param contents
      */
-    public void placeChest(int x, int y, int z, Room room, ArrayList<IItem> contents) {
+    public void placeChest(int x, int y, int z, Room room, ArrayList<InventoryItem> contents) {
         Location roomLocation = room.getLowerBound();
         BlockPos placeLocation = new BlockPos(roomLocation.getX() + x, roomLocation.getY() + y, roomLocation.getZ() + z);
         room.getItems().add(new Chest("my chest",new Location(placeLocation.getX(), placeLocation.getY(), placeLocation.getZ())));
@@ -217,7 +217,7 @@ public class MinecraftCommandHelper implements CommandHelper {
         }
     }
 
-    public ItemStack droolsItemToItemStack(IItem item) {
+    public ItemStack droolsItemToItemStack(InventoryItem item) {
         net.minecraft.item.Item stackItem = GameRegistry.findItem("minecraft", item.getType());
         if (stackItem == null) {
             stackItem = GameRegistry.findItem("examplemod", item.getType());

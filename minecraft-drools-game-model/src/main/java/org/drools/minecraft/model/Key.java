@@ -9,10 +9,9 @@ package org.drools.minecraft.model;
  *
  * @author salaboy
  */
-public class Key implements IItem {
+public class Key implements InventoryItem {
 
     private String name;
-    private Location location;
 
     public Key(String name) {
         this.name = name;
@@ -25,15 +24,6 @@ public class Key implements IItem {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    @Override
-    public Location getLocation() {
-        return location;
-    }
-
-    public void setLocation(Location location) {
-        this.location = location;
     }
 
     @Override

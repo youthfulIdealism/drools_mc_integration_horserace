@@ -9,8 +9,7 @@ package org.drools.minecraft.model;
  *
  * @author salaboy
  */
-public interface IItem {
-    public String getName();
+public interface WorldItem {
     public String getType();
     public Location getLocation();
 }

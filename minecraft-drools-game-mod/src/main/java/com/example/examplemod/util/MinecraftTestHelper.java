@@ -1,11 +1,11 @@
 package com.example.examplemod.util;
 
 import org.drools.minecraft.model.Door;
-import org.drools.minecraft.model.IItem;
 import org.drools.minecraft.model.Player;
 import org.drools.minecraft.model.Location;
 import org.drools.minecraft.model.Room;
 import org.drools.minecraft.helper.TestHelper;
+import org.drools.minecraft.model.InventoryItem;
 
 /**
  *
@@ -17,7 +17,7 @@ import org.drools.minecraft.helper.TestHelper;
 public class MinecraftTestHelper implements TestHelper {
 
     public static boolean playerHasItem(Player player, String item) {
-        for (IItem inventoryItem : player.getInventory()) {
+        for (InventoryItem inventoryItem : player.getInventory()) {
             if (inventoryItem.getType().equals(item)) {
                 return true;
             }

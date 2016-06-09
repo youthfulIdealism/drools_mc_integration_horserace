@@ -23,7 +23,7 @@ public class Room {
 
     private List<Door> doors;
 
-    private List<IItem> items;
+    private List<WorldItem> items;
     
     private List<String> playersInRoom  = new ArrayList<>();
 
@@ -87,14 +87,14 @@ public class Room {
     }
 
 
-    public void addItem(IItem item) {
+    public void addItem(WorldItem item) {
         if (this.items == null) {
             this.items = new ArrayList<>();
         }
         this.items.add(item);
     }
 
-    public List<IItem> getItems() {
+    public List<WorldItem> getItems() {
         return items;
     }
 

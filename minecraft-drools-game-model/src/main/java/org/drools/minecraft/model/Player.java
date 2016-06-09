@@ -13,7 +13,7 @@ public class Player {
 
     private String name; 
     private List<Room> roomsIn;
-    private List<IItem> inventory;
+    private List<InventoryItem> inventory;
     private boolean inventoryDirty;
     private Location location;
 
@@ -37,11 +37,11 @@ public class Player {
         this.location = location;
     }
 
-    public List<IItem> getInventory() {
+    public List<InventoryItem> getInventory() {
         return inventory;
     }
 
-    public void setInventory(List<IItem> inventory) {
+    public void setInventory(List<InventoryItem> inventory) {
         this.inventory = inventory;
     }
 
