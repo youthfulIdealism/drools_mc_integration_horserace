@@ -5,18 +5,14 @@
  */
 package org.drools.minecraft.adapter;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Queue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -24,7 +20,6 @@ import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import org.drools.core.common.DefaultFactHandle;
 import org.drools.minecraft.helper.GlobalHelper;
 import org.drools.minecraft.helper.GlobalHelper.Notification;
@@ -52,11 +47,10 @@ public class Adapter {
     private KieSession kSession;
     private HashMap<String, Player> players;
     private HashMap<Integer, World> dimensions;
-    private ArrayList<Room> rooms;
 
     private static final Adapter instance = new Adapter();
     
-    //TODO: This shouldn't exist. I need it because the world can't be
+    //@TODO: This shouldn't exist. I need it because the world can't be
     //constructed until all setup has been finished. This means that we
     //can't construct the world until after the adapter is done being created.
     //This shouldnt matter in the long run, because the user should create
@@ -64,7 +58,7 @@ public class Adapter {
     //as soon as possible!
     private boolean hasConstructedWorld = false;
 
-    //TODO: this has to change, if we want rules accesible from different dimensions.
+    //@TODO: this has to change, if we want rules accesible from different dimensions.
     //public static World world;
     //ArrayList<DroolsPlayer> players;
     /**
@@ -74,13 +68,15 @@ public class Adapter {
     private Adapter() {
         players = new HashMap<String, Player>();
         dimensions = new HashMap<Integer, World>();
-        rooms = new ArrayList<Room>();
+        //rooms = new ArrayList<Room>();
 
         bootstrapKieSession();
         
         kSession.setGlobal("cmds", new GlobalHelper());
         //we can't modify the world until after minecraft boots it up,
         //which is some time after the adapter has been constructed.
+        //@TODO: relegate map creation to drools. I don't want the user
+        //touching minecraft code.
         //constructWorld();
 
         kSession.insert(new Event("Setup"));
@@ -106,31 +102,34 @@ public class Adapter {
     private void constructWorld(World world) {
         if (kSession != null) {
             //We must place our rooms/doors/etc relative to some point. I chose the player
-            //spawn point as that point.
+            //spawn point as that point. I then lift that point some ways into the air, because
+            //it kept trying to spawn underground.
             BlockPos relativeTo = world.getSpawnPoint().add(0, 40, 0);
             
+            //create rooms
             Room roomA = new Room(relativeTo.getX() - 5, relativeTo.getY() - 5, relativeTo.getZ() - 5, relativeTo.getX() + 5, relativeTo.getY() + 5, relativeTo.getZ() + 5, "RoomA");
-            rooms.add(roomA);
             UtilTerrainEdit.constructRoom(world, roomA);
             
             Room roomB = new Room(relativeTo.getX() + 5, relativeTo.getY() - 5, relativeTo.getZ() - 5, relativeTo.getX() + 15, relativeTo.getY() + 5, relativeTo.getZ() + 5, "RoomB");
-            rooms.add(roomB);
             UtilTerrainEdit.constructRoom(world, roomB);
             
-            Door door = new Door(relativeTo.getX() + 5, relativeTo.getY() - 5, relativeTo.getZ() - 1, relativeTo.getX() + 5, relativeTo.getY(), relativeTo.getZ() + 1, "ToRoomB");
+            //create doors
+            Door door = new Door(relativeTo.getX() + 5, relativeTo.getY() - 4, relativeTo.getZ() - 1, relativeTo.getX() + 5, relativeTo.getY(), relativeTo.getZ() + 1, "ToRoomB");
             roomA.addDoor(door);
             UtilTerrainEdit.constructDoor(world, door);
             
-            Chest chestA = new Chest("Chest A", new Location(relativeTo.getX() - 4, relativeTo.getY() - 4, relativeTo.getZ() - 4));
-            UtilTerrainEdit.placeKeyChest(world, new BlockPos(relativeTo.getX() - 4, relativeTo.getY() - 4, relativeTo.getZ() - 4));
-            
-            Chest chestB = new Chest("Chest B", new Location(relativeTo.getX() + 6, relativeTo.getY() - 5, relativeTo.getZ() - 5));
-            UtilTerrainEdit.placeKeyChest(world, new BlockPos(relativeTo.getX() + 6, relativeTo.getY() - 4, relativeTo.getZ() - 4));
-         
-            Door exitDoor = new Door(relativeTo.getX() + 15, relativeTo.getY() - 5, relativeTo.getZ() - 1, relativeTo.getX() + 15, relativeTo.getY(), relativeTo.getZ() + 1, "ExitDoor");
+            Door exitDoor = new Door(relativeTo.getX() + 15, relativeTo.getY() - 4, relativeTo.getZ() - 1, relativeTo.getX() + 15, relativeTo.getY(), relativeTo.getZ() + 1, "ExitDoor");
             roomA.addDoor(exitDoor);
             UtilTerrainEdit.constructDoor(world, exitDoor);
             
+            //create chests
+            Chest chestA = new Chest("Chest A", new Location(relativeTo.getX() - 4, relativeTo.getY() - 4, relativeTo.getZ() - 4));
+            UtilTerrainEdit.placeKeyChest(world, new BlockPos(relativeTo.getX() - 4, relativeTo.getY() - 4, relativeTo.getZ() - 4), "RoomBKey");
+            
+            Chest chestB = new Chest("Chest B", new Location(relativeTo.getX() + 6, relativeTo.getY() - 5, relativeTo.getZ() - 5));
+            UtilTerrainEdit.placeKeyChest(world, new BlockPos(relativeTo.getX() + 6, relativeTo.getY() - 4, relativeTo.getZ() - 4), "ExitKey");
+         
+            //insert everything
             kSession.insert(roomA);
             kSession.insert(roomB);
             kSession.insert(door);
@@ -138,6 +137,7 @@ public class Adapter {
             kSession.insert(chestB);
             kSession.insert(exitDoor);
             
+            //leave a flag so that the world isn't constructed repeatedly.
             hasConstructedWorld = true;
         } else {
             throw new IllegalStateException("There is no KieSession available, the rules will not work");
@@ -163,18 +163,26 @@ public class Adapter {
         }
         
         for (EntityPlayer player : world.playerEntities) {
+            
+            //update player locations
             Player droolsPlayer = players.get(player.getName());
             Location playerLoc = droolsPlayer.getLocation();
             playerLoc.setX(player.getPosition().getX());
             playerLoc.setY(player.getPosition().getY());
             playerLoc.setZ(player.getPosition().getZ());
+            
+            //if the inventory has been changed, rebuild it.
             if (droolsPlayer.getInventoryDirty()) {
                 rebuildInventory(player);
             }
             droolsPlayer.setInventoryDirty(false);
 
+            //if the player's location has caused him to change rooms,
+            //update this within the model.
             droolsPlayer.getRoomsIn().clear();
-            for (Room room : rooms) {
+            for (FactHandle handle : kSession.getFactHandles(new ClassObjectFilter(Room.class))) {
+                Room room = (Room) ((DefaultFactHandle) handle).getObject(); 
+                
                 if (playerWithinRoom(droolsPlayer, room)) {
                     room.addPlayer(player.getName());
                 }else
@@ -183,19 +191,37 @@ public class Adapter {
                 }
                 kSession.update(kSession.getFactHandle(room), room);
             }
+            
+            if(player.inventory.inventoryChanged)
+            {
+                rebuildInventory(player);
+                player.inventory.inventoryChanged = false;
+            }
+            
             kSession.update(kSession.getFactHandle(droolsPlayer), droolsPlayer);
         }
+        
+        //cause rules to fire
         kSession.fireAllRules();
+        
+        //react to changes made by drools by retrieving the helper
         GlobalHelper helper = (GlobalHelper)kSession.getGlobal("cmds");
         handleDroolsChanges(helper, world);
     }
     
+    /**
+     * Helper method to pass changes made within the rules
+     * to more specific helper methods.
+     * 
+     * @TODO: should we externalise this to another class?
+     * @param helper
+     * @param world 
+     */
     private void handleDroolsChanges(GlobalHelper helper, World world)
     {
         Queue<Notification> tasks = helper.getNotificationQueue();
         while(tasks.peek() != null)
         {
-            System.out.println("HANDLETASK");
             Notification current = tasks.poll();
             String[] parsedIndicator = current.getData().split(" ");
             if(parsedIndicator[0].equals("DOOR"))
@@ -205,11 +231,19 @@ public class Adapter {
         }
     }
     
+    /**
+     * Parses a notification and changes door blocks accordingly.
+     * 
+     * @param parsedIndicator
+     * @param doorList
+     * @param world 
+     */
     private void handleDroolsDoorChange(String[] parsedIndicator, List<Object> doorList, World world)
     {
         Door door = (Door)(doorList.get(0));
         if(parsedIndicator[1].equals("OPEN"))
         {
+            //@TODO: put the actual terrain changes in UtilTerrainEdit.
             Location lower = door.getLowerBound();
             Location upper = door.getUpperBound();
 
@@ -225,6 +259,7 @@ public class Adapter {
             }
         }else if(parsedIndicator[1].equals("CLOSED"))
         {
+            //@TODO: put the actual terrain changes in UtilTerrainEdit.
             Location lower = door.getLowerBound();
             Location upper = door.getUpperBound();
 
@@ -287,7 +322,7 @@ public class Adapter {
     }
     
     /**
-     * Set up player session, inventory, etc.
+     * When a player exits, remove them from the rules.
      *
      * @param event
      */
@@ -299,14 +334,15 @@ public class Adapter {
                 
                 Player droolsPlayer = players.get(player.getName());
                 players.remove(player.getName());
-                for (Room room : rooms) {
+                
+                //Clear the removed player out of any rooms.
+                for (FactHandle handle : kSession.getFactHandles(new ClassObjectFilter(Room.class))) {
+                    Room room = (Room) ((DefaultFactHandle) handle).getObject(); 
                     if (playerWithinRoom(droolsPlayer, room)) {
                         room.removePlayer(player.getName());
-                        System.out.println("roomhandle " + kSession.getFactHandle(room));
                         kSession.update(kSession.getFactHandle(room), room);
                     }
                 }
-                System.out.println("playerhandle " + kSession.getFactHandle(droolsPlayer));
                 if(kSession.getFactHandle(droolsPlayer) != null)
                 {
                     kSession.retract(kSession.getFactHandle(droolsPlayer));
@@ -320,22 +356,22 @@ public class Adapter {
     }
 
     /**
-     * Whenever the player's inventory changes, we need to entirely rebuild the
-     * model on the minecraft side. There's just too much data to track to keep
-     * a synchronised model.
+     * Whenever the player's inventory changes, rebuild the
+     * model on the minecraft side. There's just too much data
+     * to track to keep a synchronised model.
      *
      * @param entity
      */
     private void rebuildInventory(EntityPlayer entity) {
+        
         Player player = players.get(entity.getName());
         player.getInventory().clear();
+        
         for (int i = 0; i < entity.inventory.mainInventory.length; i++) {
             ItemStack stack = entity.inventory.mainInventory[i];
             if (stack != null) {
                 try {
-                    //                player.getInventory().add(new Item(stack.getUnlocalizedName(), stack.stackSize));
-                    System.out.println(stack.getUnlocalizedName());
-                    player.getInventory().add(ItemsFactory.newItem(stack.getUnlocalizedName()));
+                    player.getInventory().add(ItemsFactory.newItem(stack.getUnlocalizedName(), stack.getDisplayName()));
                 } catch (Exception ex) {
                     Logger.getLogger(Adapter.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -345,7 +381,7 @@ public class Adapter {
             ItemStack stack = entity.inventory.armorInventory[i];
             if (stack != null) {
                 try {
-                    player.getInventory().add(ItemsFactory.newItem(stack.getUnlocalizedName()));
+                    player.getInventory().add(ItemsFactory.newItem(stack.getUnlocalizedName(), stack.getDisplayName()));
                 } catch (Exception ex) {
                     Logger.getLogger(Adapter.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -355,35 +391,13 @@ public class Adapter {
     }
 
     /**
-     * Find out if an inventory needs rebuilding.
-     *
-     * @param event
+     * helper method. Determines if a player is mathematically
+     * within a room.
+     * @TODO: externalise.
+     * @param player
+     * @param room
+     * @return 
      */
-    @SubscribeEvent
-    public void addInventoryItem(EntityItemPickupEvent event) {
-        if (!event.entityLiving.worldObj.isRemote) {
-            if (event.entityPlayer != null) {
-                Player player = players.get(event.entityPlayer.getName());
-                player.setInventoryDirty(true);
-            }
-        }
-    }
-
-    /**
-     * Find out if an inventory needs rebuilding.
-     *
-     * @param event
-     */
-    @SubscribeEvent
-    public void dropInventoryItem(ItemTossEvent event) {
-        if (!event.entity.worldObj.isRemote) {
-            if (event.player != null) {
-                Player player = players.get(event.player.getName());
-                player.setInventoryDirty(true);
-            }
-        }
-    }
-
     public boolean playerWithinRoom(Player player, Room room) {
         Location playerLoc = player.getLocation();
         Location roomLowerLoc = room.getLowerBound();
@@ -394,6 +408,13 @@ public class Adapter {
         return xWithin && yWithin && zWithin;
     }
 
+    /**
+     * helper method. Determines if a number is within bounds.
+     * @TODO: externalise.
+     * @param player
+     * @param room
+     * @return 
+     */
     public boolean within(int number, int first, int second) {
         int min = Math.min(first, second);
         int max = Math.max(first, second);

@@ -127,13 +127,13 @@ public class UtilTerrainEdit
         }
     }
     
-    public static void placeKeyChest(World world, BlockPos location)
+    public static void placeKeyChest(World world, BlockPos location, String keyname)
     {
         world.setBlockState(location, net.minecraft.init.Blocks.chest.getDefaultState(), 2);
         TileEntity chestEntity = world.getTileEntity(location);
 
         if (chestEntity instanceof TileEntityChest) {
-                    ((TileEntityChest) chestEntity).setInventorySlotContents(0, new ItemStack(GameRegistry.findItem("examplemod", "key")));
+                    ((TileEntityChest) chestEntity).setInventorySlotContents(0, new ItemStack(GameRegistry.findItem("examplemod", "key")).setStackDisplayName(keyname));
         }
     }
 }

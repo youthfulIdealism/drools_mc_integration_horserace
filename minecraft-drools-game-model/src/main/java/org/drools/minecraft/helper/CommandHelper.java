@@ -6,6 +6,8 @@
 package org.drools.minecraft.helper;
 
 import org.drools.minecraft.model.Door;
+import org.drools.minecraft.model.Location;
+import org.drools.minecraft.model.Player;
 
 /**
  *
@@ -16,5 +18,7 @@ public interface CommandHelper {
     public void notifyOpenDoor(Door door);
     
     public void notifyCloseDoor(Door door);
+    
+    public void notifyTeleportPlayer(Player player, Location location);
     
 }

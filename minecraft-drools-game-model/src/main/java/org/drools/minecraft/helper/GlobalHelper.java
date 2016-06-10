@@ -10,6 +10,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import org.drools.minecraft.model.Door;
+import org.drools.minecraft.model.Location;
+import org.drools.minecraft.model.Player;
 
 /**
  *
@@ -19,6 +21,7 @@ public class GlobalHelper implements CommandHelper
 {
    
     private Queue<Notification> notificationQueue;
+
     /**
      * Represents a notification to minecraft. Contains the data that is being acted upon,
      * and a string to instruct Minecraft on how to react to that data.
@@ -69,7 +72,6 @@ public class GlobalHelper implements CommandHelper
     {
         String data = "DOOR OPEN";
         notificationQueue.add(new Notification(data, door));
-        System.out.println("Open Door Rule Fired");
     }
 
     @Override
@@ -77,7 +79,6 @@ public class GlobalHelper implements CommandHelper
     {
         String data = "DOOR CLOSE";
         notificationQueue.add(new Notification(data, door));
-        System.out.println("Close Door Rule Fired");
     }
 
     public Queue<Notification> getNotificationQueue()
@@ -85,7 +86,12 @@ public class GlobalHelper implements CommandHelper
         return notificationQueue;
     }
     
-    
+    @Override
+    public void notifyTeleportPlayer(Player player, Location location)
+    {
+        String data = "PLAYER TELEPORT";
+        notificationQueue.add(new Notification(data, player, location));
+    }
     
     
 }

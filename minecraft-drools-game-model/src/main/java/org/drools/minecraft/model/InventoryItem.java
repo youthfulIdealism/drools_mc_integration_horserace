@@ -18,5 +18,6 @@ package org.drools.minecraft.model;
  */
 public interface InventoryItem {
     public String getName();
+    public void setName(String name);
     public String getType();
 }

@@ -63,19 +63,29 @@ rule "show content of the room where the player is"
         }
 end
 
-rule "Open the door when the player has the key matching that Door"
+rule "Open the room b door when the player has the key matching that Door"
     when
         $p : Player()
-        Key() from $p.getInventory()
+        Key(name == "RoomBKey") from $p.getInventory()
         $d : Door(id == "ToRoomB", open == false)
         $r: Room(playersInRoom contains $p.getName(), doors contains $d)
         
         
     then    
-       /*modify($d){
-         setOpen(true);
-       }
-       cmds.openDoor($d);*/
+		$d.setOpen(true);
+		cmds.notifyOpenDoor($d);
+
+end
+
+rule "Open the exit door when the player has the key matching that Door"
+    when
+        $p : Player()
+        Key(name == "ExitKey") from $p.getInventory()
+        $d : Door(id == "ExitDoor", open == false)
+        $r: Room(playersInRoom contains $p.getName(), doors contains $d)
+        
+        
+    then    
 		$d.setOpen(true);
 		cmds.notifyOpenDoor($d);
 

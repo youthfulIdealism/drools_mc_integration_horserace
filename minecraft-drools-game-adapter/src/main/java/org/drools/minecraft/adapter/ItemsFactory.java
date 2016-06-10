@@ -36,7 +36,7 @@ public class ItemsFactory {
      * @throws InstantiationException
      * @throws IllegalAccessException 
      */
-    public static InventoryItem newItem(String itemName) throws ClassNotFoundException, InstantiationException, IllegalAccessException
+    public static InventoryItem newItem(String itemName, String displayName) throws ClassNotFoundException, InstantiationException, IllegalAccessException
     {
         Class referencedClass = itemClasses.get(itemName);
         InventoryItem newItem;
@@ -49,40 +49,8 @@ public class ItemsFactory {
             String canonicalName = referencedClass.getCanonicalName();
             newItem = (InventoryItem) Class.forName(canonicalName).newInstance();
         }
+        newItem.setName(displayName);
 
-        
         return newItem;
     }
-    
-    /*
-    Obsoleted code:
-    
-    net.minecraft.item.Item stackItem = GameRegistry.findItem("minecraft", item.getType());
- -        if(stackItem == null)
- -        {
- +        if (stackItem == null) {
-              stackItem = GameRegistry.findItem("examplemod", item.getType());
-          }
- -        if(stackItem == null)
- -        {
- +        if (stackItem == null) {
-              System.err.println("The item " + item.getType() + " could not be found. Try whacking the box a couple times--that usually helps.");
-              return null;
-          }
- -        
- -        
- -        ItemStack returnable = new ItemStack(stackItem, item.getCount(), item.getDurability());
- -        if(item.getName() != null)
- -        {
- +
- +        ItemStack returnable = new ItemStack(stackItem, 1, 1);
- +        if (item.getName() != null) {
-              returnable.setStackDisplayName(item.getName());
-          }
-          return returnable;
-    
-    
-    
-    
-    */
 }

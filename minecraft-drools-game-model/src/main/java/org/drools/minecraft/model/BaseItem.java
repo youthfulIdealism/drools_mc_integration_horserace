@@ -28,11 +28,19 @@ public class BaseItem implements InventoryItem
     {
         return name;
     }
+    
+    @Override
+    public void setName(String name)
+    {
+        this.name = name;
+    }
 
     @Override
     public String getType()
     {
         return type;
     }
+
+    
     
 }
