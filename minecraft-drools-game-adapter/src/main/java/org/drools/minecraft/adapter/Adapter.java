@@ -7,6 +7,8 @@ package org.drools.minecraft.adapter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Queue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.minecraft.client.Minecraft;
@@ -23,6 +25,9 @@ import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import org.drools.core.common.DefaultFactHandle;
+import org.drools.minecraft.helper.GlobalHelper;
+import org.drools.minecraft.helper.GlobalHelper.Notification;
 import org.drools.minecraft.model.Chest;
 import org.drools.minecraft.model.Door;
 import org.drools.minecraft.model.Event;
@@ -31,17 +36,10 @@ import org.drools.minecraft.model.Player;
 import org.drools.minecraft.model.Room;
 import org.drools.minecraft.model.Session;
 import org.kie.api.KieServices;
-import org.kie.api.event.rule.AfterMatchFiredEvent;
+import org.kie.api.runtime.ClassObjectFilter;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
-import org.kie.api.event.rule.AgendaEventListener;
-import org.kie.api.event.rule.AgendaGroupPoppedEvent;
-import org.kie.api.event.rule.AgendaGroupPushedEvent;
-import org.kie.api.event.rule.BeforeMatchFiredEvent;
-import org.kie.api.event.rule.MatchCancelledEvent;
-import org.kie.api.event.rule.MatchCreatedEvent;
-import org.kie.api.event.rule.RuleFlowGroupActivatedEvent;
-import org.kie.api.event.rule.RuleFlowGroupDeactivatedEvent;
+import org.kie.api.runtime.rule.FactHandle;
 
 /**
  *
@@ -80,7 +78,7 @@ public class Adapter {
 
         bootstrapKieSession();
         
-        //kSession.setGlobal("helper", helper);
+        kSession.setGlobal("cmds", new GlobalHelper());
         //we can't modify the world until after minecraft boots it up,
         //which is some time after the adapter has been constructed.
         //constructWorld();
@@ -112,28 +110,33 @@ public class Adapter {
             BlockPos relativeTo = world.getSpawnPoint().add(0, 40, 0);
             
             Room roomA = new Room(relativeTo.getX() - 5, relativeTo.getY() - 5, relativeTo.getZ() - 5, relativeTo.getX() + 5, relativeTo.getY() + 5, relativeTo.getZ() + 5, "RoomA");
-            kSession.insert(roomA);
-            constructRoom(world, roomA);
+            rooms.add(roomA);
+            UtilTerrainEdit.constructRoom(world, roomA);
             
             Room roomB = new Room(relativeTo.getX() + 5, relativeTo.getY() - 5, relativeTo.getZ() - 5, relativeTo.getX() + 15, relativeTo.getY() + 5, relativeTo.getZ() + 5, "RoomB");
-            kSession.insert(roomB);
-            constructRoom(world, roomB);
+            rooms.add(roomB);
+            UtilTerrainEdit.constructRoom(world, roomB);
             
             Door door = new Door(relativeTo.getX() + 5, relativeTo.getY() - 5, relativeTo.getZ() - 1, relativeTo.getX() + 5, relativeTo.getY(), relativeTo.getZ() + 1, "ToRoomB");
-            kSession.insert(door);
-            constructDoor(world, door);
+            roomA.addDoor(door);
+            UtilTerrainEdit.constructDoor(world, door);
             
             Chest chestA = new Chest("Chest A", new Location(relativeTo.getX() - 4, relativeTo.getY() - 4, relativeTo.getZ() - 4));
-            kSession.insert(chestA);
-            placeKeyChest(world, new BlockPos(relativeTo.getX() - 4, relativeTo.getY() - 4, relativeTo.getZ() - 4));
+            UtilTerrainEdit.placeKeyChest(world, new BlockPos(relativeTo.getX() - 4, relativeTo.getY() - 4, relativeTo.getZ() - 4));
             
             Chest chestB = new Chest("Chest B", new Location(relativeTo.getX() + 6, relativeTo.getY() - 5, relativeTo.getZ() - 5));
-            kSession.insert(chestB);
-            placeKeyChest(world, new BlockPos(relativeTo.getX() + 6, relativeTo.getY() - 4, relativeTo.getZ() - 4));
+            UtilTerrainEdit.placeKeyChest(world, new BlockPos(relativeTo.getX() + 6, relativeTo.getY() - 4, relativeTo.getZ() - 4));
          
             Door exitDoor = new Door(relativeTo.getX() + 15, relativeTo.getY() - 5, relativeTo.getZ() - 1, relativeTo.getX() + 15, relativeTo.getY(), relativeTo.getZ() + 1, "ExitDoor");
+            roomA.addDoor(exitDoor);
+            UtilTerrainEdit.constructDoor(world, exitDoor);
+            
+            kSession.insert(roomA);
+            kSession.insert(roomB);
+            kSession.insert(door);
+            kSession.insert(chestA);
+            kSession.insert(chestB);
             kSession.insert(exitDoor);
-            constructDoor(world, exitDoor);
             
             hasConstructedWorld = true;
         } else {
@@ -141,120 +144,7 @@ public class Adapter {
         }
     }
     
-    //
-    //
-    //
-    // I know that these helpers are massively ugly and probably in the wrong place. Don't worry about them quite yet,
-    // I'll move them when we get drools/MC communication closer to finished.
-    //
-    //
-    //
-    
-    /**
-     * Constructs a room within minecraft.
-     * @param worldin
-     * @param room 
-     */
-    private void constructRoom(World worldin, Room room)
-    {
-        Location lower = room.getLowerBound();
-        Location upper = room.getUpperBound();
-        
-        //clear out any existing terrains
-        for(int x = lower.getX() + 1; x < upper.getX(); x++)
-        {
-            for(int y = lower.getY() + 1; y < upper.getY(); y++)
-            {
-                for(int z = lower.getZ() + 1; z < upper.getZ(); z++)
-                {
-                    worldin.setBlockState(new BlockPos(x, y, z), Blocks.air.getDefaultState());
-                }
-            }
-        }
-        
-        //make the cieling
-        for(int x = lower.getX(); x <= upper.getX(); x++)
-        {
-            for (int z = lower.getZ(); z <= upper.getZ(); z++)
-            {
-                worldin.setBlockState(new BlockPos(x, upper.getY(), z), Blocks.sea_lantern.getDefaultState());
-            }
-        }
-        //make the floor
-        for(int x = lower.getX(); x <= upper.getX(); x++)
-        {
-            for (int z = lower.getZ(); z <= upper.getZ(); z++)
-            {
-                worldin.setBlockState(new BlockPos(x, lower.getY(), z), Blocks.stone.getDefaultState());
-            }
-        }
-        
-        //make the front wall
-        for(int x = lower.getX(); x <= upper.getX(); x++)
-        {
-            for (int y = lower.getY(); y <= upper.getY(); y++)
-            {
-                worldin.setBlockState(new BlockPos(x, y, upper.getZ()), Blocks.stone.getDefaultState());
-            }
-        }
-        //make the back wall
-        for(int x = lower.getX(); x <= upper.getX(); x++)
-        {
-            for (int y = lower.getY(); y <= upper.getY(); y++)
-            {
-                worldin.setBlockState(new BlockPos(x, y, lower.getZ()), Blocks.stone.getDefaultState());
-            }
-        }
-        
-        //make the left wall
-        for(int y = lower.getY(); y <= upper.getY(); y++)
-        {
-            for (int z = lower.getZ(); z <= upper.getZ(); z++)
-            {
-                worldin.setBlockState(new BlockPos(upper.getX(), y, z), Blocks.stone.getDefaultState());
-            }
-        }
-        //make the right wall
-        for(int y = lower.getY(); y <= upper.getY(); y++)
-        {
-            for (int z = lower.getZ(); z <= upper.getZ(); z++)
-            {
-                worldin.setBlockState(new BlockPos(lower.getX(), y, z), Blocks.stone.getDefaultState());
-            }
-        }
-    }
-    
-    /**
-     * Constructs a door within the minecraft world
-     * @param worldin
-     * @param room 
-     */
-    private void constructDoor(World worldin, Door door)
-    {
-        Location lower = door.getLowerBound();
-        Location upper = door.getUpperBound();
-        
-        for(int x = lower.getX(); x <= upper.getX(); x++)
-        {
-            for(int y = lower.getY(); y <= upper.getY(); y++)
-            {
-                for(int z = lower.getZ(); z <= upper.getZ(); z++)
-                {
-                    worldin.setBlockState(new BlockPos(x, y, z), Blocks.planks.getDefaultState());
-                }
-            }
-        }
-    }
-    
-    private void placeKeyChest(World world, BlockPos location)
-    {
-        world.setBlockState(location, net.minecraft.init.Blocks.chest.getDefaultState(), 2);
-        TileEntity chestEntity = world.getTileEntity(location);
 
-        if (chestEntity instanceof TileEntityChest) {
-                    ((TileEntityChest) chestEntity).setInventorySlotContents(0, new ItemStack(GameRegistry.findItem("examplemod", "key")));
-        }
-    }
 
     /**
      * Updates a particular dimension.
@@ -286,13 +176,69 @@ public class Adapter {
             droolsPlayer.getRoomsIn().clear();
             for (Room room : rooms) {
                 if (playerWithinRoom(droolsPlayer, room)) {
-                    droolsPlayer.getRoomsIn().add(room);
-                    kSession.update(kSession.getFactHandle(room), room);
+                    room.addPlayer(player.getName());
+                }else
+                {
+                    room.removePlayer(player.getName());
                 }
+                kSession.update(kSession.getFactHandle(room), room);
             }
             kSession.update(kSession.getFactHandle(droolsPlayer), droolsPlayer);
         }
         kSession.fireAllRules();
+        GlobalHelper helper = (GlobalHelper)kSession.getGlobal("cmds");
+        handleDroolsChanges(helper, world);
+    }
+    
+    private void handleDroolsChanges(GlobalHelper helper, World world)
+    {
+        Queue<Notification> tasks = helper.getNotificationQueue();
+        while(tasks.peek() != null)
+        {
+            System.out.println("HANDLETASK");
+            Notification current = tasks.poll();
+            String[] parsedIndicator = current.getData().split(" ");
+            if(parsedIndicator[0].equals("DOOR"))
+            {
+                handleDroolsDoorChange(parsedIndicator, current.getObject(), world);
+            }
+        }
+    }
+    
+    private void handleDroolsDoorChange(String[] parsedIndicator, List<Object> doorList, World world)
+    {
+        Door door = (Door)(doorList.get(0));
+        if(parsedIndicator[1].equals("OPEN"))
+        {
+            Location lower = door.getLowerBound();
+            Location upper = door.getUpperBound();
+
+            for(int x = lower.getX(); x <= upper.getX(); x++)
+            {
+                for(int y = lower.getY(); y <= upper.getY(); y++)
+                {
+                    for(int z = lower.getZ(); z <= upper.getZ(); z++)
+                    {
+                        world.setBlockState(new BlockPos(x, y, z), Blocks.air.getDefaultState());
+                    }
+                }
+            }
+        }else if(parsedIndicator[1].equals("CLOSED"))
+        {
+            Location lower = door.getLowerBound();
+            Location upper = door.getUpperBound();
+
+            for(int x = lower.getX(); x <= upper.getX(); x++)
+            {
+                for(int y = lower.getY(); y <= upper.getY(); y++)
+                {
+                    for(int z = lower.getZ(); z <= upper.getZ(); z++)
+                    {
+                        world.setBlockState(new BlockPos(x, y, z), Blocks.planks.getDefaultState());
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -331,12 +277,46 @@ public class Adapter {
                 Player player = new Player();
                 players.put(event.entity.getName(), player);
                 player.setInventoryDirty(true);
+                player.setName(event.entity.getName());
 
                 kSession.insert(new Session(player));
                 kSession.insert(player);
                 kSession.insert(player.getInventory());
             }
         }
+    }
+    
+    /**
+     * Set up player session, inventory, etc.
+     *
+     * @param event
+     */
+    @SubscribeEvent
+    public void onPlayerExit(EntityJoinWorldEvent event) {
+        if (!event.world.isRemote) {
+            if (event.entity instanceof EntityPlayer) {
+                Player player = new Player();
+                
+                Player droolsPlayer = players.get(player.getName());
+                players.remove(player.getName());
+                for (Room room : rooms) {
+                    if (playerWithinRoom(droolsPlayer, room)) {
+                        room.removePlayer(player.getName());
+                        System.out.println("roomhandle " + kSession.getFactHandle(room));
+                        kSession.update(kSession.getFactHandle(room), room);
+                    }
+                }
+                System.out.println("playerhandle " + kSession.getFactHandle(droolsPlayer));
+                if(kSession.getFactHandle(droolsPlayer) != null)
+                {
+                    kSession.retract(kSession.getFactHandle(droolsPlayer));
+                }
+            
+            }
+            
+            
+        }
+        
     }
 
     /**

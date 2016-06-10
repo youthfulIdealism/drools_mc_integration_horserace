@@ -16,22 +16,23 @@ rule "Setup"
     when
         $startup : Event(id == "Setup" && !hasFired)
     then
-        ArrayList<Item> chestContents = new ArrayList<Item>();
-        chestContents.add(new Item("key", 1));
-        chestContents.add(new Item("bread", 12));
+        //ArrayList<InventoryItem> chestContents = new ArrayList<InventoryItem>();
+        //chestContents.add(new Key("key", 1));
+        //chestContents.add(new BaseItem("bread", 12));
         
-        DroolsCommandInterface.placeChest(-91, 64, 433, 0, chestContents);
+        //DroolsCommandInterface.placeChest(-91, 64, 433, 0, chestContents);
         $startup.setHasFired(true);
 end
 
 rule "Open the door when the player has the key"
     when
-        $d : Door(id == "LighthouseDoor")
+        $d : Door(id == "ToRoomB")
         $p : Player(DroolsTestInterface.playerTouchingDoor($p, $d))
         Item(type == "item.key") from $p.getInventory()
         
     then
-       cmds.openDoor($d);
+		$d.setOpen(true);
+		cmds.notifyOpenDoor($d);
 
 end
 
@@ -41,7 +42,8 @@ rule "Close the door when we're not around."
         $p : Player(!DroolsTestInterface.playerTouchingDoor($p, $d))
         
     then
-       cmds.closeDoor($d);
+		$d.setOpen(false);
+		cmds.notifyCloseDoor($d);
 
 end
 
@@ -52,11 +54,11 @@ rule "show content of the room where the player is"
         $p: Player()
         $r: Room(playersInRoom contains $p.getName())
     then
-        for(IItem i : $r.getItems()){
+        for(WorldItem i : $r.getItems()){
             System.out.println(">>> Item: "+ i);
         }
 
-        for(IItem i : $p.getInventory()){
+        for(InventoryItem i : $p.getInventory()){
             System.out.println(">>> Inventory Item: "+ i);
         }
 end
@@ -64,16 +66,17 @@ end
 rule "Open the door when the player has the key matching that Door"
     when
         $p : Player()
-        
-        Key(name == "to Room B") from $p.getInventory()
-        $d : Door(id == "to Room B", open == false)
+        Key() from $p.getInventory()
+        $d : Door(id == "ToRoomB", open == false)
         $r: Room(playersInRoom contains $p.getName(), doors contains $d)
         
+        
     then    
-       modify($d){
+       /*modify($d){
          setOpen(true);
        }
-       cmds.openDoor($d);
+       cmds.openDoor($d);*/
+		$d.setOpen(true);
+		cmds.notifyOpenDoor($d);
 
 end
-

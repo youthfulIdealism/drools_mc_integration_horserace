@@ -115,12 +115,12 @@ public class MinecraftCommandHelper implements CommandHelper {
     }
 
     @Override
-    public void openDoor(Door door) {
+    public void notifyOpenDoor(Door door) {
         modifyBlocks(door.getLowerBound(), door.getUpperBound(), door.getLowerBound().getDimension(), Blocks.Air);
     }
 
     @Override
-    public void closeDoor(Door door) {
+    public void notifyCloseDoor(Door door) {
         modifyBlocks(door.getLowerBound(), door.getUpperBound(), door.getLowerBound().getDimension(), Blocks.Planks);
     }
 

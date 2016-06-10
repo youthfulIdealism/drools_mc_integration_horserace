@@ -13,8 +13,8 @@ import org.drools.minecraft.model.Door;
  */
 public interface CommandHelper {
     
-    public void openDoor(Door door);
+    public void notifyOpenDoor(Door door);
     
-    public void closeDoor(Door door);
+    public void notifyCloseDoor(Door door);
     
 }

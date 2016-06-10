@@ -16,6 +16,10 @@ public class Key implements InventoryItem {
     public Key(String name) {
         this.name = name;
     }
+    
+    public Key() {
+        this.name = "";
+    }
 
     @Override
     public String getName() {

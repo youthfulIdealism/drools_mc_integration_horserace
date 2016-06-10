@@ -15,12 +15,12 @@ import org.drools.minecraft.helper.CommandHelper;
 public class MockCommandHelper implements CommandHelper {
 
     @Override
-    public void openDoor(Door door) {
+    public void notifyOpenDoor(Door door) {
         System.out.println("Opening Door: " + door);
     }
 
     @Override
-    public void closeDoor(Door door) {
+    public void notifyCloseDoor(Door door) {
         System.out.println("Closing Door: " + door);
     }
 

@@ -8,7 +8,6 @@ package org.drools.minecraft.adapter;
 import java.util.HashMap;
 import java.util.Map;
 import org.drools.minecraft.model.BaseItem;
-import org.drools.minecraft.model.Chest;
 import org.drools.minecraft.model.Key;
 import org.drools.minecraft.model.InventoryItem;
 
@@ -22,7 +21,7 @@ public class ItemsFactory {
 
     static {
         {
-            itemClasses.put("key", Key.class);
+            itemClasses.put("item.key", Key.class);
 
         }
     }

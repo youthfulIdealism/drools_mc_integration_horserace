@@ -37,6 +37,7 @@ public class Room {
         upperBound = new Location(Math.max(x, fx), Math.max(y, fy), Math.max(z, fz));
         this.dimension = 0;
         doors = new ArrayList<>();
+        items = new ArrayList<>();
     }
 
     public Location getLowerBound() {
