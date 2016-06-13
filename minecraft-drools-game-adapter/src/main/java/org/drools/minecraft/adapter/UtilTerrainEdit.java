@@ -6,13 +6,17 @@
 package org.drools.minecraft.adapter;
 
 import net.minecraft.init.Blocks;
+//import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import org.drools.minecraft.model.Chest;
 import org.drools.minecraft.model.Door;
+import org.drools.minecraft.model.InventoryItem;
+import org.drools.minecraft.model.Item;
 import org.drools.minecraft.model.Location;
 import org.drools.minecraft.model.Room;
 
@@ -108,23 +112,30 @@ public class UtilTerrainEdit
     /**
      * Constructs a door within the minecraft world
      * @param worldin
-     * @param room 
+     * @param door
+     * @param shut 
      */
-    public static void constructDoor(World worldin, Door door)
+    public static void constructDoor(World worldin, Door door, boolean shut)
     {
-        Location lower = door.getLowerBound();
-        Location upper = door.getUpperBound();
-        
-        for(int x = lower.getX(); x <= upper.getX(); x++)
-        {
-            for(int y = lower.getY(); y <= upper.getY(); y++)
+         Location lower = door.getLowerBound();
+            Location upper = door.getUpperBound();
+
+            for(int x = lower.getX(); x <= upper.getX(); x++)
             {
-                for(int z = lower.getZ(); z <= upper.getZ(); z++)
+                for(int y = lower.getY(); y <= upper.getY(); y++)
                 {
-                    worldin.setBlockState(new BlockPos(x, y, z), Blocks.planks.getDefaultState());
+                    for(int z = lower.getZ(); z <= upper.getZ(); z++)
+                    {
+                        if(shut)
+                        {
+                            worldin.setBlockState(new BlockPos(x, y, z), Blocks.planks.getDefaultState());
+                        }else
+                        {
+                            worldin.setBlockState(new BlockPos(x, y, z), Blocks.air.getDefaultState());
+                        }
+                    }
                 }
             }
-        }
     }
     
     public static void placeKeyChest(World world, BlockPos location, String keyname)
@@ -135,5 +146,46 @@ public class UtilTerrainEdit
         if (chestEntity instanceof TileEntityChest) {
                     ((TileEntityChest) chestEntity).setInventorySlotContents(0, new ItemStack(GameRegistry.findItem("examplemod", "key")).setStackDisplayName(keyname));
         }
+    }
+    
+    public static void placeChest(World world, Chest chest)
+    {
+        Location location = chest.getLocation();
+        BlockPos pos = new BlockPos(location.getX(), location.getY(), location.getZ());
+        world.setBlockState(pos, net.minecraft.init.Blocks.chest.getDefaultState(), 2);
+    }
+    
+    public static void addChestItem(World world,  Chest chest, InventoryItem item)
+    {
+        Location location = chest.getLocation();
+        BlockPos pos = new BlockPos(location.getX(), location.getY(), location.getZ());
+        world.setBlockState(pos, net.minecraft.init.Blocks.chest.getDefaultState(), 2);
+        TileEntity chestEntity = world.getTileEntity(pos);
+        
+        
+        net.minecraft.item.Item minecraftItem = GameRegistry.findItem("examplemod", item.getType().replace("item.", "").replace("block.", ""));
+        if(minecraftItem == null)
+        {
+            minecraftItem = GameRegistry.findItem("minecraft", item.getType().replace("item.", "").replace("block.", ""));
+        }
+        if(minecraftItem == null)
+        {
+            //TODO: find a way to handle any additional mods
+        }
+        if(minecraftItem != null)
+        {
+            ItemStack stack = new ItemStack(minecraftItem);
+            if (chestEntity instanceof TileEntityChest) {
+                //TODO: ensure items are placed into next avaliable slot.
+                ((TileEntityChest) chestEntity).setInventorySlotContents(0, stack.setStackDisplayName(item.getName()));
+            }else
+            {
+                System.out.println("Error placing item in chest: chest not found in world.");
+            }
+        }else
+        {
+            System.out.println("Error placing item in chest: item " + item.getType() + " not found.");
+        }
+        
     }
 }

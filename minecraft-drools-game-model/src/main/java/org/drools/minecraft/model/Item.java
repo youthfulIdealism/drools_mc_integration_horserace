@@ -13,7 +13,7 @@ public class Item {
 
     private String name;
     private String type;
-    private int count;
+    private int count = 1;
     private int durability;
 
     public Item(String name, String type, int durability) {

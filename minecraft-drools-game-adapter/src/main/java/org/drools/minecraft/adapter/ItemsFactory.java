@@ -31,6 +31,7 @@ public class ItemsFactory {
      * a search is performed to try to find a corresponding item from vanilla minecraft or other registered mods, and
      * shoves them into a BaseItem.
      * @param itemName
+     * @param displayName
      * @return
      * @throws ClassNotFoundException
      * @throws InstantiationException

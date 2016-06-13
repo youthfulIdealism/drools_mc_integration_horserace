@@ -9,9 +9,12 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+import org.drools.minecraft.model.Chest;
 import org.drools.minecraft.model.Door;
+import org.drools.minecraft.model.InventoryItem;
 import org.drools.minecraft.model.Location;
 import org.drools.minecraft.model.Player;
+import org.drools.minecraft.model.Room;
 
 /**
  *
@@ -79,6 +82,34 @@ public class GlobalHelper implements CommandHelper
     {
         String data = "DOOR CLOSE";
         notificationQueue.add(new Notification(data, door));
+    }
+    
+    @Override
+    public void notifyGenerateRoom(Room room)
+    {
+        Notification roomNotification = new Notification("GENERATE ROOM", room);
+        notificationQueue.add(roomNotification);
+    }
+
+    @Override
+    public void notifyGenerateDoor(Door door)
+    {
+        Notification chestNotification = new Notification("GENERATE DOOR", door);
+        notificationQueue.add(chestNotification);
+    }
+    
+    @Override
+    public void notifyGenerateChest(Chest chest)
+    {
+        Notification chestNotification = new Notification("GENERATE CHEST", chest);
+        notificationQueue.add(chestNotification);
+    }
+
+    @Override
+    public void notifyItemToChest(Chest chest, InventoryItem item)
+    {
+        Notification chestNotification = new Notification("CHEST PUTITEM", chest, item);
+        notificationQueue.add(chestNotification);
     }
 
     public Queue<Notification> getNotificationQueue()

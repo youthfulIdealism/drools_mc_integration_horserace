@@ -38,6 +38,30 @@ public class MinecraftCommandHelper implements CommandHelper {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    @Override
+    public void notifyGenerateRoom(Room room)
+    {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void notifyGenerateChest(Chest chest)
+    {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void notifyItemToChest(Chest chest, InventoryItem item)
+    {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void notifyGenerateDoor(Door door)
+    {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
     //I'd like to protect the user from minecraft entirely. This may be the way,
     //but will require a crapload of bookkeeping, which will not be done until I
     //run out of more important tasks.

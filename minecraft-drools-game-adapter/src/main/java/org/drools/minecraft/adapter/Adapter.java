@@ -16,8 +16,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
-import net.minecraftforge.event.entity.item.ItemTossEvent;
-import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.drools.core.common.DefaultFactHandle;
@@ -27,6 +25,7 @@ import org.drools.minecraft.model.Chest;
 import org.drools.minecraft.model.Door;
 import org.drools.minecraft.model.Event;
 import org.drools.minecraft.model.Location;
+import org.drools.minecraft.model.NamedLocation;
 import org.drools.minecraft.model.Player;
 import org.drools.minecraft.model.Room;
 import org.drools.minecraft.model.Session;
@@ -47,6 +46,7 @@ public class Adapter {
     private KieSession kSession;
     private HashMap<String, Player> players;
     private HashMap<Integer, World> dimensions;
+    private NotificationManager changeManager;
 
     private static final Adapter instance = new Adapter();
     
@@ -72,7 +72,10 @@ public class Adapter {
 
         bootstrapKieSession();
         
-        kSession.setGlobal("cmds", new GlobalHelper());
+        
+        GlobalHelper globalhelper = new GlobalHelper();
+        changeManager = new NotificationManager(globalhelper);
+        kSession.setGlobal("cmds", globalhelper);
         //we can't modify the world until after minecraft boots it up,
         //which is some time after the adapter has been constructed.
         //@TODO: relegate map creation to drools. I don't want the user
@@ -106,36 +109,9 @@ public class Adapter {
             //it kept trying to spawn underground.
             BlockPos relativeTo = world.getSpawnPoint().add(0, 40, 0);
             
-            //create rooms
-            Room roomA = new Room(relativeTo.getX() - 5, relativeTo.getY() - 5, relativeTo.getZ() - 5, relativeTo.getX() + 5, relativeTo.getY() + 5, relativeTo.getZ() + 5, "RoomA");
-            UtilTerrainEdit.constructRoom(world, roomA);
-            
-            Room roomB = new Room(relativeTo.getX() + 5, relativeTo.getY() - 5, relativeTo.getZ() - 5, relativeTo.getX() + 15, relativeTo.getY() + 5, relativeTo.getZ() + 5, "RoomB");
-            UtilTerrainEdit.constructRoom(world, roomB);
-            
-            //create doors
-            Door door = new Door(relativeTo.getX() + 5, relativeTo.getY() - 4, relativeTo.getZ() - 1, relativeTo.getX() + 5, relativeTo.getY(), relativeTo.getZ() + 1, "ToRoomB");
-            roomA.addDoor(door);
-            UtilTerrainEdit.constructDoor(world, door);
-            
-            Door exitDoor = new Door(relativeTo.getX() + 15, relativeTo.getY() - 4, relativeTo.getZ() - 1, relativeTo.getX() + 15, relativeTo.getY(), relativeTo.getZ() + 1, "ExitDoor");
-            roomA.addDoor(exitDoor);
-            UtilTerrainEdit.constructDoor(world, exitDoor);
-            
-            //create chests
-            Chest chestA = new Chest("Chest A", new Location(relativeTo.getX() - 4, relativeTo.getY() - 4, relativeTo.getZ() - 4));
-            UtilTerrainEdit.placeKeyChest(world, new BlockPos(relativeTo.getX() - 4, relativeTo.getY() - 4, relativeTo.getZ() - 4), "RoomBKey");
-            
-            Chest chestB = new Chest("Chest B", new Location(relativeTo.getX() + 6, relativeTo.getY() - 5, relativeTo.getZ() - 5));
-            UtilTerrainEdit.placeKeyChest(world, new BlockPos(relativeTo.getX() + 6, relativeTo.getY() - 4, relativeTo.getZ() - 4), "ExitKey");
-         
-            //insert everything
-            kSession.insert(roomA);
-            kSession.insert(roomB);
-            kSession.insert(door);
-            kSession.insert(chestA);
-            kSession.insert(chestB);
-            kSession.insert(exitDoor);
+            //let the rules know 1) that it can now build the world and 2) where it should build the world.
+            kSession.insert(new NamedLocation(relativeTo.getX(), relativeTo.getY(), relativeTo.getZ(), "Spawnpoint"));
+            kSession.insert(new Event("Startup"));
             
             //leave a flag so that the world isn't constructed repeatedly.
             hasConstructedWorld = true;
@@ -206,74 +182,7 @@ public class Adapter {
         
         //react to changes made by drools by retrieving the helper
         GlobalHelper helper = (GlobalHelper)kSession.getGlobal("cmds");
-        handleDroolsChanges(helper, world);
-    }
-    
-    /**
-     * Helper method to pass changes made within the rules
-     * to more specific helper methods.
-     * 
-     * @TODO: should we externalise this to another class?
-     * @param helper
-     * @param world 
-     */
-    private void handleDroolsChanges(GlobalHelper helper, World world)
-    {
-        Queue<Notification> tasks = helper.getNotificationQueue();
-        while(tasks.peek() != null)
-        {
-            Notification current = tasks.poll();
-            String[] parsedIndicator = current.getData().split(" ");
-            if(parsedIndicator[0].equals("DOOR"))
-            {
-                handleDroolsDoorChange(parsedIndicator, current.getObject(), world);
-            }
-        }
-    }
-    
-    /**
-     * Parses a notification and changes door blocks accordingly.
-     * 
-     * @param parsedIndicator
-     * @param doorList
-     * @param world 
-     */
-    private void handleDroolsDoorChange(String[] parsedIndicator, List<Object> doorList, World world)
-    {
-        Door door = (Door)(doorList.get(0));
-        if(parsedIndicator[1].equals("OPEN"))
-        {
-            //@TODO: put the actual terrain changes in UtilTerrainEdit.
-            Location lower = door.getLowerBound();
-            Location upper = door.getUpperBound();
-
-            for(int x = lower.getX(); x <= upper.getX(); x++)
-            {
-                for(int y = lower.getY(); y <= upper.getY(); y++)
-                {
-                    for(int z = lower.getZ(); z <= upper.getZ(); z++)
-                    {
-                        world.setBlockState(new BlockPos(x, y, z), Blocks.air.getDefaultState());
-                    }
-                }
-            }
-        }else if(parsedIndicator[1].equals("CLOSED"))
-        {
-            //@TODO: put the actual terrain changes in UtilTerrainEdit.
-            Location lower = door.getLowerBound();
-            Location upper = door.getUpperBound();
-
-            for(int x = lower.getX(); x <= upper.getX(); x++)
-            {
-                for(int y = lower.getY(); y <= upper.getY(); y++)
-                {
-                    for(int z = lower.getZ(); z <= upper.getZ(); z++)
-                    {
-                        world.setBlockState(new BlockPos(x, y, z), Blocks.planks.getDefaultState());
-                    }
-                }
-            }
-        }
+        changeManager.update(world);
     }
 
     /**

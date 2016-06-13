@@ -11,43 +11,47 @@ import java.util.ArrayList;
 global CommandHelper cmds;
 global TestHelper    tests;
 
-/*
-rule "Setup"
+rule "set up world"
     when
-        $startup : Event(id == "Setup" && !hasFired)
+        $startupevent: Event(id == "Startup")
+        $spawnpoint: NamedLocation(name == "Spawnpoint")
     then
-        //ArrayList<InventoryItem> chestContents = new ArrayList<InventoryItem>();
-        //chestContents.add(new Key("key", 1));
-        //chestContents.add(new BaseItem("bread", 12));
-        
-        //DroolsCommandInterface.placeChest(-91, 64, 433, 0, chestContents);
-        $startup.setHasFired(true);
+        Room roomA = new Room($spawnpoint.getX() - 5, $spawnpoint.getY() - 5, $spawnpoint.getZ() - 5, $spawnpoint.getX() + 5, $spawnpoint.getY() + 5, $spawnpoint.getZ() + 5, "RoomA");
+        cmds.notifyGenerateRoom(roomA);
+            
+        Room roomB = new Room($spawnpoint.getX() + 5, $spawnpoint.getY() - 5, $spawnpoint.getZ() - 5, $spawnpoint.getX() + 15, $spawnpoint.getY() + 5, $spawnpoint.getZ() + 5, "RoomB");
+        cmds.notifyGenerateRoom(roomB);
+            
+        //create doors
+        Door door = new Door($spawnpoint.getX() + 5, $spawnpoint.getY() - 4, $spawnpoint.getZ() - 1, $spawnpoint.getX() + 5, $spawnpoint.getY(), $spawnpoint.getZ() + 1, "ToRoomB");
+        roomA.addDoor(door);
+        cmds.notifyGenerateDoor(door);
+            
+        Door exitDoor = new Door($spawnpoint.getX() + 15, $spawnpoint.getY() - 4, $spawnpoint.getZ() - 1, $spawnpoint.getX() + 15, $spawnpoint.getY(), $spawnpoint.getZ() + 1, "ExitDoor");
+        roomB.addDoor(exitDoor);
+        cmds.notifyGenerateDoor(exitDoor);
+            
+        //create chests
+        Chest chestA = new Chest("Chest A", new Location($spawnpoint.getX() - 4, $spawnpoint.getY() - 4, $spawnpoint.getZ() - 4));
+        cmds.notifyGenerateChest(chestA);
+		
+		Key firstKey = new Key("RoomBKey");
+		cmds.notifyItemToChest(chestA, firstKey);
+            
+        Chest chestB = new Chest("Chest B", new Location($spawnpoint.getX() + 6, $spawnpoint.getY() - 4, $spawnpoint.getZ() - 4));
+        cmds.notifyGenerateChest(chestB);
+		
+		Key secondKey = new Key("ExitKey");
+		cmds.notifyItemToChest(chestB, secondKey);
+         
+        //insert everything
+        insert(roomA);
+        insert(roomB);
+        insert(door);
+        insert(chestA);
+        insert(chestB);
+        insert(exitDoor);
 end
-
-rule "Open the door when the player has the key"
-    when
-        $d : Door(id == "ToRoomB")
-        $p : Player(DroolsTestInterface.playerTouchingDoor($p, $d))
-        Item(type == "item.key") from $p.getInventory()
-        
-    then
-		$d.setOpen(true);
-		cmds.notifyOpenDoor($d);
-
-end
-
-rule "Close the door when we're not around."
-    when
-        $d : Door(id == "LighthouseDoor")
-        $p : Player(!DroolsTestInterface.playerTouchingDoor($p, $d))
-        
-    then
-		$d.setOpen(false);
-		cmds.notifyCloseDoor($d);
-
-end
-
-*/
 
 rule "show content of the room where the player is"
     when
@@ -69,12 +73,9 @@ rule "Open the room b door when the player has the key matching that Door"
         Key(name == "RoomBKey") from $p.getInventory()
         $d : Door(id == "ToRoomB", open == false)
         $r: Room(playersInRoom contains $p.getName(), doors contains $d)
-        
-        
     then    
 		$d.setOpen(true);
 		cmds.notifyOpenDoor($d);
-
 end
 
 rule "Open the exit door when the player has the key matching that Door"
@@ -83,10 +84,7 @@ rule "Open the exit door when the player has the key matching that Door"
         Key(name == "ExitKey") from $p.getInventory()
         $d : Door(id == "ExitDoor", open == false)
         $r: Room(playersInRoom contains $p.getName(), doors contains $d)
-        
-        
     then    
 		$d.setOpen(true);
 		cmds.notifyOpenDoor($d);
-
 end

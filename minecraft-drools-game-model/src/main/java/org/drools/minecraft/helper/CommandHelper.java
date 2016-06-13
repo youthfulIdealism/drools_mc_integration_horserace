@@ -5,9 +5,12 @@
  */
 package org.drools.minecraft.helper;
 
+import org.drools.minecraft.model.Chest;
 import org.drools.minecraft.model.Door;
+import org.drools.minecraft.model.InventoryItem;
 import org.drools.minecraft.model.Location;
 import org.drools.minecraft.model.Player;
+import org.drools.minecraft.model.Room;
 
 /**
  *
@@ -21,4 +24,11 @@ public interface CommandHelper {
     
     public void notifyTeleportPlayer(Player player, Location location);
     
+    public void notifyGenerateDoor(Door door);
+    
+    public void notifyGenerateRoom(Room room);
+    
+    public void notifyGenerateChest(Chest chest);
+    
+    public void notifyItemToChest(Chest chest, InventoryItem item);
 }
