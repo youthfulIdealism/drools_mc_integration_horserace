@@ -14,6 +14,10 @@ public class InitClient
         final int METADATA_APPARENTLY = 0;
         ModelResourceLocation keyResourceLocation = new ModelResourceLocation("examplemod:key", "inventory");
         ModelLoader.setCustomModelResourceLocation(InitCommon.itemKey, METADATA_APPARENTLY, keyResourceLocation);
+        
+        ModelResourceLocation rulerRoomResourceLocation = new ModelResourceLocation("examplemod:ruler_room", "inventory");
+        ModelLoader.setCustomModelResourceLocation(InitCommon.itemRulerRoom, METADATA_APPARENTLY, rulerRoomResourceLocation);
+        
     }
 
     public static void init(FMLInitializationEvent event)
