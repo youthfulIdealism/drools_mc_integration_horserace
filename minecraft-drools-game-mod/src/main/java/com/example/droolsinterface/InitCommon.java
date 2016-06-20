@@ -19,7 +19,6 @@ public class InitCommon
         GameRegistry.registerItem(itemKey, "key");
         
         
-        //TODO: add side:server only?
         org.drools.minecraft.adapter.InitCommon.preInit(event);
         //MinecraftForge.EVENT_BUS.register(new RulesDriver());
     }

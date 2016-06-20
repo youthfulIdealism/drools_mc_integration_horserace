@@ -176,9 +176,16 @@ public class UtilTerrainEdit
         {
             ItemStack stack = new ItemStack(minecraftItem);
             if (chestEntity instanceof TileEntityChest) {
-                //TODO: ensure items are placed into next avaliable slot.
-                ((TileEntityChest) chestEntity).setInventorySlotContents(0, stack.setStackDisplayName(item.getName()));
-            }else
+                for(int i = 0; i < ((TileEntityChest) chestEntity).getSizeInventory(); i++)
+                {
+                    if(((TileEntityChest) chestEntity).getStackInSlot(i) == null)
+                    {
+                        ((TileEntityChest) chestEntity).setInventorySlotContents(i, stack.setStackDisplayName(item.getName()));
+                        break;
+                    }
+                }
+            }
+            else
             {
                 System.out.println("Error placing item in chest: chest not found in world.");
             }

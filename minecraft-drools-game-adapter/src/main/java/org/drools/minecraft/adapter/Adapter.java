@@ -19,6 +19,7 @@ import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.drools.core.common.DefaultFactHandle;
+import org.drools.minecraft.adapter.UtilMathHelper;
 import org.drools.minecraft.helper.GlobalHelper;
 import org.drools.minecraft.helper.GlobalHelper.Notification;
 import org.drools.minecraft.model.Chest;
@@ -76,11 +77,6 @@ public class Adapter {
         GlobalHelper globalhelper = new GlobalHelper();
         changeManager = new NotificationManager(globalhelper);
         kSession.setGlobal("cmds", globalhelper);
-        //we can't modify the world until after minecraft boots it up,
-        //which is some time after the adapter has been constructed.
-        //@TODO: relegate map creation to drools. I don't want the user
-        //touching minecraft code.
-        //constructWorld();
 
         kSession.insert(new Event("Setup"));
     }
@@ -132,7 +128,7 @@ public class Adapter {
         {
             //ensure that we're not constructing rooms into blocks that will be overwritten
             //by the terrain generator
-            if(world.getChunkFromBlockCoords(world.getSpawnPoint()).isPopulated()/*.isLoaded()*/)
+            if(world.getChunkFromBlockCoords(world.getSpawnPoint()).isPopulated())
             {
                 constructWorld(world);
             }
@@ -159,7 +155,7 @@ public class Adapter {
             for (FactHandle handle : kSession.getFactHandles(new ClassObjectFilter(Room.class))) {
                 Room room = (Room) ((DefaultFactHandle) handle).getObject(); 
                 
-                if (playerWithinRoom(droolsPlayer, room)) {
+                if (UtilMathHelper.playerWithinRoom(droolsPlayer, room)) {
                     room.addPlayer(player.getName());
                 }else
                 {
@@ -247,7 +243,7 @@ public class Adapter {
                 //Clear the removed player out of any rooms.
                 for (FactHandle handle : kSession.getFactHandles(new ClassObjectFilter(Room.class))) {
                     Room room = (Room) ((DefaultFactHandle) handle).getObject(); 
-                    if (playerWithinRoom(droolsPlayer, room)) {
+                    if (UtilMathHelper.playerWithinRoom(droolsPlayer, room)) {
                         room.removePlayer(player.getName());
                         kSession.update(kSession.getFactHandle(room), room);
                     }
@@ -299,36 +295,7 @@ public class Adapter {
         kSession.update(kSession.getFactHandle(player.getInventory()), player.getInventory());
     }
 
-    /**
-     * helper method. Determines if a player is mathematically
-     * within a room.
-     * @TODO: externalise.
-     * @param player
-     * @param room
-     * @return 
-     */
-    public boolean playerWithinRoom(Player player, Room room) {
-        Location playerLoc = player.getLocation();
-        Location roomLowerLoc = room.getLowerBound();
-        Location roomUpperLoc = room.getUpperBound();
-        boolean xWithin = within(playerLoc.getX(), roomLowerLoc.getX(), roomUpperLoc.getX());
-        boolean yWithin = within(playerLoc.getY(), roomLowerLoc.getY(), roomUpperLoc.getY());
-        boolean zWithin = within(playerLoc.getZ(), roomLowerLoc.getZ(), roomUpperLoc.getZ());
-        return xWithin && yWithin && zWithin;
-    }
-
-    /**
-     * helper method. Determines if a number is within bounds.
-     * @TODO: externalise.
-     * @param player
-     * @param room
-     * @return 
-     */
-    public boolean within(int number, int first, int second) {
-        int min = Math.min(first, second);
-        int max = Math.max(first, second);
-        return number >= min && number <= max;
-    }
+    
 
     public HashMap<Integer, World> getDimensions() {
         return dimensions;

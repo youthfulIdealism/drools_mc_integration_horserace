@@ -1,5 +1,4 @@
 package org.drools.minecraft.model;
-//TODO: merge with EventOneShot, or remove entirely
 
 public class Event {
 
