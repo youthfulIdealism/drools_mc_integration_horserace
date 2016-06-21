@@ -210,6 +210,7 @@ public class Adapter {
         if (!event.world.isRemote) {
             if (event.entity instanceof EntityPlayer) {
                 Player player = new Player();
+                System.out.println("||||||| " + event.entity.getDisplayName().getUnformattedText());
                 players.put(event.entity.getName(), player);
                 player.setInventoryDirty(true);
                 player.setName(event.entity.getName());
@@ -230,6 +231,7 @@ public class Adapter {
     public void onPlayerExit(EntityJoinWorldEvent event) {
         if (!event.world.isRemote) {
             if (event.entity instanceof EntityPlayer) {
+                System.out.println("||||||| " + event.entity.getDisplayName().getUnformattedText());
                 EntityPlayer player = (EntityPlayer) event.entity;
                 
                 Player droolsPlayer = players.get(player.getName());
