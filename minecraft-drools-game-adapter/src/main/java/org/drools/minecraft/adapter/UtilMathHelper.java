@@ -23,6 +23,16 @@ public class UtilMathHelper
      * @return 
      */
     public static boolean playerWithinRoom(Player player, Room room) {
+        if(player == null)
+        {
+            System.out.println("ERROR: Player not found in playerWithinRoom.");
+            return false;
+        }
+        if(player.getLocation() == null)
+        {
+            System.out.println("ERROR: Player location not found in playerWithinRoom.");
+            return false;
+        }
         Location playerLoc = player.getLocation();
         Location roomLowerLoc = room.getLowerBound();
         Location roomUpperLoc = room.getUpperBound();

@@ -1,0 +1,8 @@
+Room chest = new Room(182, 94, -276, 182, 94, -276, "Chest");
+insert(chest);
+Room scorezone_red = new Room(155, 94, -280, 151, 99, -272, "Scorezone_Red");
+insert(scorezone_red);
+Room scorezone_blue = new Room(209, 94, -272, 213, 99, -280, "Scorezone_Blue");
+insert(scorezone_blue);
+Room chasm = new Room(141, 80, -310, 228, 68, -253, "Chasm");
+insert(chasm);

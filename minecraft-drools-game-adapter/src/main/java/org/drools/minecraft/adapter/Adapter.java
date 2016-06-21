@@ -45,6 +45,7 @@ public class Adapter {
     private int throttle = 0;
 
     private KieSession kSession;
+    //TODO: phase out players list. We should retrieve that from drools maybe.
     private HashMap<String, Player> players;
     private HashMap<Integer, World> dimensions;
     private NotificationManager changeManager;
@@ -58,10 +59,6 @@ public class Adapter {
     //the world from drools, but for reference: Delete this
     //as soon as possible!
     private boolean hasConstructedWorld = false;
-
-    //@TODO: this has to change, if we want rules accesible from different dimensions.
-    //public static World world;
-    //ArrayList<DroolsPlayer> players;
     /**
      * The adapter provides a bridge from Minecraft to Drools. One is created
      * automatically on game bootup
@@ -116,8 +113,6 @@ public class Adapter {
         }
     }
     
-
-
     /**
      * Updates a particular dimension.
      *
@@ -235,7 +230,7 @@ public class Adapter {
     public void onPlayerExit(EntityJoinWorldEvent event) {
         if (!event.world.isRemote) {
             if (event.entity instanceof EntityPlayer) {
-                Player player = new Player();
+                EntityPlayer player = (EntityPlayer) event.entity;
                 
                 Player droolsPlayer = players.get(player.getName());
                 players.remove(player.getName());
@@ -304,7 +299,4 @@ public class Adapter {
     public void setDimensions(HashMap<Integer, World> dimensions) {
         this.dimensions = dimensions;
     }
-    
-    
-
 }

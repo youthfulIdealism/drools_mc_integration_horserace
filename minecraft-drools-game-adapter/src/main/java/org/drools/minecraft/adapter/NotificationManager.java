@@ -7,12 +7,15 @@ package org.drools.minecraft.adapter;
 
 import java.util.List;
 import java.util.Queue;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import org.drools.minecraft.helper.GlobalHelper;
 import org.drools.minecraft.model.Chest;
 import org.drools.minecraft.model.Door;
 import org.drools.minecraft.model.InventoryItem;
 import org.drools.minecraft.model.Item;
+import org.drools.minecraft.model.Location;
+import org.drools.minecraft.model.Player;
 import org.drools.minecraft.model.Room;
 
 /**
@@ -45,6 +48,9 @@ public class NotificationManager
             }else if(parsedIndicator[0].equals("CHEST"))
             {
                 handleChest(parsedIndicator, current.getObject(), world);
+            }else if(parsedIndicator[0].equals("PLAYER"))
+            {
+                handlePlayer(parsedIndicator, current.getObject(), world);
             }
         }
     }
@@ -88,6 +94,26 @@ public class NotificationManager
         {
             UtilTerrainEdit.addChestItem(world, (Chest)(ParamList.get(0)), (InventoryItem)(ParamList.get(1)));
         }
+    }
+    
+    private void handlePlayer(String[] parsedIndicator, List<Object> ParamList, World world)
+    {
+        if(parsedIndicator[1].equals("TELEPORT"))
+        {
+            for(EntityPlayer player : world.playerEntities)
+            {
+                System.out.println("attempting teleport...");
+                if(player.getName().equals(((Player) ParamList.get(0)).getName()))
+                {
+                    Location location = (Location)(ParamList.get(1));
+                    player.setPositionAndUpdate(location.getX(), location.getY(), location.getZ());
+                    return;
+                }
+            }
+            System.out.println("ERROR: player " + ((Player) ParamList.get(0)).getName() + " not found when teleportation was attempted.");
+        }
+        
+        
     }
     
 }
