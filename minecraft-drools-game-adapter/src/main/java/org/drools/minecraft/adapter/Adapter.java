@@ -16,6 +16,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.drools.core.common.DefaultFactHandle;
@@ -129,14 +130,22 @@ public class Adapter {
             }
         }
         
-        for (EntityPlayer player : world.playerEntities) {
+        
+        //for (EntityPlayer player : world.playerEntities) {
+        for(FactHandle playerHandle : kSession.getFactHandles(new ClassObjectFilter(Player.class))) {
+            Player droolsPlayer = (Player) ((DefaultFactHandle) playerHandle).getObject(); 
             
             //update player locations
-            Player droolsPlayer = players.get(player.getName());
+            //String playername = player.getDisplayName().getUnformattedText();
+            //Player droolsPlayer = players.get(playername);
+            
+            EntityPlayer player = world.getPlayerEntityByName(droolsPlayer.getName());
+            
             Location playerLoc = droolsPlayer.getLocation();
             playerLoc.setX(player.getPosition().getX());
             playerLoc.setY(player.getPosition().getY());
             playerLoc.setZ(player.getPosition().getZ());
+            
             
             //if the inventory has been changed, rebuild it.
             if (droolsPlayer.getInventoryDirty()) {
@@ -186,7 +195,7 @@ public class Adapter {
         if (!event.world.isRemote) {
             throttle++;
 
-            if (throttle % 50 == 0) {
+            if (throttle % 35 == 0) {
                 //for simplicity's sake, this locks the adapter into only working
                 //in the default dimension. Rules will not work in the nether or end.
                 //We should change this at some point.
@@ -210,14 +219,39 @@ public class Adapter {
         if (!event.world.isRemote) {
             if (event.entity instanceof EntityPlayer) {
                 Player player = new Player();
-                System.out.println("||||||| " + event.entity.getDisplayName().getUnformattedText());
-                players.put(event.entity.getName(), player);
+                String playername = event.entity.getDisplayName().getUnformattedText();
+                System.out.println("||||||| " + playername);
+                players.put(playername, player);
                 player.setInventoryDirty(true);
-                player.setName(event.entity.getName());
+                player.setName(playername);
 
                 kSession.insert(new Session(player));
                 kSession.insert(player);
                 kSession.insert(player.getInventory());
+            }
+        }
+    }
+    
+        /**
+     * Set up player session, inventory, etc.
+     *
+     * @param event
+     */
+    @SubscribeEvent
+    public void onPlayerDie(LivingDeathEvent event) {
+        if (!event.entity.worldObj.isRemote) {
+            if (event.entity instanceof EntityPlayer) {
+                Player player = new Player();
+                String playername = event.entity.getDisplayName().getUnformattedText();
+
+                //Clear the removed player out of any rooms.
+                for (FactHandle handle : kSession.getFactHandles(new ClassObjectFilter(Room.class))) {
+                    Room room = (Room) ((DefaultFactHandle) handle).getObject(); 
+                    if (room.getPlayersInRoom().contains(playername)) {
+                        room.removePlayer(playername);
+                        kSession.update(kSession.getFactHandle(room), room);
+                    }
+                }
             }
         }
     }
@@ -227,21 +261,25 @@ public class Adapter {
      *
      * @param event
      */
-    @SubscribeEvent
+    /*@SubscribeEvent
     public void onPlayerExit(EntityJoinWorldEvent event) {
         if (!event.world.isRemote) {
             if (event.entity instanceof EntityPlayer) {
                 System.out.println("||||||| " + event.entity.getDisplayName().getUnformattedText());
+                
                 EntityPlayer player = (EntityPlayer) event.entity;
                 
-                Player droolsPlayer = players.get(player.getName());
-                players.remove(player.getName());
+                
+                String playername = event.entity.getDisplayName().getUnformattedText();
+                
+                Player droolsPlayer = players.get(playername);
+                players.remove(playername);
                 
                 //Clear the removed player out of any rooms.
                 for (FactHandle handle : kSession.getFactHandles(new ClassObjectFilter(Room.class))) {
                     Room room = (Room) ((DefaultFactHandle) handle).getObject(); 
-                    if (UtilMathHelper.playerWithinRoom(droolsPlayer, room)) {
-                        room.removePlayer(player.getName());
+                    if (room.getPlayersInRoom().contains(playername)) {
+                        room.removePlayer(playername);
                         kSession.update(kSession.getFactHandle(room), room);
                     }
                 }
@@ -251,11 +289,8 @@ public class Adapter {
                 }
             
             }
-            
-            
         }
-        
-    }
+    }*/
 
     /**
      * Whenever the player's inventory changes, rebuild the

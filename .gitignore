@@ -6,7 +6,10 @@ gradle*
 .gradle
 
 minecraft-drools-game-mod/run/*
-
+crash*.txt
+*.log.gz
+*.dat
+*/run/*
 #################
 ## Eclipse
 #################
@@ -229,3 +232,4 @@ pip-log.txt
 .mr.developer.cfg
 /minecraft-drools-game-mod/run/
 /minecraft-drools-game-adapter/run/
+/minecraft-drools-game-model/minecraft-drools-game-mod/run/

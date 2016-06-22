@@ -31,4 +31,8 @@ public interface CommandHelper {
     public void notifyGenerateChest(Chest chest);
     
     public void notifyItemToChest(Chest chest, InventoryItem item);
+    
+    public void notifySetPlayerHealth(Player player, Integer health);
+    
+    public void notifyChat(String contents);
 }

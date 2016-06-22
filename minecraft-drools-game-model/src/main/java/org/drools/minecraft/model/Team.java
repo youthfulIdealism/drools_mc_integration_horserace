@@ -12,12 +12,15 @@ import java.util.List;
  *
  * @author Samuel
  */
-public class Team extends ArrayList<Player>
+public class Team extends ArrayList<String>
 {
     String id;
+    int points;
+    
     public Team(String name)
     {
         this.id = name;
+        points = 0;
     }
 
     public String getId()
@@ -28,6 +31,16 @@ public class Team extends ArrayList<Player>
     public void setId(String id)
     {
         this.id = id;
+    }
+
+    public int getPoints()
+    {
+        return points;
+    }
+
+    public void setPoints(int points)
+    {
+        this.points = points;
     }
     
     

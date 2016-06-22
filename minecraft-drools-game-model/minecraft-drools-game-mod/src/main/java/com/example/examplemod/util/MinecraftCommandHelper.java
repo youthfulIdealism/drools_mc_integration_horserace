@@ -68,12 +68,6 @@ public class MinecraftCommandHelper implements CommandHelper {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    @Override
-    public void notifyChat(String contents)
-    {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
     //I'd like to protect the user from minecraft entirely. This may be the way,
     //but will require a crapload of bookkeeping, which will not be done until I
     //run out of more important tasks.

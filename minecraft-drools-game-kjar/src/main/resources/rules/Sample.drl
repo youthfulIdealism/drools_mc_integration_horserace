@@ -61,38 +61,65 @@ rule "set up world"
         Room scorezone_red = new Room(155, 94, -280, 151, 99, -272, "Scorezone_Red");
         insert(scorezone_red);
 
-        Room scorezone_blue = new Room(209, 94, -272, 213, 99, -280, "Scorezone_Blue");
+        Room scorezone_blue = new Room(209, 94, -272, 213, 99, -280,  "Scorezone_Blue");
         insert(scorezone_blue);
+        
+        insert(new NamedLocation(153, 98, -275, "Redspawn"));
+        insert(new NamedLocation(211, 97, -275, "Bluespawn"));
 
-        Room chasm = new Room(141, 80, -310, 228, 63, -253, "Chasm");
+        Room chasm = new Room(141, 80, -310, 260, 62, -199, "Chasm");
         insert(chasm);
         
         insert(new Team("red"));
         insert(new Team("blue"));
 end
 
-rule "Give blue a point when the flag enters the red scorezone"
+rule "Give red a point when the flag enters the blue scorezone"
     when
-        $p : Player()
+        $teamred : Team(id == "red")
+        $p : Player($teamred.contains($p.getName()))
+        $flag : BaseItem(name == "Flag") from $p.getInventory()
         $r: Room(id == "Scorezone_Blue" && playersInRoom contains $p.getName())
-    then    
+        $spawnred : NamedLocation(name == "Redspawn")
+        
+    then
+        $teamred.setPoints($teamred.getPoints() + 1);
+        cmds.notifyTeleportPlayer($p, $spawnred);
+        cmds.notifyChat("Scooooorrrre! Red now has " + $teamred.getPoints() + " points!");
 	System.out.println("Someone stepped in the blue scorezone");
 end
 
-rule "Give red a point when the flag enters the red scorezone"
+rule "Give blue a point when the flag enters the red scorezone"
     when
-        $p : Player()
+        $teamblue : Team(id == "blue")
+        $p : Player($teamblue.contains($p.getName()))
+        $flag : BaseItem(name == "Flag") from $p.getInventory()
         $r: Room(id == "Scorezone_Red" && playersInRoom contains $p.getName())
-    then    
-	System.out.println("Someone stepped in the red scorezone");
+        $spawnblue : NamedLocation(name == "Bluespawn")
+    then
+        $teamblue.setPoints($teamblue.getPoints() + 1);
+        cmds.notifyTeleportPlayer($p, $spawnblue);
+        cmds.notifyChat("Scooooorrrre! Blue now has " + $teamblue.getPoints() + " points!");
+	System.out.println("Someone stepped in the red scorezone with the flag");
 end
 
 rule "Teleport a player who hits the chasm"
     when
-        $p : Player()
-        $r: Room(id == "Chasm", playersInRoom contains $p.getName())
-    then    
-        cmds.notifyTeleportPlayer($p, new Location(182, 96, -276));
+        $player : Player()
+        $teamred : Team(id == "red")
+        $teamblue : Team(id == "blue")
+        $spawnred : NamedLocation(name == "Redspawn")
+        $spawnblue : NamedLocation(name == "Bluespawn")
+        $r: Room(id == "Chasm", playersInRoom contains $player.getName())
+    then
+        if($teamred.contains($player.getName()))
+        {
+            cmds.notifyTeleportPlayer($player, $spawnred);
+        }else if($teamblue.contains($player.getName()))
+        {
+            cmds.notifyTeleportPlayer($player, $spawnblue);
+        }
+        cmds.notifySetPlayerHealth($player, 20);
 	System.out.println("Someone fell into the chasm");
 end
 
@@ -100,19 +127,18 @@ rule "If a player has no team, assign him one."
     when
         $teamred : Team(id == "red")
         $teamblue : Team(id == "blue")
-        $p : Player(!($teamred contains $p || $teamblue contains $p))
+        $p : Player(!($teamred contains $p.getName() || $teamblue contains $p.getName()))
     then    
         if($teamred.size() <= $teamblue.size())
         {
-            $teamred.add($p);
-            System.out.println("Added player " + $p + " to team red!");
+            $teamred.add($p.getName());
+            cmds.notifyChat("Added player " + $p.getName() + " to team red!");
         }else
         {
-            $teamblue.add($p);
-            System.out.println("Added player " + $p + " to team blue!");
+            $teamblue.add($p.getName());
+            cmds.notifyChat("Added player " + $p.getName() + " to team blue!");
         }
         cmds.notifyTeleportPlayer($p, new Location(182, 96, -276));
-	
 end
 
 

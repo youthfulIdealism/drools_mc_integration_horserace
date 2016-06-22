@@ -124,5 +124,17 @@ public class GlobalHelper implements CommandHelper
         notificationQueue.add(new Notification(data, player, location));
     }
     
+    @Override
+    public void notifySetPlayerHealth(Player player, Integer health)
+    {
+        String data = "PLAYER HEALTH";
+        notificationQueue.add(new Notification(data, player, health));
+    }
     
+    @Override
+    public void notifyChat(String message)
+    {
+        String data = "CHAT BROADCAST";
+        notificationQueue.add(new Notification(data, message));
+    }
 }

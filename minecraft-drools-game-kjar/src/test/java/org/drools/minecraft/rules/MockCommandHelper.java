@@ -59,4 +59,16 @@ public class MockCommandHelper implements CommandHelper {
         System.out.println("Placing item " + item.getName() + " of type " + item.getType() + " in a chest at " + chest.getLocation());
     }
 
+    @Override
+    public void notifySetPlayerHealth(Player player, Integer health)
+    {
+        System.out.println("Setting health of player " + player + " to " + health);
+    }
+
+    @Override
+    public void notifyChat(String contents)
+    {
+        System.out.println("Broadcasting chat message: " + contents);
+    }
+
 }

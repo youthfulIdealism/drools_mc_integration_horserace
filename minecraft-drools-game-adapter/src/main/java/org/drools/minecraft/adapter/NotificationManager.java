@@ -8,6 +8,8 @@ package org.drools.minecraft.adapter;
 import java.util.List;
 import java.util.Queue;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
 import org.drools.minecraft.helper.GlobalHelper;
 import org.drools.minecraft.model.Chest;
@@ -51,6 +53,9 @@ public class NotificationManager
             }else if(parsedIndicator[0].equals("PLAYER"))
             {
                 handlePlayer(parsedIndicator, current.getObject(), world);
+            }else if(parsedIndicator[0].equals("CHAT"))
+            {
+                handleChat(parsedIndicator, current.getObject(), world);
             }
         }
     }
@@ -102,18 +107,39 @@ public class NotificationManager
         {
             for(EntityPlayer player : world.playerEntities)
             {
-                System.out.println("attempting teleport...");
                 if(player.getName().equals(((Player) ParamList.get(0)).getName()))
                 {
                     Location location = (Location)(ParamList.get(1));
+                    player.fallDistance = 0;
                     player.setPositionAndUpdate(location.getX(), location.getY(), location.getZ());
                     return;
                 }
             }
             System.out.println("ERROR: player " + ((Player) ParamList.get(0)).getName() + " not found when teleportation was attempted.");
+        }else if(parsedIndicator[1].equals("HEALTH"))
+        {
+            for(EntityPlayer player : world.playerEntities)
+            {
+                if(player.getName().equals(((Player) ParamList.get(0)).getName()) && player.getHealth() > 0)
+                {
+                    int health = ((Integer)ParamList.get(1)).intValue();
+                    player.setHealth(health);
+                    return;
+                }
+            }
+            System.out.println("ERROR: player " + ((Player) ParamList.get(0)).getName() + " not found when health set was attempted.");
         }
-        
-        
+    }
+    
+    private void handleChat(String[] parsedIndicator, List<Object> ParamList, World world)
+    {
+        if(parsedIndicator[1].equals("BROADCAST"))
+        {
+            for(EntityPlayer player : world.playerEntities)
+            {
+                player.addChatComponentMessage(new ChatComponentText((String)ParamList.get(0)));
+            }
+        }
     }
     
 }
