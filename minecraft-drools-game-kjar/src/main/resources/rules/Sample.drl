@@ -77,30 +77,68 @@ end
 rule "Give red a point when the flag enters the blue scorezone"
     when
         $teamred : Team(id == "red")
-        $p : Player($teamred.contains($p.getName()))
-        $flag : BaseItem(name == "Flag") from $p.getInventory()
-        $r: Room(id == "Scorezone_Blue" && playersInRoom contains $p.getName())
+        $player : Player($teamred.contains($player.getName()))
+        $flag : BaseItem(name == "Flag") from $player.getInventory()
+        $r: Room(id == "Scorezone_Blue" && playersInRoom contains $player.getName())
         $spawnred : NamedLocation(name == "Redspawn")
-        
+        $chest : Chest(name == "Flag Chest")
     then
         $teamred.setPoints($teamred.getPoints() + 1);
-        cmds.notifyTeleportPlayer($p, $spawnred);
+        cmds.notifyTeleportPlayer($player, $spawnred);
+        cmds.notifyClearPlayerInventory($player);
+        
+        BaseItem flag = new BaseItem("Flag", "banner");
+	cmds.notifyItemToChest($chest, flag);
+        
         cmds.notifyChat("Scooooorrrre! Red now has " + $teamred.getPoints() + " points!");
-	System.out.println("Someone stepped in the blue scorezone");
+        System.out.println("Someone stepped in the blue scorezone");
 end
 
 rule "Give blue a point when the flag enters the red scorezone"
     when
         $teamblue : Team(id == "blue")
-        $p : Player($teamblue.contains($p.getName()))
-        $flag : BaseItem(name == "Flag") from $p.getInventory()
-        $r: Room(id == "Scorezone_Red" && playersInRoom contains $p.getName())
+        $player : Player($teamblue.contains($player.getName()))
+        $flag : BaseItem(name == "Flag") from $player.getInventory()
+        $r: Room(id == "Scorezone_Red" && playersInRoom contains $player.getName())
         $spawnblue : NamedLocation(name == "Bluespawn")
+        $chest : Chest(name == "Flag Chest")
     then
         $teamblue.setPoints($teamblue.getPoints() + 1);
-        cmds.notifyTeleportPlayer($p, $spawnblue);
-        cmds.notifyChat("Scooooorrrre! Blue now has " + $teamblue.getPoints() + " points!");
+        cmds.notifyTeleportPlayer($player, $spawnblue);
+        cmds.notifyClearPlayerInventory($player);
+        
+        BaseItem flag = new BaseItem("Flag", "banner");
+	cmds.notifyItemToChest($chest, flag);
+        
 	System.out.println("Someone stepped in the red scorezone with the flag");
+        cmds.notifyChat("Scooooorrrre! Blue now has " + $teamblue.getPoints() + " points!");
+end
+
+rule "Teleport a player who hits the chasm with the flag"
+    when
+        $player : Player()
+        $teamred : Team(id == "red")
+        $teamblue : Team(id == "blue")
+        $spawnred : NamedLocation(name == "Redspawn")
+        $spawnblue : NamedLocation(name == "Bluespawn")
+        $r: Room(id == "Chasm", playersInRoom contains $player.getName())
+        BaseItem(name == "Flag") from $player.getInventory()
+        $chest : Chest(name == "Flag Chest")
+    then
+        if($teamred.contains($player.getName()))
+        {
+            cmds.notifyTeleportPlayer($player, $spawnred);
+        }else if($teamblue.contains($player.getName()))
+        {
+            cmds.notifyTeleportPlayer($player, $spawnblue);
+        }
+        cmds.notifySetPlayerHealth($player, 20);
+        cmds.notifyClearPlayerInventory($player);
+        
+        BaseItem flag = new BaseItem("Flag", "banner");
+	cmds.notifyItemToChest($chest, flag);
+        
+        System.out.println("Someone fell into the chasm with the flag");
 end
 
 rule "Teleport a player who hits the chasm"
@@ -111,6 +149,7 @@ rule "Teleport a player who hits the chasm"
         $spawnred : NamedLocation(name == "Redspawn")
         $spawnblue : NamedLocation(name == "Bluespawn")
         $r: Room(id == "Chasm", playersInRoom contains $player.getName())
+        not BaseItem(name == "Flag") from $player.getInventory()
     then
         if($teamred.contains($player.getName()))
         {
@@ -120,6 +159,7 @@ rule "Teleport a player who hits the chasm"
             cmds.notifyTeleportPlayer($player, $spawnblue);
         }
         cmds.notifySetPlayerHealth($player, 20);
+        
 	System.out.println("Someone fell into the chasm");
 end
 

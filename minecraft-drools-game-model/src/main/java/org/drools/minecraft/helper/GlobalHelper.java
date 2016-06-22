@@ -124,6 +124,8 @@ public class GlobalHelper implements CommandHelper
         notificationQueue.add(new Notification(data, player, location));
     }
     
+    //TODO: write helpers to enchant the player
+    
     @Override
     public void notifySetPlayerHealth(Player player, Integer health)
     {
@@ -132,9 +134,21 @@ public class GlobalHelper implements CommandHelper
     }
     
     @Override
+    public void notifyClearPlayerInventory(Player player)
+    {
+        System.out.println("Inventory clear");
+        String data = "PLAYER INVENTORY_CLEAR";
+        notificationQueue.add(new Notification(data, player));
+    }
+    
+    //TODO: write helpers to add and subtract from the player inventory
+    
+    @Override
     public void notifyChat(String message)
     {
         String data = "CHAT BROADCAST";
         notificationQueue.add(new Notification(data, message));
     }
+    
+    //TODO: write helpers to chat with specific players
 }

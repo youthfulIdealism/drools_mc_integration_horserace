@@ -128,6 +128,17 @@ public class NotificationManager
                 }
             }
             System.out.println("ERROR: player " + ((Player) ParamList.get(0)).getName() + " not found when health set was attempted.");
+        }else if(parsedIndicator[1].equals("INVENTORY_CLEAR"))
+        {
+            for(EntityPlayer player : world.playerEntities)
+            {
+                if(player.getName().equals(((Player) ParamList.get(0)).getName()))
+                {
+                    player.inventory.clear();
+                    return;
+                }
+            }
+            System.out.println("ERROR: player " + ((Player) ParamList.get(0)).getName() + " not found when health set was attempted.");
         }
     }
     

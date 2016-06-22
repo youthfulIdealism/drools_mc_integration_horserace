@@ -41,6 +41,16 @@ public class BaseItem implements InventoryItem
         return type;
     }
 
-    
+    @Override
+    public boolean equals(Object obj)
+    {
+        if(!(obj instanceof BaseItem))
+        {
+            return false;
+        }
+        BaseItem otherItem = (BaseItem)obj;
+        return name.equals(otherItem.getName()) &&
+                type.equals(otherItem.getType());
+    }
     
 }

@@ -51,6 +51,16 @@ public class Chest implements WorldItem {
         this.location = location;
     }
 
+    public String getName()
+    {
+        return name;
+    }
+
+    public void setName(String name)
+    {
+        this.name = name;
+    }
+    
     @Override
     public String getType() {
         return "item.chest";

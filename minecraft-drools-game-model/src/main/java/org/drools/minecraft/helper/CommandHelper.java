@@ -34,5 +34,7 @@ public interface CommandHelper {
     
     public void notifySetPlayerHealth(Player player, Integer health);
     
+    public void notifyClearPlayerInventory(Player player);
+    
     public void notifyChat(String contents);
 }

@@ -71,4 +71,10 @@ public class MockCommandHelper implements CommandHelper {
         System.out.println("Broadcasting chat message: " + contents);
     }
 
+    @Override
+    public void notifyClearPlayerInventory(Player player)
+    {
+        System.out.println("Clearing the inventory of: " + player.getName());
+    }
+
 }
