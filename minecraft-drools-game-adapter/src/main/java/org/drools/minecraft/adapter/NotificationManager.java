@@ -8,9 +8,11 @@ package org.drools.minecraft.adapter;
 import java.util.List;
 import java.util.Queue;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
+import org.drools.minecraft.helper.CommandHelper;
 import org.drools.minecraft.helper.GlobalHelper;
 import org.drools.minecraft.model.Chest;
 import org.drools.minecraft.model.Door;
@@ -135,6 +137,20 @@ public class NotificationManager
                 if(player.getName().equals(((Player) ParamList.get(0)).getName()))
                 {
                     player.inventory.clear();
+                    return;
+                }
+            }
+            System.out.println("ERROR: player " + ((Player) ParamList.get(0)).getName() + " not found when health set was attempted.");
+        }else if(parsedIndicator[1].equals("EFFECT"))
+        {
+            for(EntityPlayer player : world.playerEntities)
+            {
+                if(player.getName().equals(((Player) ParamList.get(0)).getName()))
+                {
+                    int id = ((CommandHelper.Effect)ParamList.get(1)).effectid;
+                    int duration = (Integer)ParamList.get(2);
+                    int power = (Integer)ParamList.get(3) - 1;
+                    player.addPotionEffect(new PotionEffect(id, duration * 20, power));
                     return;
                 }
             }

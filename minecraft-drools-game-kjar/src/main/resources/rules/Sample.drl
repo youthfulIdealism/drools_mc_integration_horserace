@@ -134,6 +134,8 @@ rule "Teleport a player who hits the chasm with the flag"
         }
         cmds.notifySetPlayerHealth($player, 20);
         cmds.notifyClearPlayerInventory($player);
+        cmds.notifyEffectPlayer($player, CommandHelper.Effect.SPEED, 600, 3);
+        cmds.notifyEffectPlayer($player, CommandHelper.Effect.JUMP_BOOST, 600, 3);
         
         BaseItem flag = new BaseItem("Flag", "banner");
 	cmds.notifyItemToChest($chest, flag);
@@ -159,7 +161,8 @@ rule "Teleport a player who hits the chasm"
             cmds.notifyTeleportPlayer($player, $spawnblue);
         }
         cmds.notifySetPlayerHealth($player, 20);
-        
+        cmds.notifyEffectPlayer($player, CommandHelper.Effect.SPEED, 600, 3);
+        cmds.notifyEffectPlayer($player, CommandHelper.Effect.JUMP_BOOST, 600, 3);
 	System.out.println("Someone fell into the chasm");
 end
 
@@ -178,6 +181,7 @@ rule "If a player has no team, assign him one."
             $teamblue.add($p.getName());
             cmds.notifyChat("Added player " + $p.getName() + " to team blue!");
         }
+        
         cmds.notifyTeleportPlayer($p, new Location(182, 96, -276));
 end
 

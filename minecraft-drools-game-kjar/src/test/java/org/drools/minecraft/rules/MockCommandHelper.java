@@ -77,4 +77,10 @@ public class MockCommandHelper implements CommandHelper {
         System.out.println("Clearing the inventory of: " + player.getName());
     }
 
+    @Override
+    public void notifyEffectPlayer(Player player, Effect effect, int duration, int power)
+    {
+        System.out.println("Enchanting player " + player.getName() + " with effect " + effect + " for " + duration + " seconds at power " + power);
+    }
+
 }

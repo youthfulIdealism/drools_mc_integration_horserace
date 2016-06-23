@@ -124,6 +124,18 @@ public class GlobalHelper implements CommandHelper
         notificationQueue.add(new Notification(data, player, location));
     }
     
+    @Override
+    public void notifyEffectPlayer(Player player, Effect effect, int duration, int power)
+    {
+        String data = "PLAYER EFFECT";
+        List<Object> paramlist = new ArrayList<Object>();
+        paramlist.add(player);
+        paramlist.add(effect);
+        paramlist.add(duration);
+        paramlist.add(power);
+        notificationQueue.add(new Notification(data, paramlist));
+    }
+    
     //TODO: write helpers to enchant the player
     
     @Override
