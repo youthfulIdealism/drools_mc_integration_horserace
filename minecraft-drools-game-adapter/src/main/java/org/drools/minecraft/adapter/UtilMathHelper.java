@@ -28,11 +28,6 @@ public class UtilMathHelper
             System.out.println("ERROR: Player not found in playerWithinRoom.");
             return false;
         }
-        if(player.getLocation() == null)
-        {
-            System.out.println("ERROR: Player location not found in playerWithinRoom.");
-            return false;
-        }
         Location playerLoc = player.getLocation();
         Location roomLowerLoc = room.getLowerBound();
         Location roomUpperLoc = room.getUpperBound();
@@ -44,8 +39,9 @@ public class UtilMathHelper
 
     /**
      * helper method. Determines if a number is within bounds.
-     * @param player
-     * @param room
+     * @param number
+     * @param first
+     * @param second
      * @return 
      */
     public static boolean within(int number, int first, int second) {

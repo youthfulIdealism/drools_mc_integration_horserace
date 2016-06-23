@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Queue;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
 import org.drools.minecraft.helper.CommandHelper;
@@ -17,7 +16,6 @@ import org.drools.minecraft.helper.GlobalHelper;
 import org.drools.minecraft.model.Chest;
 import org.drools.minecraft.model.Door;
 import org.drools.minecraft.model.InventoryItem;
-import org.drools.minecraft.model.Item;
 import org.drools.minecraft.model.Location;
 import org.drools.minecraft.model.Player;
 import org.drools.minecraft.model.Room;
@@ -28,14 +26,17 @@ import org.drools.minecraft.model.Room;
  */
 public class NotificationManager
 {
-    GlobalHelper helper;
+    private GlobalHelper helper;
     
     public NotificationManager(GlobalHelper helper)
     {
         this.helper = helper;
-         
     }
     
+    /**
+     * Evaluate and act upon any queued notifications.
+     * @param world 
+     */
     public void update(World world)
     {
         Queue<GlobalHelper.Notification> tasks = helper.getNotificationQueue();
@@ -62,13 +63,6 @@ public class NotificationManager
         }
     }
     
-    /**
-     * Parses a notification and changes door blocks accordingly.
-     * 
-     * @param parsedIndicator
-     * @param ParamList
-     * @param world 
-     */
     private void handleDoorChange(String[] parsedIndicator, List<Object> ParamList, World world)
     {
         Door door = (Door)(ParamList.get(0));

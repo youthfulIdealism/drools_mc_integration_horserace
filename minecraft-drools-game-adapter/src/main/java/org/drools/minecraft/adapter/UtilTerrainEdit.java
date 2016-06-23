@@ -138,6 +138,16 @@ public class UtilTerrainEdit
             }
     }
     
+
+    
+    @Deprecated
+    /**
+     * Places a chest containing a key.
+     * 
+     * you can now place a chest, then place a named key inside it. This
+     * function is overly specific and will eventually be removed. Don't
+     * use it.
+     */
     public static void placeKeyChest(World world, BlockPos location, String keyname)
     {
         world.setBlockState(location, net.minecraft.init.Blocks.chest.getDefaultState(), 2);
@@ -148,6 +158,11 @@ public class UtilTerrainEdit
         }
     }
     
+    /**
+     * Places a chest in the world given a location.
+     * @param world
+     * @param chest 
+     */
     public static void placeChest(World world, Chest chest)
     {
         Location location = chest.getLocation();
@@ -155,14 +170,34 @@ public class UtilTerrainEdit
         world.setBlockState(pos, net.minecraft.init.Blocks.chest.getDefaultState(), 2);
     }
     
+    /**
+     * Places a chest in the world at a blockpos.
+     * @param world
+     * @param location
+     * @param keyname 
+     */
+    public static void placeChest(World world, BlockPos location)
+    {
+        world.setBlockState(location, net.minecraft.init.Blocks.chest.getDefaultState(), 2);
+    }
+    
+    /**
+     * Adds an item to an existing chest.
+     * //TODO: write a version that can take a location instead, and add a corresponding
+     * //notification.
+     * @param world
+     * @param chest
+     * @param item 
+     */
     public static void addChestItem(World world,  Chest chest, InventoryItem item)
     {
+        //find the chest in minecraft
         Location location = chest.getLocation();
         BlockPos pos = new BlockPos(location.getX(), location.getY(), location.getZ());
         world.setBlockState(pos, net.minecraft.init.Blocks.chest.getDefaultState(), 2);
         TileEntity chestEntity = world.getTileEntity(pos);
         
-        
+        //generate the item and place it in the chest
         net.minecraft.item.Item minecraftItem = GameRegistry.findItem("examplemod", item.getType().replace("item.", "").replace("block.", ""));
         if(minecraftItem == null)
         {

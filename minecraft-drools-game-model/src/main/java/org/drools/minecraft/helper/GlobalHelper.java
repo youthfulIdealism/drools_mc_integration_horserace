@@ -136,8 +136,6 @@ public class GlobalHelper implements CommandHelper
         notificationQueue.add(new Notification(data, paramlist));
     }
     
-    //TODO: write helpers to enchant the player
-    
     @Override
     public void notifySetPlayerHealth(Player player, Integer health)
     {
