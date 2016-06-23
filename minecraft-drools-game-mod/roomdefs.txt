@@ -1,2 +1,0 @@
-Room chasm = new Room(141, 80, -310, 260, 62, -199, "Chasm");
-insert(chasm);

@@ -15,6 +15,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
@@ -50,6 +51,7 @@ public class ItemRulerRoom extends Item {
                     roomWriter.write("insert(" + stack.getDisplayName().toLowerCase().replaceAll(" ", "") + ");");
                     roomWriter.write("\n");
                     roomWriter.flush();
+                    playerIn.addChatComponentMessage(new ChatComponentText("Defined room " + stack.getDisplayName()));
                 } catch (IOException ex)
                 {
                     Logger.getLogger(ItemRulerRoom.class.getName()).log(Level.SEVERE, null, ex);
@@ -64,6 +66,10 @@ public class ItemRulerRoom extends Item {
             }else
             {
                 workingPos = pos;
+                //for(EntityPlayer player : playerIn)
+                //{
+                    playerIn.addChatComponentMessage(new ChatComponentText("Started defining room " + stack.getDisplayName()));
+                //}
             }
         }
         

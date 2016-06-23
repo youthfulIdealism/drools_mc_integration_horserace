@@ -118,7 +118,11 @@ public class Adapter {
             playerLoc.setY(player.getPosition().getY());
             playerLoc.setZ(player.getPosition().getZ());
             
-            //TODO: Track more about the player && feed it into drools. Health, hunger, etc.
+            droolsPlayer.setExperience(player.experienceLevel);
+            droolsPlayer.setHealth(player.getHealth());
+            droolsPlayer.setHunger(20 - player.getFoodStats().getFoodLevel());
+            droolsPlayer.setIsBurning(player.isBurning());
+            droolsPlayer.setIsDead(player.isDead);
             
             //if the inventory has been changed, rebuild it.
             if (droolsPlayer.getInventoryDirty() || player.inventory.inventoryChanged) {

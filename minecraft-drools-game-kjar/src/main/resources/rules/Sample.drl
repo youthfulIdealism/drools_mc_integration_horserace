@@ -14,220 +14,107 @@ global TestHelper    tests;
 
 rule "set up world"
     when
-        $startupevent: Event(id == "Startup")
+        $startupevent : Event(id == "Startup")
     then
-        /*Room roomA = new Room($spawnpoint.getX() - 5, $spawnpoint.getY() - 5, $spawnpoint.getZ() - 5, $spawnpoint.getX() + 5, $spawnpoint.getY() + 5, $spawnpoint.getZ() + 5, "RoomA");
-        cmds.notifyGenerateRoom(roomA);
-            
-        Room roomB = new Room($spawnpoint.getX() + 5, $spawnpoint.getY() - 5, $spawnpoint.getZ() - 5, $spawnpoint.getX() + 15, $spawnpoint.getY() + 5, $spawnpoint.getZ() + 5, "RoomB");
-        cmds.notifyGenerateRoom(roomB);
-            
-        //create doors
-        Door door = new Door($spawnpoint.getX() + 5, $spawnpoint.getY() - 4, $spawnpoint.getZ() - 1, $spawnpoint.getX() + 5, $spawnpoint.getY(), $spawnpoint.getZ() + 1, "ToRoomB");
-        roomA.addDoor(door);
-        cmds.notifyGenerateDoor(door);
-            
-        Door exitDoor = new Door($spawnpoint.getX() + 15, $spawnpoint.getY() - 4, $spawnpoint.getZ() - 1, $spawnpoint.getX() + 15, $spawnpoint.getY(), $spawnpoint.getZ() + 1, "ExitDoor");
-        roomB.addDoor(exitDoor);
-        cmds.notifyGenerateDoor(exitDoor);
-            
-        //create flag chest
-        Chest chestA = new Chest("Chest A", new Location($spawnpoint.getX() - 4, $spawnpoint.getY() - 4, $spawnpoint.getZ() - 4));
-        cmds.notifyGenerateChest(chestA);
-		
-		Key firstKey = new Key("RoomBKey");
-		cmds.notifyItemToChest(chestA, firstKey);
-            
-        Chest chestB = new Chest("Chest B", new Location($spawnpoint.getX() + 6, $spawnpoint.getY() - 4, $spawnpoint.getZ() - 4));
-        cmds.notifyGenerateChest(chestB);
-		
-		Key secondKey = new Key("ExitKey");
-		cmds.notifyItemToChest(chestB, secondKey);
-         
-        //insert everything
-        insert(roomA);
-        insert(roomB);
-        insert(door);
-        insert(chestA);
-        insert(chestB);
-        insert(exitDoor);*/
-
-        Chest chest = new Chest("Flag Chest", new Location(182, 94, -276));
-        insert(chest);
-        cmds.notifyGenerateChest(chest);
-        BaseItem flag = new BaseItem("Flag", "banner");
-	cmds.notifyItemToChest(chest, flag);
-
-        Room scorezone_red = new Room(155, 94, -280, 151, 99, -272, "Scorezone_Red");
-        insert(scorezone_red);
-
-        Room scorezone_blue = new Room(209, 94, -272, 213, 99, -280,  "Scorezone_Blue");
-        insert(scorezone_blue);
+        Room startfinish = new Room(-9, 89, 189, -2, 95, 184, "StartFinish");
+        insert(startfinish);
         
-        insert(new NamedLocation(153, 98, -275, "Redspawn"));
-        insert(new NamedLocation(211, 97, -275, "Bluespawn"));
+        Room checkpointone = new Room(32, 89, 184, 37, 100, 190, "CheckPointOne");
+        insert(checkpointone);
 
-        Room chasm = new Room(141, 80, -310, 260, 62, -199, "Chasm");
-        insert(chasm);
+        Room checkpointtwo = new Room(32, 89, 159, 38, 100, 154, "CheckPointTwo");
+        insert(checkpointtwo);
+
+        Room checkpointthree = new Room(-21, 89, 159, -26, 100, 153, "CheckPointThree");
+        insert(checkpointthree);
+
+        Room checkpointfour = new Room(-21, 89, 184, -27, 100, 189, "CheckPointFour");
+        insert(checkpointfour);
         
-        insert(new Team("red"));
-        insert(new Team("blue"));
+        Team burgerbaby = new Team("BurgerBaby");
+        insert(burgerbaby);
+
+        Team numberOne = new Team ("NumberOne");
+        insert (numberOne);
 end
-
-rule "Give red a point when the flag enters the blue scorezone"
-    when
-        $teamred : Team(id == "red")
-        $player : Player($teamred.contains($player.getName()))
-        $flag : BaseItem(name == "Flag") from $player.getInventory()
-        $r: Room(id == "Scorezone_Blue" && playersInRoom contains $player.getName())
-        $spawnred : NamedLocation(name == "Redspawn")
-        $chest : Chest(name == "Flag Chest")
-    then
-        $teamred.setPoints($teamred.getPoints() + 1);
-        cmds.notifyTeleportPlayer($player, $spawnred);
-        cmds.notifyClearPlayerInventory($player);
-        
-        BaseItem flag = new BaseItem("Flag", "banner");
-	cmds.notifyItemToChest($chest, flag);
-        
-        cmds.notifyChat("Scooooorrrre! Red now has " + $teamred.getPoints() + " points!");
-        System.out.println("Someone stepped in the blue scorezone");
-end
-
-rule "Give blue a point when the flag enters the red scorezone"
-    when
-        $teamblue : Team(id == "blue")
-        $player : Player($teamblue.contains($player.getName()))
-        $flag : BaseItem(name == "Flag") from $player.getInventory()
-        $r: Room(id == "Scorezone_Red" && playersInRoom contains $player.getName())
-        $spawnblue : NamedLocation(name == "Bluespawn")
-        $chest : Chest(name == "Flag Chest")
-    then
-        $teamblue.setPoints($teamblue.getPoints() + 1);
-        cmds.notifyTeleportPlayer($player, $spawnblue);
-        cmds.notifyClearPlayerInventory($player);
-        
-        BaseItem flag = new BaseItem("Flag", "banner");
-	cmds.notifyItemToChest($chest, flag);
-        
-	System.out.println("Someone stepped in the red scorezone with the flag");
-        cmds.notifyChat("Scooooorrrre! Blue now has " + $teamblue.getPoints() + " points!");
-end
-
-rule "Teleport a player who hits the chasm with the flag"
-    when
-        $player : Player()
-        $teamred : Team(id == "red")
-        $teamblue : Team(id == "blue")
-        $spawnred : NamedLocation(name == "Redspawn")
-        $spawnblue : NamedLocation(name == "Bluespawn")
-        $r: Room(id == "Chasm", playersInRoom contains $player.getName())
-        BaseItem(name == "Flag") from $player.getInventory()
-        $chest : Chest(name == "Flag Chest")
-    then
-        if($teamred.contains($player.getName()))
-        {
-            cmds.notifyTeleportPlayer($player, $spawnred);
-        }else if($teamblue.contains($player.getName()))
-        {
-            cmds.notifyTeleportPlayer($player, $spawnblue);
-        }
-        cmds.notifySetPlayerHealth($player, 20);
-        cmds.notifyClearPlayerInventory($player);
-        cmds.notifyEffectPlayer($player, CommandHelper.Effect.SPEED, 600, 3);
-        cmds.notifyEffectPlayer($player, CommandHelper.Effect.JUMP_BOOST, 600, 3);
-        
-        BaseItem flag = new BaseItem("Flag", "banner");
-	cmds.notifyItemToChest($chest, flag);
-        
-        System.out.println("Someone fell into the chasm with the flag");
-end
-
-rule "Teleport a player who hits the chasm"
-    when
-        $player : Player()
-        $teamred : Team(id == "red")
-        $teamblue : Team(id == "blue")
-        $spawnred : NamedLocation(name == "Redspawn")
-        $spawnblue : NamedLocation(name == "Bluespawn")
-        $r: Room(id == "Chasm", playersInRoom contains $player.getName())
-        not BaseItem(name == "Flag") from $player.getInventory()
-    then
-        if($teamred.contains($player.getName()))
-        {
-            cmds.notifyTeleportPlayer($player, $spawnred);
-        }else if($teamblue.contains($player.getName()))
-        {
-            cmds.notifyTeleportPlayer($player, $spawnblue);
-        }
-        cmds.notifySetPlayerHealth($player, 20);
-        cmds.notifyEffectPlayer($player, CommandHelper.Effect.SPEED, 600, 3);
-        cmds.notifyEffectPlayer($player, CommandHelper.Effect.JUMP_BOOST, 600, 3);
-	System.out.println("Someone fell into the chasm");
-end
-
-rule "If a player has no team, assign him one."
-    when
-        $teamred : Team(id == "red")
-        $teamblue : Team(id == "blue")
-        $p : Player(!($teamred contains $p.getName() || $teamblue contains $p.getName()))
-    then    
-        if($teamred.size() <= $teamblue.size())
-        {
-            $teamred.add($p.getName());
-            cmds.notifyChat("Added player " + $p.getName() + " to team red!");
-        }else
-        {
-            $teamblue.add($p.getName());
-            cmds.notifyChat("Added player " + $p.getName() + " to team blue!");
-        }
-        
-        cmds.notifyTeleportPlayer($p, new Location(182, 96, -276));
-end
-
-
-
-
-
-
-
-
-
-
 
 /*
-rule "show content of the room where the player is"
+rule "When there is a room"
     when
-        $p: Player()
-        $r: Room(playersInRoom contains $p.getName())
+        $player : Player()
+        $room : Room(id == "StartFinish" && playersInRoom contains $player.getName())
+        $team : Team(id == "BurgerBaby")
+        $team : Team(id == "NumberOne" && points == 0)
     then
-        for(WorldItem i : $r.getItems()){
-            System.out.println(">>> Item: "+ i);
-        }
+        cmds.notifyChat("A room called startfinish exists.");
+        modify($team) { setPoints($team.getPoints() + 1) }
+        cmds.notifyChat("Team BurgerBaby has " + $team.getPoints() + " points!");
+    end*/
 
-        for(InventoryItem i : $p.getInventory()){
-            System.out.println(">>> Inventory Item: "+ i);
-        }
-end
 
-rule "Open the room b door when the player has the key matching that Door"
+       
+rule "Announcer"
     when
-        $p : Player()
-        Key(name == "RoomBKey") from $p.getInventory()
-        $d : Door(id == "ToRoomB", open == false)
-        $r: Room(playersInRoom contains $p.getName(), doors contains $d)
-    then    
-		$d.setOpen(true);
-		cmds.notifyOpenDoor($d);
-end
+       $player : Player()
+      
+       $room : Room(id == "StartFinish" && playersInRoom contains $player.getName())
+    then
+        cmds.notifyChat("Welcome to the annual horse race of Tergl Squub!"); 
+    end
 
-rule "Open the exit door when the player has the key matching that Door"
+rule "first checkpoint"
+        when
+            $player : Player()
+            $team : Team(id == "NumberOne" && points == 0)
+            $room : Room(id == "CheckPointOne" && playersInRoom contains $player.getName())
+        then
+            cmds.notifyChat("Contestant number One has entered CheckPoint number one!");
+            
+            modify($team) { setPoints($team.getPoints() + 1) }
+            cmds.notifyChat("Team Number One has " + $team.getPoints() + " points!");
+           end
+
+rule "second checkpoint"
+        when
+            $player : Player()
+            $team : Team(id == "NumberOne" && points == 1)
+            $room : Room(id == "CheckPointTwo" && playersInRoom contains $player.getName())
+        then
+            cmds.notifyChat("Contestant number One has entered CheckPoint number two!");
+            
+            modify($team) { setPoints($team.getPoints() + 1) }
+            cmds.notifyChat("Team Number One has " + $team.getPoints() + " points!");
+        end
+
+rule "third checkpoint"
+        when
+            $player : Player()
+            $team : Team(id == "NumberOne" && points == 2)
+            $room : Room(id == "CheckPointThree" && playersInRoom contains $player.getName())
+        then
+            cmds.notifyChat("Contestant number One has entered CheckPoint number three!");
+            
+            modify($team) { setPoints($team.getPoints() + 1) }
+            cmds.notifyChat("Team Number One has " + $team.getPoints() + " points!");
+        end
+
+rule "fourth checkpoint"
+        when
+            $player : Player()
+            $team : Team(id == "NumberOne" && points == 3)
+            $room : Room(id == "CheckPointFour" && playersInRoom contains $player.getName())
+        then
+            cmds.notifyChat("Contestant number One has entered CheckPoint number four!");
+            
+            modify($team) { setPoints($team.getPoints() + 1) }
+            cmds.notifyChat("Team Number One has " + $team.getPoints() + " points!");
+        end
+
+rule "finishing the race"
     when
-        $p : Player()
-        Key(name == "ExitKey") from $p.getInventory()
-        $d : Door(id == "ExitDoor", open == false)
-        $r: Room(playersInRoom contains $p.getName(), doors contains $d)
-    then    
-		$d.setOpen(true);
-		cmds.notifyOpenDoor($d);
-end*/
+        $player : Player()
+        $team : Team(id == "NumberOne" && points == 4)
+        $room : Room(id == "StartFinish" && playersInRoom contains $player.getName())
+    then
+        cmds.notifyChat("Team number One has won with four points!");
+    end
