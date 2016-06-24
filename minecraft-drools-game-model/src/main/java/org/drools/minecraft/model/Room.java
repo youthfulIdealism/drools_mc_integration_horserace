@@ -6,6 +6,7 @@
 package org.drools.minecraft.model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -26,18 +27,24 @@ public class Room {
     private List<WorldItem> items;
     
     private List<String> playersInRoom  = new ArrayList<>();
+    private HashMap<String, Mob> mobsInRoom;
 
+    private Room(){
+        this.dimension = 0;
+        doors = new ArrayList<>();
+        items = new ArrayList<>();
+        mobsInRoom = new HashMap<String, Mob>();
+    }
+    
     public Room(String id) {
+        this();
         this.id = id;
     }
 
     public Room(int x, int y, int z, int fx, int fy, int fz, String id) {
-        this.id = id;
+        this(id);
         lowerBound = new Location(Math.min(x, fx), Math.min(y, fy), Math.min(z, fz));
         upperBound = new Location(Math.max(x, fx), Math.max(y, fy), Math.max(z, fz));
-        this.dimension = 0;
-        doors = new ArrayList<>();
-        items = new ArrayList<>();
     }
 
     public Location getLowerBound() {
@@ -115,6 +122,16 @@ public class Room {
         this.playersInRoom.remove(player);
     }
 
+    public HashMap<String, Mob> getMobsInRoom()
+    {
+        return mobsInRoom;
+    }
+
+    public void setMobsInRoom(HashMap<String, Mob> mobsInRoom)
+    {
+        this.mobsInRoom = mobsInRoom;
+    }
+    
     @Override
     public String toString() {
         return "Room{" + "id=" + id + ", lowerBound=" + lowerBound + ", upperBound=" + upperBound + ", dimension=" + dimension + ", doors=" + doors + ", items=" + items + ", playersInRoom=" + playersInRoom + '}';

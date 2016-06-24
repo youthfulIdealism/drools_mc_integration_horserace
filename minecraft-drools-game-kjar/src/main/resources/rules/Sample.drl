@@ -118,6 +118,14 @@ rule "Give blue a point when the flag enters the red scorezone"
         cmds.notifyChat("Scooooorrrre! Blue now has " + $teamblue.getPoints() + " points!");
 end
 
+rule "Print mobs in rooms"
+    when
+        $mob : Mob()
+        $room : Room(mobsInRoom.containsKey($mob.getId()))
+    then
+        System.out.println($mob.getType() + " from room " + $room.getId());
+end
+
 rule "Teleport a player who hits the chasm with the flag"
     when
         $player : Player()

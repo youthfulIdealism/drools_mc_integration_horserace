@@ -5,11 +5,14 @@
  */
 package org.drools.minecraft.adapter;
 
-import java.util.HashMap;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -20,6 +23,7 @@ import org.drools.core.common.DefaultFactHandle;
 import org.drools.minecraft.helper.GlobalHelper;
 import org.drools.minecraft.model.Event;
 import org.drools.minecraft.model.Location;
+import org.drools.minecraft.model.Mob;
 import org.drools.minecraft.model.NamedLocation;
 import org.drools.minecraft.model.Player;
 import org.drools.minecraft.model.Room;
@@ -95,7 +99,7 @@ public class Adapter {
      *
      * @param world
      */
-    private void update(World world) {
+    private void update(World world) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
         
         if(!hasConstructedWorld)
         {
@@ -126,6 +130,8 @@ public class Adapter {
             
             //if the inventory has been changed, rebuild it.
             if (droolsPlayer.getInventoryDirty() || player.inventory.inventoryChanged) {
+                //TODO: this doesn't always work! Find a reliable way to determine when
+                //the inventory has changed.
                 rebuildInventory(player);
                 player.inventory.inventoryChanged = false;
             }
@@ -143,10 +149,74 @@ public class Adapter {
                 {
                     room.removePlayer(player.getName());
                 }
-                kSession.update(kSession.getFactHandle(room), room);
             }
             
             kSession.update(kSession.getFactHandle(droolsPlayer), droolsPlayer);
+        }
+        
+        
+        for (FactHandle handle : kSession.getFactHandles(new ClassObjectFilter(Room.class))) {
+                Room room = (Room) ((DefaultFactHandle) handle).getObject(); 
+                
+                Location lower = room.getLowerBound();
+                Location upper = room.getUpperBound();
+                List<EntityCreature> considered = world.getEntitiesWithinAABB(EntityCreature.class, new AxisAlignedBB(lower.getX(), lower.getY(), lower.getZ(), upper.getX(), upper.getY(), upper.getZ()));
+                
+                List<String> untouchedMobs = new ArrayList<String>(room.getMobsInRoom().keySet().size());
+                for(String id : room.getMobsInRoom().keySet())
+                {
+                    untouchedMobs.add(id);
+                }
+                
+                
+                for(EntityCreature creature : considered)
+                {
+                    String id = creature.getUniqueID().toString();
+                    if(!room.getMobsInRoom().containsKey(id))
+                    {
+                        boolean found = false;
+                        Mob mob = null;
+                        
+                        for (FactHandle mobHandle : kSession.getFactHandles(new ClassObjectFilter(Mob.class))) {
+                            Mob potentialMob = (Mob) ((DefaultFactHandle) mobHandle).getObject(); 
+                            if(potentialMob.getId().equals(id))
+                            {
+                                mob = potentialMob;
+                                found = true;
+                            }
+                        }
+                        
+                        if(!found)
+                        {
+                            mob = new Mob(MobFactory.newMobType(creature), id, new Location((int)creature.posX, (int)creature.posY, (int)creature.posZ));
+                            kSession.insert(mob);
+                        }
+                        mob.setRoomcount(mob.getRoomcount() + 1);
+                        room.getMobsInRoom().put(id, mob);
+                        
+                    }else
+                    {
+                        Mob updatingMob = room.getMobsInRoom().get(id);
+                        updatingMob.setLocation(new Location((int)creature.posX, (int)creature.posY, (int)creature.posZ));
+                        
+                        untouchedMobs.remove(id);
+                        kSession.update(kSession.getFactHandle(updatingMob), updatingMob);
+                    }
+                }
+                
+                for(String deletedMobID : untouchedMobs)
+                {
+                     Mob updatingMob = room.getMobsInRoom().get(deletedMobID);
+                     room.getMobsInRoom().remove(deletedMobID);
+                     updatingMob.setRoomcount(updatingMob.getRoomcount() - 1);
+                     
+                     if(updatingMob.getRoomcount() <= 0)
+                     {
+                         kSession.retract(kSession.getFactHandle(updatingMob));
+                     }
+                }
+                
+                kSession.update(kSession.getFactHandle(room), room);
         }
         
         //cause rules to fire
@@ -181,8 +251,12 @@ public class Adapter {
      * @param event
      */
     @SubscribeEvent
-    public void onServerTick(TickEvent.WorldTickEvent event) {
+    public void onServerTick(TickEvent.WorldTickEvent event) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
         if (!event.world.isRemote) {
+            if(event.phase == TickEvent.WorldTickEvent.Phase.START)
+            {
+                return;
+            }
             throttle++;
 
             if (throttle % 35 == 0) {
