@@ -13,6 +13,7 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.boss.EntityDragon;
 import net.minecraft.entity.boss.EntityWither;
 import net.minecraft.entity.monster.EntityBlaze;
+import net.minecraft.entity.monster.EntityCaveSpider;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.monster.EntityEnderman;
 import net.minecraft.entity.monster.EntityEndermite;
@@ -64,7 +65,7 @@ public class MobFactory {
             mobClasses.put(MobTypes.SHEEP, EntitySheep.class);
             mobClasses.put(MobTypes.SQUID, EntitySquid.class);
             mobClasses.put(MobTypes.VILLAGER, EntityVillager.class);
-            mobClasses.put(MobTypes.POISON_SPIDER, EntitySpider.class);
+            mobClasses.put(MobTypes.POISON_SPIDER, EntityCaveSpider.class);
             mobClasses.put(MobTypes.ENDERMAN, EntityEnderman.class);
             mobClasses.put(MobTypes.SPIDER, EntitySpider.class);
             mobClasses.put(MobTypes.ZOMBIE_PIGMAN, EntityPigZombie.class);
@@ -107,6 +108,7 @@ public class MobFactory {
             classMobses.put(EntityVillager.class, MobTypes.VILLAGER);
             classMobses.put(EntityEnderman.class, MobTypes.ENDERMAN);
             classMobses.put(EntitySpider.class, MobTypes.SPIDER);
+            classMobses.put(EntityCaveSpider.class, MobTypes.POISON_SPIDER);
             classMobses.put(EntityPigZombie.class, MobTypes.ZOMBIE_PIGMAN);
             classMobses.put(EntityBlaze.class, MobTypes.BLAZE);
             classMobses.put(EntityCreeper.class, MobTypes.CREEPER);
@@ -152,9 +154,18 @@ public class MobFactory {
             return null;
         }else
         {
-            String canonicalName = referencedClass.getCanonicalName();
-            //newCreature = (EntityLiving) Class.forName(canonicalName).newInstance();
             newCreature = (EntityLiving) referencedClass.getDeclaredConstructor(World.class).newInstance(world);
+            
+            if(type == MobTypes.DONKEY){
+                ((EntityHorse)newCreature).setHorseType(1);
+            }else if(type == MobTypes.MULE){
+                ((EntityHorse)newCreature).setHorseType(2);
+            }else if(type == MobTypes.ELDER_GUARDIAN){
+                ((EntityGuardian)newCreature).setElder();
+            }else if(type == MobTypes.WITHER_SKELETON){
+                ((EntitySkeleton)newCreature).setSkeletonType(1);
+            }
+            
         }
         
         return newCreature;
@@ -177,6 +188,23 @@ public class MobFactory {
         {
             System.out.println("ERROR: You tried to acess an unknown mob from the MobFactory. Are you using modded entities?");
             return null;
+        }
+        
+        if(entity instanceof EntityHorse){
+            if(((EntityHorse)entity).getHorseType() == 1){
+                referencedType = MobTypes.DONKEY;
+            }else if(((EntityHorse)entity).getHorseType() == 2){
+                referencedType = MobTypes.MULE;
+            }
+        }else if(entity instanceof EntityGuardian){
+            if(((EntityGuardian)entity).isElder()){
+                referencedType = MobTypes.ELDER_GUARDIAN;
+            }
+        }else if(entity instanceof EntitySkeleton){
+            if(((EntitySkeleton)entity).getSkeletonType() == 1)
+            {
+                referencedType = MobTypes.WITHER_SKELETON;
+            }
         }
         
         return referencedType;
