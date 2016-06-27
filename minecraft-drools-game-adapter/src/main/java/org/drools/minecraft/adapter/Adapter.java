@@ -259,7 +259,7 @@ public class Adapter {
             }
             throttle++;
 
-            if (throttle % 35 == 0) {
+            if (throttle % 20 == 0) {
                 //for simplicity's sake, this locks the adapter into only working
                 //in the default dimension. Rules will not work in the nether or end.
                 //We should change this at some point.

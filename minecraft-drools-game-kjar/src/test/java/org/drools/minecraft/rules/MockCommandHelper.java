@@ -10,6 +10,7 @@ import org.drools.minecraft.helper.CommandHelper;
 import org.drools.minecraft.model.Chest;
 import org.drools.minecraft.model.InventoryItem;
 import org.drools.minecraft.model.Location;
+import org.drools.minecraft.model.Mob;
 import org.drools.minecraft.model.Player;
 import org.drools.minecraft.model.Room;
 
@@ -81,6 +82,12 @@ public class MockCommandHelper implements CommandHelper {
     public void notifyEffectPlayer(Player player, Effect effect, int duration, int power)
     {
         System.out.println("Enchanting player " + player.getName() + " with effect " + effect + " for " + duration + " seconds at power " + power);
+    }
+
+    @Override
+    public void notifyMobSpawn(Mob.MobTypes type, Location location)
+    {
+        System.out.println("Spawning mob " + type + " at location " + location);
     }
 
 }

@@ -5,8 +5,12 @@
  */
 package org.drools.minecraft.adapter;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Queue;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ChatComponentText;
@@ -17,6 +21,7 @@ import org.drools.minecraft.model.Chest;
 import org.drools.minecraft.model.Door;
 import org.drools.minecraft.model.InventoryItem;
 import org.drools.minecraft.model.Location;
+import org.drools.minecraft.model.Mob;
 import org.drools.minecraft.model.Player;
 import org.drools.minecraft.model.Room;
 
@@ -59,6 +64,9 @@ public class NotificationManager
             }else if(parsedIndicator[0].equals("CHAT"))
             {
                 handleChat(parsedIndicator, current.getObject(), world);
+            }else if(parsedIndicator[0].equals("MOB"))
+            {
+                handleMob(parsedIndicator, current.getObject(), world);
             }
         }
     }
@@ -159,6 +167,43 @@ public class NotificationManager
             for(EntityPlayer player : world.playerEntities)
             {
                 player.addChatComponentMessage(new ChatComponentText((String)ParamList.get(0)));
+            }
+        }
+    }
+    
+    private void handleMob(String[] parsedIndicator, List<Object> ParamList, World world)
+    {
+        if(parsedIndicator[1].equals("SPAWN"))
+        {
+            try
+            {
+                EntityLiving entity = MobFactory.newCreature((Mob.MobTypes) ParamList.get(0), world);
+                Location location = (Location) ParamList.get(1);
+                entity.setPositionAndUpdate(location.getX(), location.getY(), location.getZ());
+                world.spawnEntityInWorld(entity);
+            
+            
+            
+            
+            
+            } catch (ClassNotFoundException ex)
+            {
+                Logger.getLogger(NotificationManager.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (InstantiationException ex)
+            {
+                Logger.getLogger(NotificationManager.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IllegalAccessException ex)
+            {
+                Logger.getLogger(NotificationManager.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (NoSuchMethodException ex)
+            {
+                Logger.getLogger(NotificationManager.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IllegalArgumentException ex)
+            {
+                Logger.getLogger(NotificationManager.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (InvocationTargetException ex)
+            {
+                Logger.getLogger(NotificationManager.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }

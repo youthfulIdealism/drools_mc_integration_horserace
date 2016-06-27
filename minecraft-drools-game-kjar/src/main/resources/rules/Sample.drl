@@ -20,42 +20,6 @@ rule "set up world"
     when
         $startupevent: Event(id == "Startup")
     then
-        /*Room roomA = new Room($spawnpoint.getX() - 5, $spawnpoint.getY() - 5, $spawnpoint.getZ() - 5, $spawnpoint.getX() + 5, $spawnpoint.getY() + 5, $spawnpoint.getZ() + 5, "RoomA");
-        cmds.notifyGenerateRoom(roomA);
-            
-        Room roomB = new Room($spawnpoint.getX() + 5, $spawnpoint.getY() - 5, $spawnpoint.getZ() - 5, $spawnpoint.getX() + 15, $spawnpoint.getY() + 5, $spawnpoint.getZ() + 5, "RoomB");
-        cmds.notifyGenerateRoom(roomB);
-            
-        //create doors
-        Door door = new Door($spawnpoint.getX() + 5, $spawnpoint.getY() - 4, $spawnpoint.getZ() - 1, $spawnpoint.getX() + 5, $spawnpoint.getY(), $spawnpoint.getZ() + 1, "ToRoomB");
-        roomA.addDoor(door);
-        cmds.notifyGenerateDoor(door);
-            
-        Door exitDoor = new Door($spawnpoint.getX() + 15, $spawnpoint.getY() - 4, $spawnpoint.getZ() - 1, $spawnpoint.getX() + 15, $spawnpoint.getY(), $spawnpoint.getZ() + 1, "ExitDoor");
-        roomB.addDoor(exitDoor);
-        cmds.notifyGenerateDoor(exitDoor);
-            
-        //create flag chest
-        Chest chestA = new Chest("Chest A", new Location($spawnpoint.getX() - 4, $spawnpoint.getY() - 4, $spawnpoint.getZ() - 4));
-        cmds.notifyGenerateChest(chestA);
-		
-		Key firstKey = new Key("RoomBKey");
-		cmds.notifyItemToChest(chestA, firstKey);
-            
-        Chest chestB = new Chest("Chest B", new Location($spawnpoint.getX() + 6, $spawnpoint.getY() - 4, $spawnpoint.getZ() - 4));
-        cmds.notifyGenerateChest(chestB);
-		
-		Key secondKey = new Key("ExitKey");
-		cmds.notifyItemToChest(chestB, secondKey);
-         
-        //insert everything
-        insert(roomA);
-        insert(roomB);
-        insert(door);
-        insert(chestA);
-        insert(chestB);
-        insert(exitDoor);*/
-
         Chest chest = new Chest("Flag Chest", new Location(182, 94, -276));
         insert(chest);
         cmds.notifyGenerateChest(chest);
@@ -118,13 +82,14 @@ rule "Give blue a point when the flag enters the red scorezone"
         cmds.notifyChat("Scooooorrrre! Blue now has " + $teamblue.getPoints() + " points!");
 end
 
-rule "Print mobs in rooms"
-    when
-        $mob : Mob()
-        $room : Room(mobsInRoom.containsKey($mob.getId()))
-    then
-        System.out.println($mob.getType() + " from room " + $room.getId());
-end
+//rule "Spawn a slime when there is a chicken in a room. Chickens need friends, too."
+//    when
+//        $mob : Mob(type == Mob.MobTypes.CHICKEN)
+//        $room : Room(mobsInRoom.containsKey($mob.getId()))
+//    then
+//        cmds.notifyMobSpawn(Mob.MobTypes.SLIME, new Location(182, 97, -276));
+//        System.out.println($mob.getType() + " from room " + $room.getId());
+//end
 
 rule "Teleport a player who hits the chasm with the flag"
     when
@@ -208,6 +173,47 @@ end
 
 
 /*
+/*rule "set up world"
+    when
+        $startupevent: Event(id == "Startup")
+    then
+        Room roomA = new Room($spawnpoint.getX() - 5, $spawnpoint.getY() - 5, $spawnpoint.getZ() - 5, $spawnpoint.getX() + 5, $spawnpoint.getY() + 5, $spawnpoint.getZ() + 5, "RoomA");
+        cmds.notifyGenerateRoom(roomA);
+            
+        Room roomB = new Room($spawnpoint.getX() + 5, $spawnpoint.getY() - 5, $spawnpoint.getZ() - 5, $spawnpoint.getX() + 15, $spawnpoint.getY() + 5, $spawnpoint.getZ() + 5, "RoomB");
+        cmds.notifyGenerateRoom(roomB);
+            
+        //create doors
+        Door door = new Door($spawnpoint.getX() + 5, $spawnpoint.getY() - 4, $spawnpoint.getZ() - 1, $spawnpoint.getX() + 5, $spawnpoint.getY(), $spawnpoint.getZ() + 1, "ToRoomB");
+        roomA.addDoor(door);
+        cmds.notifyGenerateDoor(door);
+            
+        Door exitDoor = new Door($spawnpoint.getX() + 15, $spawnpoint.getY() - 4, $spawnpoint.getZ() - 1, $spawnpoint.getX() + 15, $spawnpoint.getY(), $spawnpoint.getZ() + 1, "ExitDoor");
+        roomB.addDoor(exitDoor);
+        cmds.notifyGenerateDoor(exitDoor);
+            
+        //create flag chest
+        Chest chestA = new Chest("Chest A", new Location($spawnpoint.getX() - 4, $spawnpoint.getY() - 4, $spawnpoint.getZ() - 4));
+        cmds.notifyGenerateChest(chestA);
+		
+		Key firstKey = new Key("RoomBKey");
+		cmds.notifyItemToChest(chestA, firstKey);
+            
+        Chest chestB = new Chest("Chest B", new Location($spawnpoint.getX() + 6, $spawnpoint.getY() - 4, $spawnpoint.getZ() - 4));
+        cmds.notifyGenerateChest(chestB);
+		
+		Key secondKey = new Key("ExitKey");
+		cmds.notifyItemToChest(chestB, secondKey);
+         
+        //insert everything
+        insert(roomA);
+        insert(roomB);
+        insert(door);
+        insert(chestA);
+        insert(chestB);
+        insert(exitDoor);
+end
+
 rule "show content of the room where the player is"
     when
         $p: Player()
@@ -242,9 +248,8 @@ rule "Open the exit door when the player has the key matching that Door"
     then    
 		$d.setOpen(true);
 		cmds.notifyOpenDoor($d);
-end*/
-
-
+end
+*/
 
 
 
@@ -299,16 +304,34 @@ HORSE RACE
 
         Team numberOne = new Team ("NumberOne");
         insert (numberOne);
+
+       Room stables = new Room(3, 89, 197, -11, 96, 191, "Stables");
+       insert(stables);
+
+        Event greetPlayer = new Event("greetPlayer");
+        insert(greetPlayer);
+
 end
 
+rule "spawning horses"
+    when
+        $player : Player()
+        $room : Room(id == "Stable 2" && playersInRoom contains $player.getName())
+        $team : Team(id == "NumberOne" && points == 0)
+    then
+        cmds.notifyChat("Contestants, please mount your horses!");
+    end
        
 rule "Announcer"
     when
-       $player : Player()
-      
-       $room : Room(id == "StartFinish" && playersInRoom contains $player.getName())
+        $greetPlayer : Event(id == "greetPlayer" && !hasFired)
+        $player : Player()
+        $team : Team(id == "NumberOne" && points == 0)
+        $room : Room(id == "StartFinish" && playersInRoom contains $player.getName())
     then
         cmds.notifyChat("Welcome to the annual horse race of Tergl Squub!"); 
+        modify($greetPlayer){setHasFired(true)}
+        //modify($greetPlayer){setHasFired(false)}
     end
 
 rule "first checkpoint"
@@ -318,7 +341,6 @@ rule "first checkpoint"
             $room : Room(id == "CheckPointOne" && playersInRoom contains $player.getName())
         then
             cmds.notifyChat("Contestant number One has entered CheckPoint number one!");
-            
             modify($team) { setPoints($team.getPoints() + 1) }
             cmds.notifyChat("Team Number One has " + $team.getPoints() + " points!");
            end
@@ -366,4 +388,25 @@ rule "finishing the race"
         $room : Room(id == "StartFinish" && playersInRoom contains $player.getName())
     then
         cmds.notifyChat("Team number One has won with four points!");
-    end*/
+    end
+
+rule "restarting"
+    when
+        $player : Player()
+        $team : Team(id == "NumberOne" && points == 4)
+        $room : Room(id == "StartFinish" && playersInRoom contains $player.getName())
+    then
+        cmds.notifyChat("We are now restarting the race.");
+        modify($team) { setPoints(0) }
+    end
+
+rule "Print mobs in rooms"
+    when
+        $player : Player()
+        $mob : Mob(type == Mob.MobTypes.HORSE)
+        $room : Room(id == "Stables" && playersInRoom contains $player.getName() && mobsInRoom.containsKey($mob.getId()))
+        $greetPlayer : Event(id == "greetPlayer" && !hasFired)
+    then
+        modify($greetPlayer){setHasFired(true)}
+        cmds.notifyChat("Contestants, please mount your steeds!");
+end*/

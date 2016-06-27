@@ -5,6 +5,7 @@
  */
 package org.drools.minecraft.adapter;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 import net.minecraft.entity.EntityCreature;
@@ -39,9 +40,7 @@ import net.minecraft.entity.passive.EntitySheep;
 import net.minecraft.entity.passive.EntitySquid;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.passive.EntityWolf;
-import org.drools.minecraft.model.BaseItem;
-import org.drools.minecraft.model.Key;
-import org.drools.minecraft.model.InventoryItem;
+import net.minecraft.world.World;
 import org.drools.minecraft.model.Mob;
 import org.drools.minecraft.model.Mob.MobTypes;
 
@@ -142,10 +141,10 @@ public class MobFactory {
      * @throws InstantiationException
      * @throws IllegalAccessException 
      */
-    public static EntityLiving newCreature(MobTypes type) throws ClassNotFoundException, InstantiationException, IllegalAccessException
+    public static EntityLiving newCreature(MobTypes type, World world) throws ClassNotFoundException, InstantiationException, IllegalAccessException, NoSuchMethodException, IllegalArgumentException, InvocationTargetException
     {
         Class referencedClass = mobClasses.get(type);
-        EntityCreature newCreature;
+        EntityLiving newCreature;
         
         if(referencedClass == null)
         {
@@ -154,7 +153,8 @@ public class MobFactory {
         }else
         {
             String canonicalName = referencedClass.getCanonicalName();
-            newCreature = (EntityCreature) Class.forName(canonicalName).newInstance();
+            //newCreature = (EntityLiving) Class.forName(canonicalName).newInstance();
+            newCreature = (EntityLiving) referencedClass.getDeclaredConstructor(World.class).newInstance(world);
         }
         
         return newCreature;

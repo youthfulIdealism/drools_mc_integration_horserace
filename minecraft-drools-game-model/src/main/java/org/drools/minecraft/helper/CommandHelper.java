@@ -9,6 +9,7 @@ import org.drools.minecraft.model.Chest;
 import org.drools.minecraft.model.Door;
 import org.drools.minecraft.model.InventoryItem;
 import org.drools.minecraft.model.Location;
+import org.drools.minecraft.model.Mob.MobTypes;
 import org.drools.minecraft.model.Player;
 import org.drools.minecraft.model.Room;
 
@@ -58,4 +59,6 @@ public interface CommandHelper {
     public void notifyEffectPlayer(Player player, Effect effect, int duration, int power);
     
     public void notifyChat(String contents);
+    
+    public void notifyMobSpawn(MobTypes type, Location location);
 }
