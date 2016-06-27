@@ -168,6 +168,9 @@ public class NotificationManager
             {
                 player.addChatComponentMessage(new ChatComponentText((String)ParamList.get(0)));
             }
+        }if(parsedIndicator[1].equals("PLAYER"))
+        {
+            world.getPlayerEntityByName(((Player)ParamList.get(1)).getName()).addChatComponentMessage(new ChatComponentText((String)ParamList.get(0)));
         }
     }
     

@@ -4,21 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Stub class used to wrap the player.
- *
+ * 
+ * 
  * @author Samuel
  *
  */
 public class Player {
     
     /*
-    //TODO: add these things to the player model:
-    
-    --whether or not is dead
-    --whether or not is on fire
-    --hunger
-    --health
-    --experience
+    //TODO: Find out whether it would be appropriate for player to extend mob.
     
     
     */

@@ -40,6 +40,8 @@ rule "set up world"
         
         insert(new Team("red"));
         insert(new Team("blue"));
+
+        
 end
 
 rule "Give red a point when the flag enters the blue scorezone"
@@ -59,6 +61,7 @@ rule "Give red a point when the flag enters the blue scorezone"
 	cmds.notifyItemToChest($chest, flag);
         
         cmds.notifyChat("Scooooorrrre! Red now has " + $teamred.getPoints() + " points!");
+        cmds.notifyChat("Test text, dude!", $player);
         System.out.println("Someone stepped in the blue scorezone");
 end
 
@@ -79,6 +82,7 @@ rule "Give blue a point when the flag enters the red scorezone"
 	cmds.notifyItemToChest($chest, flag);
         
 	System.out.println("Someone stepped in the red scorezone with the flag");
+        cmds.notifyChat("Test text, dude!", $player);
         cmds.notifyChat("Scooooorrrre! Blue now has " + $teamblue.getPoints() + " points!");
 end
 

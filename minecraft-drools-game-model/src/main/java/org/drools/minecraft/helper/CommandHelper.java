@@ -60,5 +60,7 @@ public interface CommandHelper {
     
     public void notifyChat(String contents);
     
+    public void notifyChat(String contents, Player player);
+    
     public void notifyMobSpawn(MobTypes type, Location location);
 }

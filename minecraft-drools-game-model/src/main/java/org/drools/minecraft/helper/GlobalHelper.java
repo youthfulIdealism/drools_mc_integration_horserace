@@ -161,7 +161,13 @@ public class GlobalHelper implements CommandHelper
         notificationQueue.add(new Notification(data, message));
     }
     
-    //TODO: write helpers to chat with specific players
+    @Override
+    public void notifyChat(String message, Player player)
+    {
+        String data = "CHAT PLAYER";
+        notificationQueue.add(new Notification(data, message, player));
+    }
+    
     
     @Override
     public void notifyMobSpawn(MobTypes type, Location location)
