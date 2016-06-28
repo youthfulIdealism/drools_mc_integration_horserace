@@ -14,9 +14,11 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 
 /**
@@ -30,12 +32,12 @@ public class ItemRulerRoom extends Item {
     
     public ItemRulerRoom() {
         this.setMaxStackSize(1);
-        this.setCreativeTab(CreativeTabs.tabMisc);
+        this.setCreativeTab(CreativeTabs.MISC);
         workingPos = null;
     }
     
     @Override
-    public boolean onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ)
+    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
     {
         if(worldIn.isRemote)
         {
@@ -51,7 +53,7 @@ public class ItemRulerRoom extends Item {
                     roomWriter.write("insert(" + stack.getDisplayName().toLowerCase().replaceAll(" ", "") + ");");
                     roomWriter.write("\n");
                     roomWriter.flush();
-                    playerIn.addChatComponentMessage(new ChatComponentText("Defined room " + stack.getDisplayName()));
+                    playerIn.addChatComponentMessage(new TextComponentString("Defined room " + stack.getDisplayName()));
                 } catch (IOException ex)
                 {
                     Logger.getLogger(ItemRulerRoom.class.getName()).log(Level.SEVERE, null, ex);
@@ -65,16 +67,12 @@ public class ItemRulerRoom extends Item {
                 workingPos = null;
             }else
             {
-                workingPos = pos;
-                //for(EntityPlayer player : playerIn)
-                //{
-                    playerIn.addChatComponentMessage(new ChatComponentText("Started defining room " + stack.getDisplayName()));
-                //}
+                playerIn.addChatComponentMessage(new TextComponentString("Started defining room " + stack.getDisplayName()));
             }
         }
         
         
-        return false;
+        return EnumActionResult.SUCCESS;
     }
     
     

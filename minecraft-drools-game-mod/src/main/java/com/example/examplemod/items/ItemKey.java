@@ -16,6 +16,6 @@ public class ItemKey extends Item {
 
     public ItemKey() {
         this.setMaxStackSize(1);
-        this.setCreativeTab(CreativeTabs.tabMisc);
+        this.setCreativeTab(CreativeTabs.MISC);
     }
 }

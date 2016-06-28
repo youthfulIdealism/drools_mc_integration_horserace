@@ -12,8 +12,8 @@ import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -263,9 +263,9 @@ public class Adapter {
                 //for simplicity's sake, this locks the adapter into only working
                 //in the default dimension. Rules will not work in the nether or end.
                 //We should change this at some point.
-                if (event.world.provider.getDimensionId() == 0) {
-                    if (!dimensions.containsKey(event.world.provider.getDimensionId())) {
-                        dimensions.put(event.world.provider.getDimensionId(), event.world);
+                if (event.world.provider.getDimension() == 0) {
+                    if (!dimensions.containsKey(event.world.provider.getDimension())) {
+                        dimensions.put(event.world.provider.getDimension(), event.world);
                     }
                     update(event.world);
                 }
@@ -280,10 +280,10 @@ public class Adapter {
      */
     @SubscribeEvent
     public void onPlayerJoin(EntityJoinWorldEvent event) {
-        if (!event.world.isRemote) {
-            if (event.entity instanceof EntityPlayer) {
+        if (!event.getWorld().isRemote) {
+            if (event.getEntity() instanceof EntityPlayer) {
                 Player player = new Player();
-                String playername = event.entity.getDisplayName().getUnformattedText();
+                String playername = event.getEntity().getDisplayName().getUnformattedText();
                 player.setInventoryDirty(true);
                 player.setName(playername);
 
@@ -305,10 +305,10 @@ public class Adapter {
      */
     @SubscribeEvent
     public void onPlayerDie(LivingDeathEvent event) {
-        if (!event.entity.worldObj.isRemote) {
-            if (event.entity instanceof EntityPlayer) {
+        if (!event.getEntity().worldObj.isRemote) {
+            if (event.getEntity() instanceof EntityPlayer) {
                 Player player = new Player();
-                String playername = event.entity.getDisplayName().getUnformattedText();
+                String playername = event.getEntity().getDisplayName().getUnformattedText();
 
                 //Clear the removed player out of any rooms.
                 for (FactHandle handle : kSession.getFactHandles(new ClassObjectFilter(Room.class))) {

@@ -12,8 +12,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import org.drools.minecraft.helper.CommandHelper;
 import org.drools.minecraft.helper.GlobalHelper;
@@ -152,7 +153,7 @@ public class NotificationManager
                     int id = ((CommandHelper.Effect)ParamList.get(1)).effectid;
                     int duration = (Integer)ParamList.get(2);
                     int power = (Integer)ParamList.get(3) - 1;
-                    player.addPotionEffect(new PotionEffect(id, duration * 20, power));
+                    player.addPotionEffect(new PotionEffect(Potion.getPotionById(id), duration * 20, power));
                     return;
                 }
             }
@@ -166,11 +167,11 @@ public class NotificationManager
         {
             for(EntityPlayer player : world.playerEntities)
             {
-                player.addChatComponentMessage(new ChatComponentText((String)ParamList.get(0)));
+                player.addChatComponentMessage(new TextComponentString((String)ParamList.get(0)));
             }
         }if(parsedIndicator[1].equals("PLAYER"))
         {
-            world.getPlayerEntityByName(((Player)ParamList.get(1)).getName()).addChatComponentMessage(new ChatComponentText((String)ParamList.get(0)));
+            world.getPlayerEntityByName(((Player)ParamList.get(1)).getName()).addChatComponentMessage(new TextComponentString((String)ParamList.get(0)));
         }
     }
     

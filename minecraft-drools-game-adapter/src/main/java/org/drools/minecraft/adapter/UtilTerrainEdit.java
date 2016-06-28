@@ -10,13 +10,12 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import org.drools.minecraft.model.Chest;
 import org.drools.minecraft.model.Door;
 import org.drools.minecraft.model.InventoryItem;
-import org.drools.minecraft.model.Item;
 import org.drools.minecraft.model.Location;
 import org.drools.minecraft.model.Room;
 
@@ -52,7 +51,7 @@ public class UtilTerrainEdit
             {
                 for(int z = lower.getZ() + 1; z < upper.getZ(); z++)
                 {
-                    worldin.setBlockState(new BlockPos(x, y, z), Blocks.air.getDefaultState());
+                    worldin.setBlockState(new BlockPos(x, y, z), Blocks.AIR.getDefaultState());
                 }
             }
         }
@@ -62,7 +61,7 @@ public class UtilTerrainEdit
         {
             for (int z = lower.getZ(); z <= upper.getZ(); z++)
             {
-                worldin.setBlockState(new BlockPos(x, upper.getY(), z), Blocks.sea_lantern.getDefaultState());
+                worldin.setBlockState(new BlockPos(x, upper.getY(), z), Blocks.SEA_LANTERN.getDefaultState());
             }
         }
         //make the floor
@@ -70,7 +69,7 @@ public class UtilTerrainEdit
         {
             for (int z = lower.getZ(); z <= upper.getZ(); z++)
             {
-                worldin.setBlockState(new BlockPos(x, lower.getY(), z), Blocks.stone.getDefaultState());
+                worldin.setBlockState(new BlockPos(x, lower.getY(), z), Blocks.STONE.getDefaultState());
             }
         }
         
@@ -79,7 +78,7 @@ public class UtilTerrainEdit
         {
             for (int y = lower.getY(); y <= upper.getY(); y++)
             {
-                worldin.setBlockState(new BlockPos(x, y, upper.getZ()), Blocks.stone.getDefaultState());
+                worldin.setBlockState(new BlockPos(x, y, upper.getZ()), Blocks.STONE.getDefaultState());
             }
         }
         //make the back wall
@@ -87,7 +86,7 @@ public class UtilTerrainEdit
         {
             for (int y = lower.getY(); y <= upper.getY(); y++)
             {
-                worldin.setBlockState(new BlockPos(x, y, lower.getZ()), Blocks.stone.getDefaultState());
+                worldin.setBlockState(new BlockPos(x, y, lower.getZ()), Blocks.STONE.getDefaultState());
             }
         }
         
@@ -96,7 +95,7 @@ public class UtilTerrainEdit
         {
             for (int z = lower.getZ(); z <= upper.getZ(); z++)
             {
-                worldin.setBlockState(new BlockPos(upper.getX(), y, z), Blocks.stone.getDefaultState());
+                worldin.setBlockState(new BlockPos(upper.getX(), y, z), Blocks.STONE.getDefaultState());
             }
         }
         //make the right wall
@@ -104,7 +103,7 @@ public class UtilTerrainEdit
         {
             for (int z = lower.getZ(); z <= upper.getZ(); z++)
             {
-                worldin.setBlockState(new BlockPos(lower.getX(), y, z), Blocks.stone.getDefaultState());
+                worldin.setBlockState(new BlockPos(lower.getX(), y, z), Blocks.STONE.getDefaultState());
             }
         }
     }
@@ -128,10 +127,10 @@ public class UtilTerrainEdit
                     {
                         if(shut)
                         {
-                            worldin.setBlockState(new BlockPos(x, y, z), Blocks.planks.getDefaultState());
+                            worldin.setBlockState(new BlockPos(x, y, z), Blocks.PLANKS.getDefaultState());
                         }else
                         {
-                            worldin.setBlockState(new BlockPos(x, y, z), Blocks.air.getDefaultState());
+                            worldin.setBlockState(new BlockPos(x, y, z), Blocks.AIR.getDefaultState());
                         }
                     }
                 }
@@ -150,7 +149,7 @@ public class UtilTerrainEdit
      */
     public static void placeKeyChest(World world, BlockPos location, String keyname)
     {
-        world.setBlockState(location, net.minecraft.init.Blocks.chest.getDefaultState(), 2);
+        world.setBlockState(location, net.minecraft.init.Blocks.CHEST.getDefaultState(), 2);
         TileEntity chestEntity = world.getTileEntity(location);
 
         if (chestEntity instanceof TileEntityChest) {
@@ -167,7 +166,7 @@ public class UtilTerrainEdit
     {
         Location location = chest.getLocation();
         BlockPos pos = new BlockPos(location.getX(), location.getY(), location.getZ());
-        world.setBlockState(pos, net.minecraft.init.Blocks.chest.getDefaultState(), 2);
+        world.setBlockState(pos, net.minecraft.init.Blocks.CHEST.getDefaultState(), 2);
     }
     
     /**
@@ -178,7 +177,7 @@ public class UtilTerrainEdit
      */
     public static void placeChest(World world, BlockPos location)
     {
-        world.setBlockState(location, net.minecraft.init.Blocks.chest.getDefaultState(), 2);
+        world.setBlockState(location, net.minecraft.init.Blocks.CHEST.getDefaultState(), 2);
     }
     
     /**
@@ -194,7 +193,7 @@ public class UtilTerrainEdit
         //find the chest in minecraft
         Location location = chest.getLocation();
         BlockPos pos = new BlockPos(location.getX(), location.getY(), location.getZ());
-        world.setBlockState(pos, net.minecraft.init.Blocks.chest.getDefaultState(), 2);
+        world.setBlockState(pos, net.minecraft.init.Blocks.CHEST.getDefaultState(), 2);
         TileEntity chestEntity = world.getTileEntity(pos);
         
         //generate the item and place it in the chest

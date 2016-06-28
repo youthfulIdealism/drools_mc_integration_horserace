@@ -8,7 +8,6 @@ package org.drools.minecraft.adapter;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
-import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.boss.EntityDragon;
 import net.minecraft.entity.boss.EntityWither;
@@ -156,10 +155,11 @@ public class MobFactory {
         {
             newCreature = (EntityLiving) referencedClass.getDeclaredConstructor(World.class).newInstance(world);
             
+            //TODO: Reimplement
             if(type == MobTypes.DONKEY){
-                ((EntityHorse)newCreature).setHorseType(1);
+                //((EntityHorse)newCreature).setHorseType(1);
             }else if(type == MobTypes.MULE){
-                ((EntityHorse)newCreature).setHorseType(2);
+                //((EntityHorse)newCreature).setHorseType(2);
             }else if(type == MobTypes.ELDER_GUARDIAN){
                 ((EntityGuardian)newCreature).setElder();
             }else if(type == MobTypes.WITHER_SKELETON){
@@ -191,11 +191,12 @@ public class MobFactory {
         }
         
         if(entity instanceof EntityHorse){
-            if(((EntityHorse)entity).getHorseType() == 1){
+            //TODO: reimplement
+            /*if(((EntityHorse)entity).getHorseType() == 1){
                 referencedType = MobTypes.DONKEY;
             }else if(((EntityHorse)entity).getHorseType() == 2){
                 referencedType = MobTypes.MULE;
-            }
+            }*/
         }else if(entity instanceof EntityGuardian){
             if(((EntityGuardian)entity).isElder()){
                 referencedType = MobTypes.ELDER_GUARDIAN;
