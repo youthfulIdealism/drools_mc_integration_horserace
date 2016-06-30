@@ -5,7 +5,6 @@
  */
 package org.drools.minecraft.rules;
 
-import junit.framework.Assert;
 import org.drools.minecraft.model.Chest;
 import org.drools.minecraft.model.Door;
 import org.drools.minecraft.model.Key;
@@ -50,7 +49,8 @@ public class DroolsGameTest {
     public void helloRules() {
         KieServices ks = KieServices.Factory.get();
         KieContainer kContainer = ks.getKieClasspathContainer();
-        KieSession kSession = kContainer.newKieSession();
+        
+        KieSession kSession = kContainer.newKieBase( "escapetheroomKBase", null ).newKieSession();
         //kSession.addEventListener(new ModAgendaEventListener());
         //kSession.addEventListener(new ModRuleRuntimeEventListener());
         kSession.setGlobal("cmds", new MockCommandHelper());

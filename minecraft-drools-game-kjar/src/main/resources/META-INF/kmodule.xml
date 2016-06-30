@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <kmodule xmlns="http://jboss.org/kie/6.0.0/kmodule">
    
+    <kbase name="capturetheflagKBase"  packages="rules.capturetheflag" default="true"></kbase>
+    <kbase name="horseraceKBase" packages="rules.escapetheroom" default="false"></kbase>
+    <kbase name="escapetheroomKBase" packages="rules.escapetheroom" default="false"></kbase>
+    
 </kmodule>
