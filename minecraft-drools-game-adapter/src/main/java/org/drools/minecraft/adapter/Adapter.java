@@ -82,7 +82,8 @@ public class Adapter {
             // load up the knowledge base
             KieServices ks = KieServices.Factory.get();
             KieContainer kContainer = ks.getKieClasspathContainer();
-            kSession = kContainer.newKieSession();
+            //kSession = kContainer.newKieSession();
+            kSession = kContainer.newKieBase("capturetheflagKBase", null).newKieSession();
             
             kSession.fireAllRules();
         } catch (Throwable t) {

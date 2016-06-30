@@ -12,11 +12,12 @@ import java.util.ArrayList;
 global CommandHelper cmds;
 global TestHelper    tests;
 
-/*
+
 
 rule "set up world"
     when
         $startupevent: Event(id == "Startup")
+        $spawnpoint : NamedLocation(name == "Spawnpoint");
     then
         Room roomA = new Room($spawnpoint.getX() - 5, $spawnpoint.getY() - 5, $spawnpoint.getZ() - 5, $spawnpoint.getX() + 5, $spawnpoint.getY() + 5, $spawnpoint.getZ() + 5, "RoomA");
         cmds.notifyGenerateRoom(roomA);
@@ -54,7 +55,7 @@ rule "set up world"
         insert(chestB);
         insert(exitDoor);
 end
-*/
+
 
 rule "show content of the room where the player is"
     when
