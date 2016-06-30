@@ -28,22 +28,22 @@ rule "set up world"
         Team numberOne = new Team ("NumberOne");
         insert (numberOne);
 
-       Room stables = new Room(3, 89, 197, -11, 96, 191, "Stables");
-       insert(stables);
+        Room stables = new Room(3, 89, 197, -11, 96, 191, "Stables");
+        insert(stables);
 
         Event greetPlayer = new Event("greetPlayer");
         insert(greetPlayer);
 
 end
 
-rule "spawning horses"
+rule "yak to players about horses"
     when
         $player : Player()
         $room : Room(id == "Stable 2" && playersInRoom contains $player.getName())
         $team : Team(id == "NumberOne" && points == 0)
     then
         cmds.notifyChat("Contestants, please mount your horses!");
-    end
+end
        
 rule "Announcer"
     when
@@ -54,8 +54,7 @@ rule "Announcer"
     then
         cmds.notifyChat("Welcome to the annual horse race of Tergl Squub!"); 
         modify($greetPlayer){setHasFired(true)}
-        //modify($greetPlayer){setHasFired(false)}
-    end
+end
 
 rule "first checkpoint"
         when
@@ -66,7 +65,7 @@ rule "first checkpoint"
             cmds.notifyChat("Contestant number One has entered CheckPoint number one!");
             modify($team) { setPoints($team.getPoints() + 1) }
             cmds.notifyChat("Team Number One has " + $team.getPoints() + " points!");
-           end
+end
 
 rule "second checkpoint"
         when
@@ -78,7 +77,7 @@ rule "second checkpoint"
             
             modify($team) { setPoints($team.getPoints() + 1) }
             cmds.notifyChat("Team Number One has " + $team.getPoints() + " points!");
-        end
+end
 
 rule "third checkpoint"
         when
@@ -90,7 +89,7 @@ rule "third checkpoint"
             
             modify($team) { setPoints($team.getPoints() + 1) }
             cmds.notifyChat("Team Number One has " + $team.getPoints() + " points!");
-        end
+end
 
 rule "fourth checkpoint"
         when
@@ -102,7 +101,7 @@ rule "fourth checkpoint"
             
             modify($team) { setPoints($team.getPoints() + 1) }
             cmds.notifyChat("Team Number One has " + $team.getPoints() + " points!");
-        end
+end
 
 rule "finishing the race"
     when
@@ -111,7 +110,7 @@ rule "finishing the race"
         $room : Room(id == "StartFinish" && playersInRoom contains $player.getName())
     then
         cmds.notifyChat("Team number One has won with four points!");
-    end
+end
 
 rule "restarting"
     when
@@ -121,7 +120,7 @@ rule "restarting"
     then
         cmds.notifyChat("We are now restarting the race.");
         modify($team) { setPoints(0) }
-    end
+end
 
 rule "Print mobs in rooms"
     when

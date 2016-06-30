@@ -83,18 +83,6 @@ rule "Give blue a point when the flag enters the red scorezone"
         cmds.notifyChat("Scooooorrrre! Blue now has " + $teamblue.getPoints() + " points!");
 end
 
-//rule "Spawn a slime when there is a chicken in a room. Chickens need friends, too."
-//    when
-//        $mob : Mob(type == Mob.MobTypes.CHICKEN)
-//        $room : Room(mobsInRoom.containsKey($mob.getId()))
-//    then
-//        cmds.notifyMobSpawn(Mob.MobTypes.DONKEY, new Location(182, 97, -276));
-//        cmds.notifyMobSpawn(Mob.MobTypes.MULE, new Location(182, 97, -276));
-//        cmds.notifyMobSpawn(Mob.MobTypes.ELDER_GUARDIAN, new Location(182, 97, -276));
-//        cmds.notifyMobSpawn(Mob.MobTypes.WITHER_SKELETON, new Location(182, 97, -276));
-//        System.out.println($mob.getType() + " from room " + $room.getId());
-//end
-
 rule "Teleport a player who hits the chasm with the flag"
     when
         $player : Player()
