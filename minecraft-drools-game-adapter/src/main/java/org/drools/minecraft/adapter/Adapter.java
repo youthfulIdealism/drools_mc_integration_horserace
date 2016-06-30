@@ -61,9 +61,7 @@ public class Adapter {
      * automatically on game bootup
      */
     private Adapter() {
-        //players = new HashMap<String, Player>();
         dimensions = new HashMap<Integer, World>();
-        //rooms = new ArrayList<Room>();
 
         bootstrapKieSession();
         
@@ -307,7 +305,6 @@ public class Adapter {
     public void onPlayerDie(LivingDeathEvent event) {
         if (!event.getEntity().worldObj.isRemote) {
             if (event.getEntity() instanceof EntityPlayer) {
-                Player player = new Player();
                 String playername = event.getEntity().getDisplayName().getUnformattedText();
 
                 //Clear the removed player out of any rooms.
