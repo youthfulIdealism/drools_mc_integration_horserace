@@ -137,26 +137,6 @@ public class UtilTerrainEdit
             }
     }
     
-
-    
-    @Deprecated
-    /**
-     * Places a chest containing a key.
-     * 
-     * you can now place a chest, then place a named key inside it. This
-     * function is overly specific and will eventually be removed. Don't
-     * use it.
-     */
-    public static void placeKeyChest(World world, BlockPos location, String keyname)
-    {
-        world.setBlockState(location, net.minecraft.init.Blocks.CHEST.getDefaultState(), 2);
-        TileEntity chestEntity = world.getTileEntity(location);
-
-        if (chestEntity instanceof TileEntityChest) {
-                    ((TileEntityChest) chestEntity).setInventorySlotContents(0, new ItemStack(GameRegistry.findItem("examplemod", "key")).setStackDisplayName(keyname));
-        }
-    }
-    
     /**
      * Places a chest in the world given a location.
      * @param world
