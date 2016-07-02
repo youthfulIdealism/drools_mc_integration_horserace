@@ -94,26 +94,3 @@ rule "Open the exit door when the player has the key matching that Door"
 end
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
