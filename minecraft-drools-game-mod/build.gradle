@@ -39,7 +39,7 @@ minecraft {
 }
 
 repositories {
-        
+        mavenLocal()
         maven{
             name = "jboss"
             url = "https://repository.jboss.org/nexus/content/groups/public-jboss"
@@ -51,11 +51,8 @@ dependencies {
     // you may put jars on which you depend on in ./libs
     // or you may define them like so..
     //compile "some.group:artifact:version:classifier"
-    compile "org.drools:drools-compiler:6.4.0.Final"
-    compile project(':minecraft-drools-game-model')  
-    compile project(':minecraft-drools-game-util')  
     compile project(':minecraft-drools-game-adapter')  
-    compile project(':minecraft-drools-game-kjar')  
+    
     // real examples
     //compile 'com.mod-buildcraft:buildcraft:6.0.8:dev'  // adds buildcraft to the dev env
     //compile 'com.googlecode.efficient-java-matrix-library:ejml:0.24' // adds ejml to the dev env

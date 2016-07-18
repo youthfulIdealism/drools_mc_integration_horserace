@@ -14,20 +14,17 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
  *
  * @author Samuel
  */
-public class InitCommon
-{
-    	public static void preInit(FMLPreInitializationEvent event)
-	{
-		MinecraftForge.EVENT_BUS.register(Adapter.getInstance());
-	}
-	
-	public static void init(FMLInitializationEvent event)
-	{
-		
-	}
+public class InitCommon {
 
-	public static void postInit(FMLPostInitializationEvent event)
-	{
-		
-	}
+    public static void preInit( FMLPreInitializationEvent event ) {
+        MinecraftForge.EVENT_BUS.register( NewAdapter.getInstance() );
+    }
+
+    public static void init( FMLInitializationEvent event ) {
+
+    }
+
+    public static void postInit( FMLPostInitializationEvent event ) {
+
+    }
 }

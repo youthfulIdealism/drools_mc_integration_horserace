@@ -5,48 +5,78 @@
  */
 package org.drools.minecraft.adapter;
 
-import org.drools.minecraft.model.Location;
-import org.drools.minecraft.model.Player;
-import org.drools.minecraft.model.Room;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import org.drools.game.capture.flag.model.Location;
+import org.drools.game.capture.flag.model.Zone;
 
 /**
  *
  * @author Samuel
  */
-public class UtilMathHelper
-{
+public class UtilMathHelper {
+
     /**
      * helper method. Determines if a player is mathematically
-     * within a room.
+     * within a zone.
+     *
      * @param player
-     * @param room
-     * @return 
+     * @param zone
+     *
+     * @return
      */
-    public static boolean playerWithinRoom(Player player, Room room) {
-        if(player == null)
-        {
-            System.out.println("ERROR: Player not found in playerWithinRoom.");
-            return false;
-        }
-        Location playerLoc = player.getLocation();
-        Location roomLowerLoc = room.getLowerBound();
-        Location roomUpperLoc = room.getUpperBound();
-        boolean xWithin = within(playerLoc.getX(), roomLowerLoc.getX(), roomUpperLoc.getX());
-        boolean yWithin = within(playerLoc.getY(), roomLowerLoc.getY(), roomUpperLoc.getY());
-        boolean zWithin = within(playerLoc.getZ(), roomLowerLoc.getZ(), roomUpperLoc.getZ());
+    public static boolean playerWithinZone( Location playerLoc, Zone zone ) {
+        Location roomLowerLoc = zone.getLowerBound();
+        Location roomUpperLoc = zone.getUpperBound();
+        boolean xWithin = within( playerLoc.getX(), roomLowerLoc.getX(), roomUpperLoc.getX() );
+        boolean yWithin = within( playerLoc.getY(), roomLowerLoc.getY(), roomUpperLoc.getY() );
+        boolean zWithin = within( playerLoc.getZ(), roomLowerLoc.getZ(), roomUpperLoc.getZ() );
         return xWithin && yWithin && zWithin;
     }
 
     /**
      * helper method. Determines if a number is within bounds.
+     *
      * @param number
      * @param first
      * @param second
-     * @return 
+     *
+     * @return
      */
-    public static boolean within(int number, int first, int second) {
-        int min = Math.min(first, second);
-        int max = Math.max(first, second);
+    private static boolean within( int number, int first, int second ) {
+        int min = Math.min( first, second );
+        int max = Math.max( first, second );
         return number >= min && number <= max;
     }
+
+    public static boolean playerPickedTheFlag( EntityPlayer player ) {
+
+        for ( int i = 0; i < player.inventory.mainInventory.length; i++ ) {
+            ItemStack stack = player.inventory.mainInventory[i];
+            if ( stack != null ) {
+                System.out.println( "Item: " + stack.getUnlocalizedName() + " -  " + stack.getDisplayName() );
+                if ( stack.getUnlocalizedName().equals( "flag" ) ) {
+                    return true;
+                }
+//                    try {
+//                        player.getInventory().add(ItemsFactory.newItem(stack.getUnlocalizedName(), stack.getDisplayName()));
+//                    } catch (Exception ex) {
+//                        Logger.getLogger(UtilMathHelper.class.getName()).log(Level.SEVERE, null, ex);
+//                    }
+            }
+        }
+        return false;
+
+//            for (int i = 0; i < player.inventory.armorInventory.length; i++) {
+//                ItemStack stack = player.inventory.armorInventory[i];
+//                if (stack != null) {
+//                    try {
+//                        player.getInventory().add(ItemsFactory.newItem(stack.getUnlocalizedName(), stack.getDisplayName()));
+//                    } catch (Exception ex) {
+//                        Logger.getLogger(UtilMathHelper.class.getName()).log(Level.SEVERE, null, ex);
+//                    }
+//                }
+//            }
+    }
+
 }
