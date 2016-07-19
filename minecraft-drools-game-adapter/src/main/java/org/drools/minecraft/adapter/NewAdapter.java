@@ -50,7 +50,9 @@ public class NewAdapter {
 
     private static final NewAdapter INSTANCE = new NewAdapter();
 
-    private int throttle = 0; // This is completely wrong, the int will overflow
+    private int throttle = 0;
+    private final int maxThrottle = 20;
+    
     private GameSession game;
 
     public NewAdapter() {
@@ -138,9 +140,11 @@ public class NewAdapter {
             if ( event.phase == TickEvent.WorldTickEvent.Phase.START ) {
                 return;
             }
+            
             throttle++;
-
-            if ( throttle % 20 == 0 ) {
+            if ( throttle <= maxThrottle ) {
+                throttle = 0;
+                
                 //for simplicity's sake, this locks the adapter into only working
                 //in the default dimension. Rules will not work in the nether or end.
                 //We should change this at some point.
