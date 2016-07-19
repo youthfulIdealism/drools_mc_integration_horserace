@@ -55,7 +55,7 @@ public class UtilMathHelper {
             ItemStack stack = player.inventory.mainInventory[i];
             if ( stack != null ) {
                 System.out.println( "Item: " + stack.getUnlocalizedName() + " -  " + stack.getDisplayName() );
-                if ( stack.getUnlocalizedName().equals( "Flag" ) ) {
+                if ( stack.getDisplayName().equals( "Flag" ) ) {
                     return true;
                 }
 //                    try {

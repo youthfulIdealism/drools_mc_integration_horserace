@@ -16,6 +16,7 @@
 
 package org.drools.minecraft.adapter.cmds;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
@@ -41,6 +42,7 @@ public class ResetFlagCommand extends BaseCommand<Void> {
         this.flag = flag;
     }
 
+    //TODO: Find out how much of this behemoth is necessary.
     @Override
     public Void execute( Context ctx ) {
 
@@ -73,6 +75,20 @@ public class ResetFlagCommand extends BaseCommand<Void> {
         } else {
             System.out.println( "Error placing item in chest: item " + flag.getType() + " not found." );
         }
+        
+        
+        //Remove the flag from the player's inventory
+        EntityPlayer playerEntity = world.getPlayerEntityByName( getPlayer().getName() );
+        for ( int i = 0; i < playerEntity.inventory.mainInventory.length; i++ ) {
+            ItemStack stack = playerEntity.inventory.mainInventory[i];
+            if ( stack != null ) {
+                System.out.println( "Item: " + stack.getUnlocalizedName() + " -  " + stack.getDisplayName() );
+                if ( stack.getDisplayName().equals( "Flag" ) ) {
+                    playerEntity.inventory.mainInventory[i] = null;
+                }
+            }
+        }
+        
         return null;
     }
 

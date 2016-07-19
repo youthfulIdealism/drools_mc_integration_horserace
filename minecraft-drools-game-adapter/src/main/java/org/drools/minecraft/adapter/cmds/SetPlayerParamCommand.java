@@ -43,11 +43,12 @@ public class SetPlayerParamCommand extends BaseCommand<Void> {
     private Integer power;
     private Integer duration;
 
-    public SetPlayerParamCommand( Player player, String param, Integer power, Integer duration ) {
+    public SetPlayerParamCommand( Player player, String param, Integer duration, Integer power  ) {
         super( player );
         this.param = param;
-        this.power = power;
         this.duration = duration;
+        this.power = power;
+        
     }
 
     @Override
@@ -68,26 +69,12 @@ public class SetPlayerParamCommand extends BaseCommand<Void> {
         this.param = param;
     }
 
-    public Integer getPower()
-    {
+    public Integer getPower() {
         return power;
     }
 
-    public void setPower(Integer power)
-    {
+    public void setPower( Integer power ) {
         this.power = power;
     }
-
-    public Integer getDuration()
-    {
-        return duration;
-    }
-
-    public void setDuration(Integer duration)
-    {
-        this.duration = duration;
-    }
-
-    
 
 }

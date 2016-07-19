@@ -28,6 +28,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.drools.game.capture.flag.cmds.CommandRegistry;
 import org.drools.game.capture.flag.cmds.EnterZoneCommand;
+import org.drools.game.capture.flag.cmds.ExitZoneCommand;
 import org.drools.game.capture.flag.cmds.PickFlagCommand;
 import org.drools.game.core.api.GameSession;
 import org.drools.game.core.*;
@@ -43,6 +44,7 @@ import org.drools.game.core.api.Context;
 import org.drools.game.core.api.PlayerConfiguration;
 import org.drools.game.model.api.Player;
 import org.drools.game.model.impl.base.BasePlayerImpl;
+import org.kie.api.runtime.rule.FactHandle;
 
 public class NewAdapter {
 
@@ -59,6 +61,7 @@ public class NewAdapter {
         CommandRegistry.set( "TELEPORT_CALLBACK", "org.drools.minecraft.adapter.cmds.TeleportPlayerCommand" );
         CommandRegistry.set( "CLEAR_INVENTORY_CALLBACK", "org.drools.minecraft.adapter.cmds.ClearPlayerInventoryCommand" );
         CommandRegistry.set( "NOTIFY_VIA_CHAT_CALLBACK", "org.drools.minecraft.adapter.cmds.NotifyViaChatCommand" );
+        CommandRegistry.set( "NOTIFY_ALL_VIA_CHAT_CALLBACK", "org.drools.minecraft.adapter.cmds.NotifyAllViaChatCommand" );
         CommandRegistry.set( "RESET_FLAG_CALLBACK", "org.drools.minecraft.adapter.cmds.ResetFlagCommand" );
         CommandRegistry.set( "SET_PLAYER_HEALTH_CALLBACK", "org.drools.minecraft.adapter.cmds.SetPlayerHealthCommand" );
         CommandRegistry.set( "SET_PLAYER_PARAM_CALLBACK", "org.drools.minecraft.adapter.cmds.SetPlayerParamCommand" );
@@ -106,6 +109,9 @@ public class NewAdapter {
             for ( Zone zone : zones ) {
                 if ( UtilMathHelper.playerWithinZone( location, zone ) ) {
                     game.execute( new EnterZoneCommand( game.getPlayerByName( player ), zone ) );
+                }else if(zone.getPlayersInZone().contains(game.getPlayerByName( player )))
+                {
+                    game.execute( new ExitZoneCommand( game.getPlayerByName( player ), zone ) );
                 }
             }
 
