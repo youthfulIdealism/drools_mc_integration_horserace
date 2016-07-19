@@ -26,6 +26,7 @@ import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import org.drools.game.capture.flag.cmds.CommandRegistry;
 import org.drools.game.capture.flag.cmds.EnterZoneCommand;
 import org.drools.game.capture.flag.cmds.PickFlagCommand;
 import org.drools.game.core.api.GameSession;
@@ -55,6 +56,12 @@ public class NewAdapter {
         game.setExecutor( new CommandExecutorImpl() );
         game.setMessageService( new GameMessageServiceImpl() );
         game.setCallbackService( new GameCallbackServiceImpl() );
+        CommandRegistry.set( "TELEPORT_CALLBACK", "org.drools.minecraft.adapter.cmds.TeleportPlayerCommand" );
+        CommandRegistry.set( "CLEAR_INVENTORY_CALLBACK", "org.drools.minecraft.adapter.cmds.ClearPlayerInventoryCommand" );
+        CommandRegistry.set( "NOTIFY_VIA_CHAT_CALLBACK", "org.drools.minecraft.adapter.cmds.NotifyViaChatCommand" );
+        CommandRegistry.set( "RESET_FLAG_CALLBACK", "org.drools.minecraft.adapter.cmds.ResetFlagCommand" );
+        CommandRegistry.set( "SET_PLAYER_HEALTH_CALLBACK", "org.drools.minecraft.adapter.cmds.SetPlayerHealthCommand" );
+        CommandRegistry.set( "SET_PLAYER_PARAM_CALLBACK", "org.drools.minecraft.adapter.cmds.SetPlayerParamCommand" );
         bootstrapWorld();
 
     }
@@ -79,7 +86,7 @@ public class NewAdapter {
         initFacts.add( flag );
         Zone chasm = new Zone( "Chasm", 141, 80, -310, 260, 62, -199 );
         initFacts.add( chasm );
-        GameConfiguration config = new BaseGameConfigurationImpl( initFacts, "org.drools.game:drools-game-engine-capture-flag-kjar:1.0-SNAPSHOT" );
+        GameConfiguration config = new BaseGameConfigurationImpl( initFacts, "" );
         game.bootstrap( config );
     }
 

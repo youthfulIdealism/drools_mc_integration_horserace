@@ -59,10 +59,16 @@ dependencies {
     //
     // You can read more about how to add dependency here:
     //   http://www.gradle.org/docs/current/userguide/dependency_management.html#sec:how_to_declare_your_dependencies
-    compile "org.drools.game:drools-game-engine-core-impl:1.0-SNAPSHOT"
-    compile "org.drools.game:drools-game-engine-capture-flag-model:1.0-SNAPSHOT"
-    compile "org.drools.game:drools-game-engine-capture-flag-kjar:1.0-SNAPSHOT"
-    runtime "org.kie:kie-ci:6.4.0.Final"
+    compile ('org.drools.game:drools-game-engine-core-impl:1.0-SNAPSHOT'){
+        exclude group: 'commons-io', module: 'commons-io'
+        transitive = true
+    }
+    compile ('org.drools.game:drools-game-engine-capture-flag-kjar:1.0-SNAPSHOT'){
+        exclude group: 'commons-io', module: 'commons-io'
+        transitive = true
+    }
+    
+    runtime 'org.drools.game:drools-game-engine-capture-flag-kjar:1.0-SNAPSHOT'
     
 }
 
