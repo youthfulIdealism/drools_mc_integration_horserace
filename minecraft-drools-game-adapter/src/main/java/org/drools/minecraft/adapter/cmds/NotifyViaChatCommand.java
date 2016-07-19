@@ -16,6 +16,9 @@
 
 package org.drools.minecraft.adapter.cmds;
 
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.world.World;
 import org.drools.game.core.api.BaseCommand;
 import org.drools.game.core.api.Context;
 import org.drools.game.model.api.Player;
@@ -31,7 +34,10 @@ public class NotifyViaChatCommand extends BaseCommand<Void> {
 
     @Override
     public Void execute( Context ctx ) {
-        
+        System.out.println( "Notifying via caht to: " + getPlayer().getName() + " Message: " + message );
+        World world = ( World ) ctx.getData().get( "world" );
+        EntityPlayer playerEntity = world.getPlayerEntityByName( getPlayer().getName() );
+        playerEntity.addChatMessage(new TextComponentString(message));
         return null;
     }
 

@@ -16,23 +16,47 @@
 
 package org.drools.minecraft.adapter.cmds;
 
+import java.util.HashMap;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
+import net.minecraft.world.World;
 import org.drools.game.core.api.BaseCommand;
 import org.drools.game.core.api.Context;
 import org.drools.game.model.api.Player;
 
 public class SetPlayerParamCommand extends BaseCommand<Void> {
 
+    private static HashMap<String, Integer> effects;
+    
+    static {
+        if(effects == null)
+        {
+            effects = new HashMap<String, Integer>();
+            effects.put("SPEED", 1);
+            effects.put("JUMP_BOOST", 8);
+            //TODO: implement the rest?
+        }
+    }
+    
     private String param;
-    private Integer value;
+    private Integer power;
+    private Integer duration;
 
-    public SetPlayerParamCommand( Player player, String param, Integer value ) {
+    public SetPlayerParamCommand( Player player, String param, Integer power, Integer duration ) {
         super( player );
         this.param = param;
-        this.value = value;
+        this.power = power;
+        this.duration = duration;
     }
 
     @Override
     public Void execute( Context ctx ) {
+        System.out.println( "Applying effect to player: " + getPlayer().getName() + " :" + param );
+        World world = ( World ) ctx.getData().get( "world" );
+        EntityPlayer playerEntity = world.getPlayerEntityByName( getPlayer().getName() );
+        playerEntity.addPotionEffect(new PotionEffect(Potion.getPotionById(effects.get(param)), duration, power));
+        
         return null;
     }
 
@@ -44,12 +68,26 @@ public class SetPlayerParamCommand extends BaseCommand<Void> {
         this.param = param;
     }
 
-    public Integer getValue() {
-        return value;
+    public Integer getPower()
+    {
+        return power;
     }
 
-    public void setValue( Integer value ) {
-        this.value = value;
+    public void setPower(Integer power)
+    {
+        this.power = power;
     }
+
+    public Integer getDuration()
+    {
+        return duration;
+    }
+
+    public void setDuration(Integer duration)
+    {
+        this.duration = duration;
+    }
+
+    
 
 }
