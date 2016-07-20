@@ -36,13 +36,11 @@ public class InitCommon
         Path runPath = Paths.get("");
         String intoModDirectory = runPath.toAbsolutePath().toString().replace("\\run", "\\worlds");
         runPath = Paths.get("saves\\");
-        System.out.println(runPath.toAbsolutePath());
         
         File woldFolder = new File(intoModDirectory);
         
         try
         {
-            
             for(File worldFile : woldFolder.listFiles())
             {
                 recursiveCopy(worldFile.getAbsolutePath(), runPath.toAbsolutePath().toString() + "\\" + worldFile.getName());

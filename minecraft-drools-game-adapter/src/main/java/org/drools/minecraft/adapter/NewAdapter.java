@@ -111,7 +111,7 @@ public class NewAdapter {
             for ( Zone zone : zones ) {
                 if ( UtilMathHelper.playerWithinZone( location, zone ) ) {
                     game.execute( new EnterZoneCommand( game.getPlayerByName( player ), zone ) );
-                }else if(zone.getPlayersInZone().contains(game.getPlayerByName( player )))
+                }else if(zone.getPlayersInZone().contains(player))
                 {
                     game.execute( new ExitZoneCommand( game.getPlayerByName( player ), zone ) );
                 }
