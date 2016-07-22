@@ -51,7 +51,7 @@ dependencies {
     // you may put jars on which you depend on in ./libs
     // or you may define them like so..
     //compile "some.group:artifact:version:classifier"
-    compile project(':minecraft-drools-game-adapter')  
+    //compile project(':minecraft-drools-game-adapter')  
     
     // real examples
     //compile 'com.mod-buildcraft:buildcraft:6.0.8:dev'  // adds buildcraft to the dev env
@@ -69,6 +69,16 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 
+	compile ('org.drools.game:drools-game-engine-core-impl:1.0-SNAPSHOT'){
+        exclude group: 'commons-io', module: 'commons-io'
+        transitive = true
+    }
+    compile ('org.drools.game:drools-game-engine-capture-flag-kjar:1.0-SNAPSHOT'){
+        exclude group: 'commons-io', module: 'commons-io'
+        transitive = true
+    }
+    
+    runtime 'org.drools.game:drools-game-engine-capture-flag-kjar:1.0-SNAPSHOT'
 }
 
 processResources

@@ -10,10 +10,12 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import org.drools.minecraft.adapter.NewAdapter;
 
 public class InitCommon
 {
@@ -24,15 +26,15 @@ public class InitCommon
     
     public static void preInit(FMLPreInitializationEvent event)
     {
+        MinecraftForge.EVENT_BUS.register( NewAdapter.getInstance() );
+        
         itemKey = (ItemKey)(new ItemKey().setUnlocalizedName("key"));
         GameRegistry.registerItem(itemKey, "key");
         
         itemRulerRoom = (ItemRulerRoom)(new ItemRulerRoom().setUnlocalizedName("ruler_room"));
         GameRegistry.registerItem(itemRulerRoom, "ruler_room");
         
-        org.drools.minecraft.adapter.InitCommon.preInit(event);
-        //MinecraftForge.EVENT_BUS.register(new RulesDriver());
-        
+        //Autoload the world in the dev environment.
         Path runPath = Paths.get("");
         String intoModDirectory = runPath.toAbsolutePath().toString().replace("\\run", "\\worlds");
         runPath = Paths.get("saves\\");
@@ -75,11 +77,11 @@ public class InitCommon
 
     public static void init(FMLInitializationEvent event)
     {
-        org.drools.minecraft.adapter.InitCommon.init(event);
+        
     }
 
     public static void postInit(FMLPostInitializationEvent event)
     {
-        org.drools.minecraft.adapter.InitCommon.postInit(event);
+        
     }
 }
