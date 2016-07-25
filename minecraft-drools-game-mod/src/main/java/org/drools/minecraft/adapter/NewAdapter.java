@@ -46,6 +46,7 @@ import org.drools.game.core.api.Context;
 import org.drools.game.core.api.PlayerConfiguration;
 import org.drools.game.model.api.Player;
 import org.drools.game.model.impl.base.BasePlayerImpl;
+import org.drools.minecraft.adapter.cmds.ClearPlayerInventoryLogicalCommand;
 import org.kie.api.runtime.rule.FactHandle;
 
 public class NewAdapter
@@ -71,6 +72,7 @@ public class NewAdapter
         CommandRegistry.set("RESET_FLAG_CALLBACK", "org.drools.minecraft.adapter.cmds.ResetFlagCommand");
         CommandRegistry.set("SET_PLAYER_HEALTH_CALLBACK", "org.drools.minecraft.adapter.cmds.SetPlayerHealthCommand");
         CommandRegistry.set("SET_PLAYER_PARAM_CALLBACK", "org.drools.minecraft.adapter.cmds.SetPlayerParamCommand");
+        CommandRegistry.set("CLEAR_PLAYER_INVENTORY_LOGICAL_CALLBACK", "org.drools.minecraft.adapter.cmds.ClearPlayerInventoryLogicalCommand");
         bootstrapWorld();
 
     }
@@ -127,15 +129,16 @@ public class NewAdapter
                 }
             }
 
-            if (playerEntity.inventory.inventoryChanged)
+            //if (playerEntity.inventory.inventoryChanged)
+            //{
+            game.execute(new ClearPlayerInventoryLogicalCommand(game.getPlayerByName(player)));
+            if (UtilMathHelper.playerPickedTheFlag(playerEntity))
             {
-                if (UtilMathHelper.playerPickedTheFlag(playerEntity))
-                {
-                    Collection<Flag> flags = game.getGameObjects(Flag.class);
-                    game.execute(new PickFlagCommand(game.getPlayerByName(player), flags.iterator().next()));
-                }
-                playerEntity.inventory.inventoryChanged = false;
+                Collection<Flag> flags = game.getGameObjects(Flag.class);
+                game.execute(new PickFlagCommand(game.getPlayerByName(player), flags.iterator().next()));
             }
+            //playerEntity.inventory.inventoryChanged = false;
+            //}
             dealWithCallbacks(world);
         }
 
@@ -222,7 +225,7 @@ public class NewAdapter
         }
     }
 
-    @SubscribeEvent
+    /*@SubscribeEvent
     public void onPlayerDropsItemsDeath(PlayerDropsEvent event)
     {
         //Tick model
@@ -269,6 +272,5 @@ public class NewAdapter
                 event.getEntityPlayer().inventory.inventoryChanged = false;
             }
         }
-    }
-
+    }*/
 }
