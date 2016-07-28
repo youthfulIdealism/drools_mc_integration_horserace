@@ -69,16 +69,16 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 
-	compile ('org.drools.game:drools-game-engine-core-impl:1.0-SNAPSHOT'){
+    compile ('org.drools.game:drools-game-engine-core-impl:1.0-SNAPSHOT'){
         exclude group: 'commons-io', module: 'commons-io'
         transitive = true
     }
-    compile ('org.drools.game:drools-game-engine-capture-flag-kjar:1.0-SNAPSHOT'){
+    compile ('org.drools.game:drools-game-engine-horserace-kjar:1.0-SNAPSHOT'){
         exclude group: 'commons-io', module: 'commons-io'
         transitive = true
     }
     
-    runtime 'org.drools.game:drools-game-engine-capture-flag-kjar:1.0-SNAPSHOT'
+    runtime 'org.drools.game:drools-game-engine-horserace-kjar:1.0-SNAPSHOT'
 }
 
 processResources

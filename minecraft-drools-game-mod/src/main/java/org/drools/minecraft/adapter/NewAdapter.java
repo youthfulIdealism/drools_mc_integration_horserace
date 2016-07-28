@@ -23,30 +23,18 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
-import net.minecraftforge.event.entity.player.PlayerDropsEvent;
-import net.minecraftforge.event.entity.player.PlayerOpenContainerEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import org.drools.game.capture.flag.cmds.CommandRegistry;
-import org.drools.game.capture.flag.cmds.EnterZoneCommand;
-import org.drools.game.capture.flag.cmds.ExitZoneCommand;
-import org.drools.game.capture.flag.cmds.PickFlagCommand;
 import org.drools.game.core.api.GameSession;
 import org.drools.game.core.*;
 import org.drools.game.core.api.GameConfiguration;
-import org.drools.game.capture.flag.model.Chest;
-import org.drools.game.capture.flag.model.Flag;
-import org.drools.game.capture.flag.model.Location;
-import org.drools.game.capture.flag.model.NamedLocation;
-import org.drools.game.capture.flag.model.Zone;
-import org.drools.game.capture.flag.model.Team;
 import org.drools.game.core.api.Command;
 import org.drools.game.core.api.Context;
 import org.drools.game.core.api.PlayerConfiguration;
 import org.drools.game.model.api.Player;
 import org.drools.game.model.impl.base.BasePlayerImpl;
-import org.drools.minecraft.adapter.cmds.ClearPlayerInventoryLogicalCommand;
+import org.drools.game.horserace.cmds.*;
+import org.drools.game.horserace.model.*;
 import org.kie.api.runtime.rule.FactHandle;
 
 public class NewAdapter
@@ -65,14 +53,9 @@ public class NewAdapter
         game.setExecutor(new CommandExecutorImpl());
         game.setMessageService(new GameMessageServiceImpl());
         game.setCallbackService(new GameCallbackServiceImpl());
-        CommandRegistry.set("TELEPORT_CALLBACK", "org.drools.minecraft.adapter.cmds.TeleportPlayerCommand");
-        CommandRegistry.set("CLEAR_INVENTORY_CALLBACK", "org.drools.minecraft.adapter.cmds.ClearPlayerInventoryCommand");
+        
         CommandRegistry.set("NOTIFY_VIA_CHAT_CALLBACK", "org.drools.minecraft.adapter.cmds.NotifyViaChatCommand");
         CommandRegistry.set("NOTIFY_ALL_VIA_CHAT_CALLBACK", "org.drools.minecraft.adapter.cmds.NotifyAllViaChatCommand");
-        CommandRegistry.set("RESET_FLAG_CALLBACK", "org.drools.minecraft.adapter.cmds.ResetFlagCommand");
-        CommandRegistry.set("SET_PLAYER_HEALTH_CALLBACK", "org.drools.minecraft.adapter.cmds.SetPlayerHealthCommand");
-        CommandRegistry.set("SET_PLAYER_PARAM_CALLBACK", "org.drools.minecraft.adapter.cmds.SetPlayerParamCommand");
-        CommandRegistry.set("CLEAR_PLAYER_INVENTORY_LOGICAL_CALLBACK", "org.drools.minecraft.adapter.cmds.ClearPlayerInventoryLogicalCommand");
         bootstrapWorld();
 
     }
@@ -80,24 +63,22 @@ public class NewAdapter
     private void bootstrapWorld()
     {
         List initFacts = new ArrayList();
-        Chest chest = new Chest("Flag Chest", new Location(182, 94, -276));
-        initFacts.add(chest);
-        Team redTeam = new Team("red");
-        initFacts.add(redTeam);
-        Zone scoreZoneRed = new Zone("red", 155, 94, -280, 151, 99, -272);
-        initFacts.add(scoreZoneRed);
-        NamedLocation redSpawn = new NamedLocation("red", 153, 98, -275);
-        initFacts.add(redSpawn);
-        Team blueTeam = new Team("blue");
-        initFacts.add(blueTeam);
-        Zone scoreZoneBlue = new Zone("blue", 209, 94, -272, 213, 99, -280);
-        initFacts.add(scoreZoneBlue);
-        NamedLocation blueSpawn = new NamedLocation("blue", 211, 97, -275);
-        initFacts.add(blueSpawn);
-        Flag flag = new Flag("Flag", "banner");
-        initFacts.add(flag);
-        Zone chasm = new Zone("Chasm", 141, 80, -310, 260, 62, -199);
-        initFacts.add(chasm);
+        
+        Checkpoint startfinish = new Checkpoint("StartFinish", 0, -143, 75, 248, -140, 79, 262, true);
+        initFacts.add(startfinish);
+        
+        Checkpoint checkpointone = new Checkpoint("CheckPointOne", 1, -143, 75, 292, -134, 82, 295);
+        initFacts.add(checkpointone);
+
+        Checkpoint checkpointtwo = new Checkpoint("CheckPointTwo", 2, -107, 75, 295, -104, 82, 286);
+        initFacts.add(checkpointtwo);
+        
+        Checkpoint checkpointthree = new Checkpoint("CheckPointThree", 3, -104, 75, 218, -113, 81, 215);
+        initFacts.add(checkpointthree);
+
+        Checkpoint checkpointfour = new Checkpoint("CheckPointFour", 4, -134, 75, 218, -143, 85, 215);
+        initFacts.add(checkpointfour);
+        
         GameConfiguration config = new BaseGameConfigurationImpl(initFacts, "");
         game.bootstrap(config);
     }
@@ -117,28 +98,18 @@ public class NewAdapter
                     playerEntity.getPosition().getY(),
                     playerEntity.getPosition().getZ());
 
-            Collection<Zone> zones = game.getGameObjects(Zone.class);
-            for (Zone zone : zones)
+            Collection<Checkpoint> checkpoints = game.getGameObjects(Checkpoint.class);
+            for (Checkpoint checkpoint : checkpoints)
             {
-                if (UtilMathHelper.playerWithinZone(location, zone))
+                if (UtilMathHelper.playerWithinCheckpoint(location, checkpoint))
                 {
-                    game.execute(new EnterZoneCommand(game.getPlayerByName(player), zone));
-                } else if (zone.getPlayersInZone().contains(player))
+                    game.execute(new EnterCheckpointCommand(game.getPlayerByName(player), checkpoint));
+                } else if(checkpoint.getPlayers().contains(player))
                 {
-                    game.execute(new ExitZoneCommand(game.getPlayerByName(player), zone));
+                    game.execute(new LeaveCheckpointCommand(game.getPlayerByName(player), checkpoint));
                 }
             }
 
-            //if (playerEntity.inventory.inventoryChanged)
-            //{
-            game.execute(new ClearPlayerInventoryLogicalCommand(game.getPlayerByName(player)));
-            if (UtilMathHelper.playerPickedTheFlag(playerEntity))
-            {
-                Collection<Flag> flags = game.getGameObjects(Flag.class);
-                game.execute(new PickFlagCommand(game.getPlayerByName(player), flags.iterator().next()));
-            }
-            //playerEntity.inventory.inventoryChanged = false;
-            //}
             dealWithCallbacks(world);
         }
 
@@ -224,53 +195,4 @@ public class NewAdapter
             cmd.execute(callbackCtx);
         }
     }
-
-    /*@SubscribeEvent
-    public void onPlayerDropsItemsDeath(PlayerDropsEvent event)
-    {
-        //Tick model
-        //event.getEntityPlayer().inventory.markDirty();
-
-        //Event model
-        if (UtilMathHelper.playerPickedTheFlag(event.getEntityPlayer()))
-        {
-            Collection<Flag> flags = game.getGameObjects(Flag.class);
-            game.execute(new PickFlagCommand(game.getPlayerByName(event.getEntityPlayer().getName()), flags.iterator().next()));
-            event.getEntityPlayer().inventory.inventoryChanged = false;
-        }
-    }
-
-    @SubscribeEvent
-    public void onPlayerOpenContainer(PlayerOpenContainerEvent event)
-    {
-        //Tick model
-        //event.getEntityPlayer().inventory.markDirty();
-
-        //Event model
-        if (UtilMathHelper.playerPickedTheFlag(event.getEntityPlayer()))
-        {
-            Collection<Flag> flags = game.getGameObjects(Flag.class);
-            game.execute(new PickFlagCommand(game.getPlayerByName(event.getEntityPlayer().getName()), flags.iterator().next()));
-            event.getEntityPlayer().inventory.inventoryChanged = false;
-        }
-
-    }
-
-    @SubscribeEvent
-    public void onPlayerPickUpItem(EntityItemPickupEvent event)
-    {
-        if (event.getEntityPlayer() != null)
-        {
-            //Tick model
-            //event.getEntityPlayer().inventory.markDirty();
-
-            //Event model
-            if (UtilMathHelper.playerPickedTheFlag(event.getEntityPlayer()))
-            {
-                Collection<Flag> flags = game.getGameObjects(Flag.class);
-                game.execute(new PickFlagCommand(game.getPlayerByName(event.getEntityPlayer().getName()), flags.iterator().next()));
-                event.getEntityPlayer().inventory.inventoryChanged = false;
-            }
-        }
-    }*/
 }

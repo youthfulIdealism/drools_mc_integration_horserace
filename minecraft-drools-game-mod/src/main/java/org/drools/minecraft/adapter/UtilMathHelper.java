@@ -5,10 +5,8 @@
  */
 package org.drools.minecraft.adapter;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import org.drools.game.capture.flag.model.Location;
-import org.drools.game.capture.flag.model.Zone;
+import org.drools.game.horserace.model.Checkpoint;
+import org.drools.game.horserace.model.Location;
 
 /**
  *
@@ -21,13 +19,13 @@ public class UtilMathHelper {
      * within a zone.
      *
      * @param player
-     * @param zone
+     * @param checkpoint
      *
      * @return
      */
-    public static boolean playerWithinZone( Location playerLoc, Zone zone ) {
-        Location roomLowerLoc = zone.getLowerBound();
-        Location roomUpperLoc = zone.getUpperBound();
+    public static boolean playerWithinCheckpoint( Location playerLoc, Checkpoint checkpoint ) {
+        Location roomLowerLoc = checkpoint.getLowerBound();
+        Location roomUpperLoc = checkpoint.getUpperBound();
         boolean xWithin = within( playerLoc.getX(), roomLowerLoc.getX(), roomUpperLoc.getX() );
         boolean yWithin = within( playerLoc.getY(), roomLowerLoc.getY(), roomUpperLoc.getY() );
         boolean zWithin = within( playerLoc.getZ(), roomLowerLoc.getZ(), roomUpperLoc.getZ() );
@@ -47,36 +45,6 @@ public class UtilMathHelper {
         int min = Math.min( first, second );
         int max = Math.max( first, second );
         return number >= min && number <= max;
-    }
-
-    public static boolean playerPickedTheFlag( EntityPlayer player ) {
-
-        for ( int i = 0; i < player.inventory.mainInventory.length; i++ ) {
-            ItemStack stack = player.inventory.mainInventory[i];
-            if ( stack != null ) {
-                System.out.println( "Item: " + stack.getUnlocalizedName() + " -  " + stack.getDisplayName() );
-                if ( stack.getDisplayName().equals( "Flag" ) ) {
-                    return true;
-                }
-//                    try {
-//                        player.getInventory().add(ItemsFactory.newItem(stack.getUnlocalizedName(), stack.getDisplayName()));
-//                    } catch (Exception ex) {
-//                        Logger.getLogger(UtilMathHelper.class.getName()).log(Level.SEVERE, null, ex);
-//                    }
-            }
-        }
-        return false;
-
-//            for (int i = 0; i < player.inventory.armorInventory.length; i++) {
-//                ItemStack stack = player.inventory.armorInventory[i];
-//                if (stack != null) {
-//                    try {
-//                        player.getInventory().add(ItemsFactory.newItem(stack.getUnlocalizedName(), stack.getDisplayName()));
-//                    } catch (Exception ex) {
-//                        Logger.getLogger(UtilMathHelper.class.getName()).log(Level.SEVERE, null, ex);
-//                    }
-//                }
-//            }
     }
 
 }
