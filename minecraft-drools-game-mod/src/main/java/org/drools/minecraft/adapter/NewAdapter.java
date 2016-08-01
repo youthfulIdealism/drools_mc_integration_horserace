@@ -110,9 +110,9 @@ public class NewAdapter
                 }
             }
 
-            dealWithCallbacks(world);
+            
         }
-
+        dealWithCallbacks(world);
     }
 
     /**

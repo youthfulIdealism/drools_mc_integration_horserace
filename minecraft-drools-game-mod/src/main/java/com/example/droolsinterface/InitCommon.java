@@ -41,20 +41,23 @@ public class InitCommon
         
         File woldFolder = new File(intoModDirectory);
         
-        try
+        if(woldFolder.exists())
         {
-            for(File worldFile : woldFolder.listFiles())
+            try
             {
-                recursiveCopy(worldFile.getAbsolutePath(), runPath.toAbsolutePath().toString() + "\\" + worldFile.getName());
+                for(File worldFile : woldFolder.listFiles())
+                {
+                    recursiveCopy(worldFile.getAbsolutePath(), runPath.toAbsolutePath().toString() + "\\" + worldFile.getName());
+                }
+            }catch(FileAlreadyExistsException aaex)
+            {
+                System.out.println("Initialization error: unable to copy worlds due to FileAlreadyExiststException.");
+                System.out.println("You can probably ignore this error..");
             }
-        }catch(FileAlreadyExistsException aaex)
-        {
-            System.out.println("Initialization error: unable to copy worlds due to FileAlreadyExiststException.");
-            System.out.println("You can probably ignore this error..");
-        }
-        catch (IOException ex)
-        {
-            Logger.getLogger(InitCommon.class.getName()).log(Level.SEVERE, null, ex);
+            catch (IOException ex)
+            {
+                Logger.getLogger(InitCommon.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         
     }
