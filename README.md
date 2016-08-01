@@ -19,3 +19,7 @@ We will be updating this repository with a Minecraft MOD which uses the Rule Eng
 #Issues
 Please feel free to get in touch or report issues about this project.
   
+#Mod
+Navigate to the project's root directory, and run gradlew build. Install forge on your copy of minecraft:
+http://files.minecraftforge.net/maven/net/minecraftforge/forge/index_1.9.4.html
+Navigate to minecraft's files, and copy minecraft-drools-game-mod/build/libs/minecraft-drools-game-1.0 from your workspace into the mod folder in minecraft's files. Launch Minecraft.
