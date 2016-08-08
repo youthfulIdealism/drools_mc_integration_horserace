@@ -56,6 +56,7 @@ public class NewAdapter
         
         CommandRegistry.set("NOTIFY_VIA_CHAT_CALLBACK", "org.drools.minecraft.adapter.cmds.NotifyViaChatCommand");
         CommandRegistry.set("NOTIFY_ALL_VIA_CHAT_CALLBACK", "org.drools.minecraft.adapter.cmds.NotifyAllViaChatCommand");
+        CommandRegistry.set("CHANGE_SCORE_CALLBACK", "org.drools.minecraft.adapter.cmds.ChangeScoreCommand");
         bootstrapWorld();
 
     }
@@ -101,10 +102,10 @@ public class NewAdapter
             Collection<Checkpoint> checkpoints = game.getGameObjects(Checkpoint.class);
             for (Checkpoint checkpoint : checkpoints)
             {
-                if (UtilMathHelper.playerWithinCheckpoint(location, checkpoint))
+                if (UtilMathHelper.playerWithinCheckpoint(location, checkpoint) && !checkpoint.getPlayers().contains(player))
                 {
                     game.execute(new EnterCheckpointCommand(game.getPlayerByName(player), checkpoint));
-                } else if(checkpoint.getPlayers().contains(player))
+                } else if(!UtilMathHelper.playerWithinCheckpoint(location, checkpoint) && checkpoint.getPlayers().contains(player))
                 {
                     game.execute(new LeaveCheckpointCommand(game.getPlayerByName(player), checkpoint));
                 }
