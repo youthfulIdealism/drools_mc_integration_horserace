@@ -35,6 +35,7 @@ import org.drools.game.model.api.Player;
 import org.drools.game.model.impl.base.BasePlayerImpl;
 import org.drools.game.horserace.cmds.*;
 import org.drools.game.horserace.model.*;
+import org.drools.minecraft.adapter.cmds.ChangeScoreCommand;
 import org.kie.api.runtime.rule.FactHandle;
 
 public class NewAdapter
@@ -44,6 +45,7 @@ public class NewAdapter
 
     private int throttle = 0;
     private final int maxThrottle = 20;
+    private boolean hasSetUpWorld;
 
     private GameSession game;
 
@@ -82,6 +84,8 @@ public class NewAdapter
         
         GameConfiguration config = new BaseGameConfigurationImpl(initFacts, "");
         game.bootstrap(config);
+        
+        hasSetUpWorld = false;
     }
 
     public static NewAdapter getInstance()
@@ -91,6 +95,22 @@ public class NewAdapter
 
     private void update(World world) throws ClassNotFoundException, InstantiationException, IllegalAccessException
     {
+        if (!hasSetUpWorld)
+        {
+            if (world.isAreaLoaded(ChangeScoreCommand.startingpos, ChangeScoreCommand.startingpos.add(0, 23, 40)))
+            {
+                for (int i = 0; i < 20; i++)
+                {
+                    for (int a = 0; a < 3 + i; a++)
+                    {
+                        world.setBlockToAir(ChangeScoreCommand.startingpos.add(0, a, i * 2));
+
+                    }
+                }
+                hasSetUpWorld = true;
+            }
+        }
+
         for (String player : game.getPlayers())
         {
             EntityPlayer playerEntity = world.getPlayerEntityByName(player);

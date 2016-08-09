@@ -25,7 +25,7 @@ import org.drools.game.core.api.Context;
 import org.drools.game.model.api.Player;
 
 public class ChangeScoreCommand extends BaseCommand<Void> {
-    
+    public  static final BlockPos startingpos  = new BlockPos(-143, 85, 248);
     private int amount;
     
     public ChangeScoreCommand( Player player, int amount) {
@@ -46,13 +46,12 @@ public class ChangeScoreCommand extends BaseCommand<Void> {
     @Override
     public Void execute( Context ctx ) {
         World world = ( World ) ctx.getData().get( "world" );
-        BlockPos startingPos = new BlockPos(-143, 80, 248);
         IBlockState blockstate = Blocks.LAPIS_BLOCK.getDefaultState();
         
         
         for(int i = 0; i < 3 + amount; i++)
         {
-            world.setBlockState(startingPos.add(0, i, amount * 2), blockstate);
+            world.setBlockState(startingpos.add(0, i, amount * 2), blockstate);
         }
         
         return null;
