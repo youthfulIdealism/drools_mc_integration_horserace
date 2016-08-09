@@ -55,7 +55,7 @@ public class NewAdapter
         game.setExecutor(new CommandExecutorImpl());
         game.setMessageService(new GameMessageServiceImpl());
         game.setCallbackService(new GameCallbackServiceImpl());
-        
+
         CommandRegistry.set("NOTIFY_VIA_CHAT_CALLBACK", "org.drools.minecraft.adapter.cmds.NotifyViaChatCommand");
         CommandRegistry.set("NOTIFY_ALL_VIA_CHAT_CALLBACK", "org.drools.minecraft.adapter.cmds.NotifyAllViaChatCommand");
         CommandRegistry.set("CHANGE_SCORE_CALLBACK", "org.drools.minecraft.adapter.cmds.ChangeScoreCommand");
@@ -66,25 +66,25 @@ public class NewAdapter
     private void bootstrapWorld()
     {
         List initFacts = new ArrayList();
-        
+
         Checkpoint startfinish = new Checkpoint("StartFinish", 0, -143, 75, 248, -140, 79, 262, true);
         initFacts.add(startfinish);
-        
+
         Checkpoint checkpointone = new Checkpoint("CheckPointOne", 1, -143, 75, 292, -134, 82, 295);
         initFacts.add(checkpointone);
 
         Checkpoint checkpointtwo = new Checkpoint("CheckPointTwo", 2, -107, 75, 295, -104, 82, 286);
         initFacts.add(checkpointtwo);
-        
+
         Checkpoint checkpointthree = new Checkpoint("CheckPointThree", 3, -104, 75, 218, -113, 81, 215);
         initFacts.add(checkpointthree);
 
         Checkpoint checkpointfour = new Checkpoint("CheckPointFour", 4, -134, 75, 218, -143, 85, 215);
         initFacts.add(checkpointfour);
-        
+
         GameConfiguration config = new BaseGameConfigurationImpl(initFacts, "");
         game.bootstrap(config);
-        
+
         hasSetUpWorld = false;
     }
 
@@ -99,12 +99,24 @@ public class NewAdapter
         {
             if (world.isAreaLoaded(ChangeScoreCommand.startingpos, ChangeScoreCommand.startingpos.add(0, 23, 40)))
             {
-                for (int i = 0; i < 20; i++)
+                if (ChangeScoreCommand.useTickMarks)
                 {
-                    for (int a = 0; a < 3 + i; a++)
+                    for (int i = 0; i < 20; i++)
                     {
-                        world.setBlockToAir(ChangeScoreCommand.startingpos.add(0, a, i * 2));
+                        for (int a = 0; a < 3 + i; a++)
+                        {
+                            world.setBlockToAir(ChangeScoreCommand.startingpos.add(0, a, i * 2));
 
+                        }
+                    }
+                } else
+                {
+                    for (int i = 2; i >= 0; i--)
+                    {
+                        for (int p = 0; p < 15; p++)
+                        {
+                            world.setBlockToAir(ChangeScoreCommand.startingpos.add(0, -(p / 3), (3 - i) * 4 + (3 - p % 3)));
+                        }
                     }
                 }
                 hasSetUpWorld = true;
@@ -125,13 +137,12 @@ public class NewAdapter
                 if (UtilMathHelper.playerWithinCheckpoint(location, checkpoint) && !checkpoint.getPlayers().contains(player))
                 {
                     game.execute(new EnterCheckpointCommand(game.getPlayerByName(player), checkpoint));
-                } else if(!UtilMathHelper.playerWithinCheckpoint(location, checkpoint) && checkpoint.getPlayers().contains(player))
+                } else if (!UtilMathHelper.playerWithinCheckpoint(location, checkpoint) && checkpoint.getPlayers().contains(player))
                 {
                     game.execute(new LeaveCheckpointCommand(game.getPlayerByName(player), checkpoint));
                 }
             }
 
-            
         }
         dealWithCallbacks(world);
     }
