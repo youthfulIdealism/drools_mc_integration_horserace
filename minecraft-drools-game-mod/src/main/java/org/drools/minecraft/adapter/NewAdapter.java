@@ -95,31 +95,31 @@ public class NewAdapter
 
     private void update(World world) throws ClassNotFoundException, InstantiationException, IllegalAccessException
     {
+        //Do minecraft-world setup, and only do it once. In this case, the setup is clearing the score area.
         if (!hasSetUpWorld)
         {
+            //Only set up if the world is loaded
             if (world.isAreaLoaded(ChangeScoreCommand.startingpos, ChangeScoreCommand.startingpos.add(0, 23, 40)))
             {
-                if (ChangeScoreCommand.useTickMarks)
+                //Clear up the score area as if it was full of tickmarks
+                for (int i = 0; i < 20; i++)
                 {
-                    for (int i = 0; i < 20; i++)
-                    {
-                        for (int a = 0; a < 3 + i; a++)
-                        {
-                            world.setBlockToAir(ChangeScoreCommand.startingpos.add(0, a, i * 2));
 
-                        }
-                    }
-                } else
-                {
-                    for (int i = 2; i >= 0; i--)
+                    for (int a = 0; a < 3 + i; a++)
                     {
-                        for (int p = 0; p < 15; p++)
-                        {
-                            world.setBlockToAir(ChangeScoreCommand.startingpos.add(0, -(p / 3), (3 - i) * 4 + (3 - p % 3)));
-                        }
+                        world.setBlockToAir(ChangeScoreCommand.startingpos.add(0, a, i * 2));
+                    }
+                }
+                //clear up the score area as if it was full of numerals.
+                for (int i = 2; i >= 0; i--)
+                {
+                    for (int p = 0; p < 15; p++)
+                    {
+                        world.setBlockToAir(ChangeScoreCommand.startingpos.add(0, -(p / 3), (3 - i) * 4 + (3 - p % 3)));
                     }
                 }
                 hasSetUpWorld = true;
+
             }
         }
 
