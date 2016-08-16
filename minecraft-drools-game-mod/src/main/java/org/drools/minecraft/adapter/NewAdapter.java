@@ -36,8 +36,11 @@ import org.drools.game.model.impl.base.BasePlayerImpl;
 import org.drools.game.horserace.cmds.*;
 import org.drools.game.horserace.model.*;
 import org.drools.minecraft.adapter.cmds.ChangeScoreCommand;
-import org.kie.api.runtime.rule.FactHandle;
 
+/**
+ * Adapter between Minecraft and Droo,s
+ * @author Samuel
+ */
 public class NewAdapter
 {
 
@@ -63,6 +66,11 @@ public class NewAdapter
 
     }
 
+        /**
+     * Sets up the drools world with checkpoints, etc, etc. These
+     * already exist in the minecraft world if you loaded the correct map. In other words,
+     * performs the first minecraft-rule synchronization.
+     */
     private void bootstrapWorld()
     {
         List initFacts = new ArrayList();
@@ -93,6 +101,15 @@ public class NewAdapter
         return INSTANCE;
     }
 
+    /**
+     * Performs the standard minecraft-drools synchronization pass. This includes
+     * modifying the locations of the player within the rules, and executing any
+     * queued commands.
+     * @param world
+     * @throws ClassNotFoundException
+     * @throws InstantiationException
+     * @throws IllegalAccessException 
+     */
     private void update(World world) throws ClassNotFoundException, InstantiationException, IllegalAccessException
     {
         //Do minecraft-world setup, and only do it once. In this case, the setup is clearing the score area.
@@ -216,6 +233,10 @@ public class NewAdapter
         }
     }
 
+    /**
+     * Executes all queued commands.
+     * @param world 
+     */
     private void dealWithCallbacks(World world)
     {
         Context callbackCtx = new ContextImpl();

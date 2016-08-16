@@ -24,7 +24,10 @@ import org.drools.game.core.api.BaseCommand;
 import org.drools.game.core.api.Context;
 import org.drools.game.model.api.Player;
 import org.drools.minecraft.adapter.UtilMathHelper;
-
+/**
+ * Command that changes the scoreboard within minecraft to correctly represent the score.
+ * @author Samuel
+ */
 public class ChangeScoreCommand extends BaseCommand<Void> {
     public  static final BlockPos startingpos  = new BlockPos(-143, 85, 248);
     

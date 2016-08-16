@@ -23,6 +23,10 @@ import org.drools.game.core.api.BaseCommand;
 import org.drools.game.core.api.Context;
 import org.drools.game.model.api.Player;
 
+/**
+ * Command that sends a chat message to all players within Minecraft.
+ * @author Samuel
+ */
 public class NotifyAllViaChatCommand extends BaseCommand<Void> {
 
     private String message;
