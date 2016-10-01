@@ -1,3 +1,5 @@
+https://salaboy.com/2016/09/29/google-summer-of-code-2016-drools-minecraft-2/
+
 # Minecraft & Drools Game, Horse race
 Game is played by mounting a horse, and then running around a track repeatedly. See how many laps you can do before your horse burns to death!
 
